@@ -48,34 +48,25 @@ class ImplementationPlanController extends Controller
         }
 
         $validated = $request->validate([
+            'resolution_type' => 'required|in:RM,RD,DS',
             'resolution_number' => 'required|string|unique:implementation_plans,resolution_number',
-            'resolution_type' => 'required|string|in:RM,RD,DS',
-            'plan_name' => 'required|string|max:255',
+            'name' => 'required|string|max:255',
             'description' => 'nullable|string',
             'pdf_document' => 'required|file|mimes:pdf|max:10240', // Max 10MB
-            'resolution_pdf' => 'nullable|file|mimes:pdf|max:10240', // PDF de la resolución
             'start_date' => 'required|date',
         ]);
 
-        // Subir el PDF del Plan
+        // Subir el PDF
         $pdfPath = $request->file('pdf_document')->store('implementation-plans', 'public');
-        
-        // Subir el PDF de la Resolución (si existe)
-        $resolutionPdfPath = null;
-        if ($request->hasFile('resolution_pdf')) {
-            $resolutionPdfPath = $request->file('resolution_pdf')->store('implementation-plans/resolutions', 'public');
-        }
 
         // Crear el plan
         $plan = ImplementationPlan::create([
-            'resolution_number' => $validated['resolution_number'],
             'resolution_type' => $validated['resolution_type'],
-            'plan_name' => $validated['plan_name'],
+            'resolution_number' => $validated['resolution_number'],
+            'name' => $validated['name'],
             'description' => $validated['description'],
             'pdf_path' => $pdfPath,
-            'resolution_pdf_path' => $resolutionPdfPath,
             'start_date' => $validated['start_date'],
-            'year' => date('Y', strtotime($validated['start_date'])),
             'status' => 'active',
             'approved_by' => Auth::id(),
             'approved_at' => now(),
@@ -115,26 +106,21 @@ class ImplementationPlanController extends Controller
     public function update(Request $request, ImplementationPlan $implementationPlan)
     {
         $validated = $request->validate([
+            'resolution_type' => 'required|in:RM,RD,DS',
             'resolution_number' => 'required|string|unique:implementation_plans,resolution_number,' . $implementationPlan->id,
-            'resolution_type' => 'required|string|in:RM,RD,DS',
-            'plan_name' => 'required|string|max:255',
+            'name' => 'required|string|max:255',
             'description' => 'nullable|string',
             'pdf_document' => 'nullable|file|mimes:pdf|max:10240',
-            'resolution_pdf' => 'nullable|file|mimes:pdf|max:10240',
         ]);
 
-        // Si hay un nuevo PDF del plan, subir y eliminar el anterior
+        // Si hay un nuevo PDF, subir y eliminar el anterior
         if ($request->hasFile('pdf_document')) {
+            // Eliminar PDF anterior
             Storage::disk('public')->delete($implementationPlan->pdf_path);
-            $validated['pdf_path'] = $request->file('pdf_document')->store('implementation-plans', 'public');
-        }
-
-        // Si hay un nuevo PDF de la resolución, subir y eliminar el anterior
-        if ($request->hasFile('resolution_pdf')) {
-            if ($implementationPlan->resolution_pdf_path) {
-                Storage::disk('public')->delete($implementationPlan->resolution_pdf_path);
-            }
-            $validated['resolution_pdf_path'] = $request->file('resolution_pdf')->store('implementation-plans/resolutions', 'public');
+            
+            // Subir nuevo PDF
+            $pdfPath = $request->file('pdf_document')->store('implementation-plans', 'public');
+            $validated['pdf_path'] = $pdfPath;
         }
 
         $implementationPlan->update($validated);

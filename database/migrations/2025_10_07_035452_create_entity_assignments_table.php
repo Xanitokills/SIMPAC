@@ -13,20 +13,16 @@ return new class extends Migration
     {
         Schema::create('entity_assignments', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('entity_id')->constrained('entities')->onDelete('cascade');
-            $table->foreignId('sectorista_id')->constrained('sectoristas')->onDelete('cascade');
-            $table->foreignId('implementation_plan_id')->constrained('implementation_plans')->onDelete('cascade');
-            $table->date('assigned_date'); // Fecha de asignación
-            $table->date('end_date')->nullable(); // Fecha de fin de asignación (si aplica)
-            $table->enum('status', ['active', 'completed', 'cancelled'])->default('active');
-            $table->foreignId('assigned_by')->nullable()->constrained('users')->onDelete('set null'); // Quien asignó
-            $table->text('notes')->nullable(); // Notas sobre la asignación
+            $table->foreignId('entity_id')->constrained('entities')->onDelete('cascade'); // Entidad asignada
+            $table->foreignId('sectorista_id')->constrained('sectoristas')->onDelete('cascade'); // Sectorista asignado
+            $table->foreignId('implementation_plan_id')->constrained('implementation_plans')->onDelete('cascade'); // Plan de implementación
+            $table->timestamp('assigned_at'); // Fecha de asignación
+            $table->enum('status', ['pending', 'in_progress', 'completed', 'cancelled'])->default('pending'); // Estado
+            $table->timestamp('completed_at')->nullable(); // Fecha de completación
+            $table->foreignId('assigned_by')->nullable()->constrained('users')->onDelete('set null'); // Usuario que asigna
+            $table->text('notes')->nullable(); // Notas adicionales
             $table->timestamps();
             $table->softDeletes();
-            
-            // Índices para búsquedas eficientes
-            $table->index(['entity_id', 'sectorista_id', 'status']);
-            $table->index(['implementation_plan_id', 'status']);
         });
     }
 

@@ -31,40 +31,61 @@
             @csrf
             @method('PUT')
 
-            <!-- Número de RD -->
+            <!-- Tipo de Resolución -->
             <div>
-                <label for="rd_number" class="block text-sm font-medium text-gray-700 mb-2">
-                    Número de Resolución Directoral (RD) *
+                <label for="resolution_type" class="block text-sm font-medium text-gray-700 mb-2">
+                    Tipo de Acto Resolutivo *
+                </label>
+                <select 
+                    name="resolution_type" 
+                    id="resolution_type" 
+                    required
+                    class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent @error('resolution_type') border-red-500 @enderror"
+                >
+                    <option value="">Seleccione tipo</option>
+                    <option value="RM" {{ old('resolution_type', $implementationPlan->resolution_type) == 'RM' ? 'selected' : '' }}>RM - Resolución Ministerial</option>
+                    <option value="RD" {{ old('resolution_type', $implementationPlan->resolution_type) == 'RD' ? 'selected' : '' }}>RD - Resolución Directoral</option>
+                    <option value="DS" {{ old('resolution_type', $implementationPlan->resolution_type) == 'DS' ? 'selected' : '' }}>DS - Decreto Supremo</option>
+                </select>
+                @error('resolution_type')
+                <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                @enderror
+            </div>
+
+            <!-- Número de Resolución -->
+            <div>
+                <label for="resolution_number" class="block text-sm font-medium text-gray-700 mb-2">
+                    Número de Resolución *
                 </label>
                 <input 
                     type="text" 
-                    name="rd_number" 
-                    id="rd_number" 
-                    value="{{ old('rd_number', $implementationPlan->rd_number) }}"
+                    name="resolution_number" 
+                    id="resolution_number" 
+                    value="{{ old('resolution_number', $implementationPlan->resolution_number) }}"
                     required
-                    placeholder="Ej: RD-001-2025-MEF/43.02"
-                    class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent @error('rd_number') border-red-500 @enderror"
+                    placeholder="Ej: RM-001-2025-MEF"
+                    class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent @error('resolution_number') border-red-500 @enderror"
                 >
-                @error('rd_number')
+                @error('resolution_number')
                 <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                 @enderror
             </div>
 
             <!-- Nombre del Plan -->
             <div>
-                <label for="plan_name" class="block text-sm font-medium text-gray-700 mb-2">
+                <label for="name" class="block text-sm font-medium text-gray-700 mb-2">
                     Nombre del Plan *
                 </label>
                 <input 
                     type="text" 
-                    name="plan_name" 
-                    id="plan_name" 
-                    value="{{ old('plan_name', $implementationPlan->plan_name) }}"
+                    name="name" 
+                    id="name" 
+                    value="{{ old('name', $implementationPlan->name) }}"
                     required
                     placeholder="Ej: Plan de Implementación de la PGE 2025"
-                    class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent @error('plan_name') border-red-500 @enderror"
+                    class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent @error('name') border-red-500 @enderror"
                 >
-                @error('plan_name')
+                @error('name')
                 <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                 @enderror
             </div>

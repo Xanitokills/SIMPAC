@@ -7,66 +7,55 @@ use App\Models\Sectorista;
 
 class SectoristaSeeder extends Seeder
 {
-    /**
-     * Seed the application's database with sample sectoristas.
-     */
     public function run(): void
     {
         $sectoristas = [
             [
-                'name' => 'Juan Pérez García',
-                'position' => 'Operario Senior',
-                'email' => 'juan.perez@simpac.gob.pe',
-                'phone' => '+51 987654321',
+                'name' => 'Juan Carlos Pérez García',
+                'email' => 'jperez@pge.gob.pe',
+                'phone' => '987654321',
                 'status' => 'active',
             ],
             [
-                'name' => 'María González López',
-                'position' => 'Operaria de Campo',
-                'email' => 'maria.gonzalez@simpac.gob.pe',
-                'phone' => '+51 987654322',
+                'name' => 'María Elena Rodríguez López',
+                'email' => 'mrodriguez@pge.gob.pe',
+                'phone' => '987654322',
                 'status' => 'active',
             ],
             [
-                'name' => 'Carlos Rodríguez Sánchez',
-                'position' => 'Coordinador de Sector',
-                'email' => 'carlos.rodriguez@simpac.gob.pe',
-                'phone' => '+51 987654323',
+                'name' => 'Carlos Alberto Mendoza Silva',
+                'email' => 'cmendoza@pge.gob.pe',
+                'phone' => '987654323',
                 'status' => 'active',
             ],
             [
-                'name' => 'Ana Martínez Torres',
-                'position' => 'Operaria Junior',
-                'email' => 'ana.martinez@simpac.gob.pe',
-                'phone' => '+51 987654324',
+                'name' => 'Ana Patricia Torres Vargas',
+                'email' => 'atorres@pge.gob.pe',
+                'phone' => '987654324',
                 'status' => 'active',
             ],
             [
-                'name' => 'Luis Fernández Díaz',
-                'position' => 'Supervisor de Sector',
-                'email' => 'luis.fernandez@simpac.gob.pe',
-                'phone' => '+51 987654325',
+                'name' => 'Luis Fernando Castillo Ramos',
+                'email' => 'lcastillo@pge.gob.pe',
+                'phone' => '987654325',
                 'status' => 'active',
             ],
             [
-                'name' => 'Rosa Quispe Huamán',
-                'position' => 'Operaria de Campo',
-                'email' => 'rosa.quispe@simpac.gob.pe',
-                'phone' => '+51 987654326',
+                'name' => 'Rosa María Flores Gutiérrez',
+                'email' => 'rflores@pge.gob.pe',
+                'phone' => '987654326',
                 'status' => 'active',
             ],
             [
-                'name' => 'Pedro Vargas Mendoza',
-                'position' => 'Operario Senior',
-                'email' => 'pedro.vargas@simpac.gob.pe',
-                'phone' => '+51 987654327',
+                'name' => 'Miguel Ángel Sánchez Díaz',
+                'email' => 'msanchez@pge.gob.pe',
+                'phone' => '987654327',
                 'status' => 'active',
             ],
             [
-                'name' => 'Carmen Flores Rojas',
-                'position' => 'Coordinadora Regional',
-                'email' => 'carmen.flores@simpac.gob.pe',
-                'phone' => '+51 987654328',
+                'name' => 'Carmen Julia Vega Morales',
+                'email' => 'cvega@pge.gob.pe',
+                'phone' => '987654328',
                 'status' => 'active',
             ],
         ];

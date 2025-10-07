@@ -47,9 +47,9 @@
                                 Modificado
                             </span>
                         @endif
-                        <span class="text-sm text-gray-500">{{ $implementationPlan->rd_number }}</span>
+                        <span class="text-sm text-gray-500">{{ $implementationPlan->resolution_type }}-{{ $implementationPlan->resolution_number }}</span>
                     </div>
-                    <h1 class="text-2xl font-bold text-gray-900 mb-2">{{ $implementationPlan->plan_name }}</h1>
+                    <h1 class="text-2xl font-bold text-gray-900 mb-2">{{ $implementationPlan->name }}</h1>
                     @if($implementationPlan->description)
                     <p class="text-gray-600">{{ $implementationPlan->description }}</p>
                     @endif
@@ -67,8 +67,12 @@
             </div>
             <div class="p-6 space-y-4">
                 <div>
-                    <dt class="text-sm font-medium text-gray-500 mb-1">Resolución Directoral</dt>
-                    <dd class="text-base text-gray-900 font-medium">{{ $implementationPlan->rd_number }}</dd>
+                    <dt class="text-sm font-medium text-gray-500 mb-1">Tipo de Resolución</dt>
+                    <dd class="text-base text-gray-900 font-medium">{{ $implementationPlan->resolution_type }}</dd>
+                </div>
+                <div>
+                    <dt class="text-sm font-medium text-gray-500 mb-1">Número de Resolución</dt>
+                    <dd class="text-base text-gray-900 font-medium">{{ $implementationPlan->resolution_number }}</dd>
                 </div>
                 <div>
                     <dt class="text-sm font-medium text-gray-500 mb-1">Fecha de Inicio de Vigencia</dt>
@@ -166,7 +170,7 @@
                     <p class="text-gray-600 mb-4">
                         Configure las asignaciones de entidades a sectoristas (operarios) para este plan de implementación.
                     </p>
-                    <a href="{{ route('entity-assignments.index', ['plan_id' => $implementationPlan->id]) }}" 
+                    <a href="{{ route('entity-assignments.index', ['plan' => $implementationPlan->id]) }}" 
                        class="inline-flex items-center px-6 py-3 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700 transition-colors shadow-md hover:shadow-lg">
                         <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>

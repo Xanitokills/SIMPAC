@@ -3,8 +3,8 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class EntityAssignment extends Model
 {
@@ -14,16 +14,16 @@ class EntityAssignment extends Model
         'entity_id',
         'sectorista_id',
         'implementation_plan_id',
-        'assigned_date',
-        'end_date',
+        'assigned_at',
+        'completed_at',
         'status',
         'assigned_by',
         'notes',
     ];
 
     protected $casts = [
-        'assigned_date' => 'date',
-        'end_date' => 'date',
+        'assigned_at' => 'datetime',
+        'completed_at' => 'datetime',
     ];
 
     /**
@@ -51,7 +51,7 @@ class EntityAssignment extends Model
     }
 
     /**
-     * Relación con quien asignó
+     * Relación con el usuario que asignó
      */
     public function assignedBy(): BelongsTo
     {
@@ -67,19 +67,10 @@ class EntityAssignment extends Model
     }
 
     /**
-     * Scope para asignaciones por plan
+     * Scope para asignaciones de un plan específico
      */
-    public function scopeByPlan($query, $planId)
+    public function scopeForPlan($query, $planId)
     {
         return $query->where('implementation_plan_id', $planId);
     }
-
-    /**
-     * Scope para asignaciones por sectorista
-     */
-    public function scopeBySectorista($query, $sectoristaId)
-    {
-        return $query->where('sectorista_id', $sectoristaId);
-    }
 }
-

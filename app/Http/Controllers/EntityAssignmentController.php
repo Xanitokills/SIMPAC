@@ -16,14 +16,14 @@ class EntityAssignmentController extends Controller
      */
     public function index(Request $request)
     {
-        // Requiere plan_id en la URL
-        if (!$request->has('plan_id')) {
+        // Requiere plan en la URL
+        if (!$request->has('plan')) {
             return redirect()
                 ->route('implementation-plans.index')
                 ->with('error', 'Debe acceder a las asignaciones desde un plan específico.');
         }
         
-        $plan = ImplementationPlan::findOrFail($request->plan_id);
+        $plan = ImplementationPlan::findOrFail($request->plan);
         
         if ($plan->status !== 'active') {
             return redirect()
@@ -31,12 +31,32 @@ class EntityAssignmentController extends Controller
                 ->with('error', 'Solo puede gestionar asignaciones de planes activos.');
         }
         
-        $assignments = EntityAssignment::with(['entity', 'sectorista', 'implementationPlan', 'assignedBy'])
-            ->where('implementation_plan_id', $plan->id)
-            ->orderBy('created_at', 'desc')
-            ->paginate(15);
+        // Query base
+        $query = EntityAssignment::with(['entity', 'sectorista', 'implementationPlan', 'assignedBy'])
+            ->where('implementation_plan_id', $plan->id);
         
-        return view('dashboard.entity-assignments.index', compact('assignments', 'plan'));
+        // Filtros
+        if ($request->filled('sectorista')) {
+            $query->where('sectorista_id', $request->sectorista);
+        }
+        
+        if ($request->filled('status')) {
+            $query->where('status', $request->status);
+        }
+        
+        $assignments = $query->orderBy('created_at', 'desc')->paginate(15);
+        
+        // Estadísticas
+        $stats = [
+            'pending' => EntityAssignment::where('implementation_plan_id', $plan->id)->where('status', 'pending')->count(),
+            'in_progress' => EntityAssignment::where('implementation_plan_id', $plan->id)->where('status', 'in_progress')->count(),
+            'completed' => EntityAssignment::where('implementation_plan_id', $plan->id)->where('status', 'completed')->count(),
+        ];
+        
+        // Sectoristas para el filtro
+        $sectoristas = Sectorista::where('status', 'active')->orderBy('name')->get();
+        
+        return view('dashboard.entity-assignments.index', compact('assignments', 'plan', 'stats', 'sectoristas'));
     }
 
     /**
@@ -44,13 +64,13 @@ class EntityAssignmentController extends Controller
      */
     public function create(Request $request)
     {
-        if (!$request->has('plan_id')) {
+        if (!$request->has('plan')) {
             return redirect()
                 ->route('implementation-plans.index')
                 ->with('error', 'Debe acceder a las asignaciones desde un plan específico.');
         }
         
-        $plan = ImplementationPlan::findOrFail($request->plan_id);
+        $plan = ImplementationPlan::findOrFail($request->plan);
         
         if ($plan->status !== 'active') {
             return redirect()
@@ -58,15 +78,15 @@ class EntityAssignmentController extends Controller
                 ->with('error', 'Solo puede crear asignaciones en planes activos.');
         }
         
-        // Obtener entidades que NO tienen asignación activa, agrupadas por tipo
+        // Obtener entidades que NO tienen asignación activa en este plan
         $entities = Entity::where('status', 'active')
-            ->whereDoesntHave('assignments', function($query) {
-                $query->where('status', 'active');
+            ->whereDoesntHave('assignments', function($query) use ($plan) {
+                $query->where('implementation_plan_id', $plan->id)
+                      ->whereIn('status', ['pending', 'in_progress']);
             })
             ->orderBy('type')
             ->orderBy('name')
-            ->get()
-            ->groupBy('type');
+            ->get();
         
         // Obtener sectoristas activos
         $sectoristas = Sectorista::where('status', 'active')
@@ -81,11 +101,11 @@ class EntityAssignmentController extends Controller
      */
     public function store(Request $request)
     {
-        if (!$request->has('plan_id')) {
+        if (!$request->has('plan')) {
             return back()->with('error', 'Debe acceder desde un plan específico.');
         }
         
-        $plan = ImplementationPlan::findOrFail($request->plan_id);
+        $plan = ImplementationPlan::findOrFail($request->plan);
         
         if ($plan->status !== 'active') {
             return back()->with('error', 'Solo puede crear asignaciones en planes activos.');
@@ -95,7 +115,6 @@ class EntityAssignmentController extends Controller
             'entity_ids' => 'required|array|min:1',
             'entity_ids.*' => 'exists:entities,id',
             'sectorista_id' => 'required|exists:sectoristas,id',
-            'assigned_date' => 'required|date',
             'notes' => 'nullable|string',
         ]);
         
@@ -104,9 +123,10 @@ class EntityAssignmentController extends Controller
         
         // Crear asignaciones para cada entidad seleccionada
         foreach ($validated['entity_ids'] as $entityId) {
-            // Verificar que la entidad no tenga asignación activa
+            // Verificar que la entidad no tenga asignación activa en este plan
             $hasActiveAssignment = EntityAssignment::where('entity_id', $entityId)
-                ->where('status', 'active')
+                ->where('implementation_plan_id', $plan->id)
+                ->whereIn('status', ['pending', 'in_progress'])
                 ->exists();
             
             if ($hasActiveAssignment) {
@@ -119,8 +139,8 @@ class EntityAssignmentController extends Controller
                 'entity_id' => $entityId,
                 'sectorista_id' => $validated['sectorista_id'],
                 'implementation_plan_id' => $plan->id,
-                'assigned_date' => $validated['assigned_date'],
-                'status' => 'active',
+                'assigned_at' => now(),
+                'status' => 'pending',
                 'assigned_by' => Auth::id(),
                 'notes' => $validated['notes'],
             ]);
@@ -134,7 +154,7 @@ class EntityAssignmentController extends Controller
         }
         
         return redirect()
-            ->route('entity-assignments.index', ['plan_id' => $plan->id])
+            ->route('entity-assignments.index', ['plan' => $plan->id])
             ->with('success', $message);
     }
 
@@ -184,43 +204,44 @@ class EntityAssignmentController extends Controller
     /**
      * Finalizar una asignación
      */
-    public function complete(EntityAssignment $entityAssignment)
+    public function complete(Request $request)
     {
-        if ($entityAssignment->status !== 'active') {
-            return back()->with('error', 'Solo se pueden completar asignaciones activas.');
+        $plan = ImplementationPlan::findOrFail($request->plan);
+        $assignment = EntityAssignment::findOrFail($request->assignment);
+        
+        if (!in_array($assignment->status, ['pending', 'in_progress'])) {
+            return back()->with('error', 'Solo se pueden completar asignaciones pendientes o en progreso.');
         }
         
-        $entityAssignment->update([
+        $assignment->update([
             'status' => 'completed',
-            'end_date' => now(),
+            'completed_at' => now(),
         ]);
         
         return redirect()
-            ->route('entity-assignments.index')
+            ->route('entity-assignments.index', ['plan' => $plan->id])
             ->with('success', 'Asignación finalizada exitosamente.');
     }
 
     /**
      * Cancelar una asignación
      */
-    public function cancel(Request $request, EntityAssignment $entityAssignment)
+    public function cancel(Request $request)
     {
-        if ($entityAssignment->status !== 'active') {
-            return back()->with('error', 'Solo se pueden cancelar asignaciones activas.');
+        $plan = ImplementationPlan::findOrFail($request->plan);
+        $assignment = EntityAssignment::findOrFail($request->assignment);
+        
+        if (!in_array($assignment->status, ['pending', 'in_progress'])) {
+            return back()->with('error', 'Solo se pueden cancelar asignaciones pendientes o en progreso.');
         }
         
-        $validated = $request->validate([
-            'cancellation_reason' => 'required|string',
-        ]);
-        
-        $entityAssignment->update([
+        $assignment->update([
             'status' => 'cancelled',
-            'end_date' => now(),
-            'notes' => $entityAssignment->notes . "\n\nMotivo de cancelación: " . $validated['cancellation_reason'],
+            'completed_at' => now(),
         ]);
         
         return redirect()
-            ->route('entity-assignments.index')
+            ->route('entity-assignments.index', ['plan' => $plan->id])
             ->with('success', 'Asignación cancelada exitosamente.');
     }
 

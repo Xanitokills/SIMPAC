@@ -40,7 +40,7 @@
                         </svg>
                         <span class="text-sm font-semibold uppercase tracking-wider">Plan Activo</span>
                     </div>
-                    <h2 class="text-2xl font-bold mb-2">{{ $activePlan->plan_name }}</h2>
+                    <h2 class="text-2xl font-bold mb-2">{{ $activePlan->name }}</h2>
                     <p class="text-green-100 mb-4">{{ $activePlan->description }}</p>
                     
                     <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mt-4">
@@ -108,7 +108,7 @@
     <!-- Botones de acción -->
     <div class="flex justify-end gap-3">
         @if($activePlan)
-        <a href="{{ route('entity-assignments.index', ['plan_id' => $activePlan->id]) }}" class="inline-flex items-center px-6 py-3 bg-indigo-600 text-white font-semibold rounded-lg hover:bg-indigo-700 transition-colors shadow-lg">
+        <a href="{{ route('entity-assignments.index', ['plan' => $activePlan->id]) }}" class="inline-flex items-center px-6 py-3 bg-indigo-600 text-white font-semibold rounded-lg hover:bg-indigo-700 transition-colors shadow-lg">
             <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"/>
             </svg>
@@ -156,7 +156,7 @@
                             <div class="text-sm font-medium text-gray-900">{{ $plan->resolution_number }}</div>
                         </td>
                         <td class="px-6 py-4">
-                            <div class="text-sm font-medium text-gray-900">{{ $plan->plan_name }}</div>
+                            <div class="text-sm font-medium text-gray-900">{{ $plan->name }}</div>
                             <div class="text-sm text-gray-500">{{ Str::limit($plan->description, 40) }}</div>
                         </td>
                         <td class="px-6 py-4 whitespace-nowrap">
