@@ -43,10 +43,14 @@
                     <h2 class="text-2xl font-bold mb-2">{{ $activePlan->plan_name }}</h2>
                     <p class="text-green-100 mb-4">{{ $activePlan->description }}</p>
                     
-                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mt-4">
+                    <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mt-4">
                         <div class="bg-white bg-opacity-20 rounded-lg p-3">
-                            <p class="text-xs text-green-100 mb-1">Resolución Directoral</p>
-                            <p class="font-semibold">{{ $activePlan->rd_number }}</p>
+                            <p class="text-xs text-green-100 mb-1">Tipo de Resolución</p>
+                            <p class="font-semibold">{{ $activePlan->resolution_type }}</p>
+                        </div>
+                        <div class="bg-white bg-opacity-20 rounded-lg p-3">
+                            <p class="text-xs text-green-100 mb-1">Número de Resolución</p>
+                            <p class="font-semibold">{{ $activePlan->resolution_number }}</p>
                         </div>
                         <div class="bg-white bg-opacity-20 rounded-lg p-3">
                             <p class="text-xs text-green-100 mb-1">Fecha de Inicio</p>
@@ -65,8 +69,13 @@
                     Ver Detalles
                 </a>
                 <a href="{{ Storage::url($activePlan->pdf_path) }}" target="_blank" class="px-4 py-2 bg-green-700 text-white rounded-lg hover:bg-green-800 transition-colors">
-                    Descargar PDF
+                    📄 Descargar Plan PDF
                 </a>
+                @if($activePlan->resolution_pdf_path)
+                <a href="{{ Storage::url($activePlan->resolution_pdf_path) }}" target="_blank" class="px-4 py-2 bg-blue-700 text-white rounded-lg hover:bg-blue-800 transition-colors">
+                    📋 Descargar Resolución
+                </a>
+                @endif
                 <form action="{{ route('implementation-plans.close', $activePlan) }}" method="POST" onsubmit="return confirm('¿Está seguro de cerrar este plan? Esto permitirá crear un nuevo plan.')">
                     @csrf
                     <button type="submit" class="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors">
@@ -119,10 +128,11 @@
             <table class="min-w-full divide-y divide-gray-200">
                 <thead class="bg-gray-50">
                     <tr>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">RD</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Tipo</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Número</th>
                         <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Nombre del Plan</th>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Fecha Inicio</th>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Fecha Fin</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Año</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Vigencia</th>
                         <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Estado</th>
                         <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Acciones</th>
                     </tr>
@@ -131,18 +141,28 @@
                     @forelse($plans as $plan)
                     <tr class="hover:bg-gray-50">
                         <td class="px-6 py-4 whitespace-nowrap">
-                            <div class="text-sm font-medium text-gray-900">{{ $plan->rd_number }}</div>
+                            <span class="px-2 py-1 text-xs font-semibold rounded bg-blue-100 text-blue-800">
+                                {{ $plan->resolution_type }}
+                            </span>
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap">
+                            <div class="text-sm font-medium text-gray-900">{{ $plan->resolution_number }}</div>
                         </td>
                         <td class="px-6 py-4">
-                            <div class="text-sm text-gray-900">{{ $plan->plan_name }}</div>
-                            <div class="text-sm text-gray-500">{{ Str::limit($plan->description, 50) }}</div>
+                            <div class="text-sm font-medium text-gray-900">{{ $plan->plan_name }}</div>
+                            <div class="text-sm text-gray-500">{{ Str::limit($plan->description, 40) }}</div>
                         </td>
                         <td class="px-6 py-4 whitespace-nowrap">
-                            <div class="text-sm text-gray-900">{{ $plan->start_date->format('d/m/Y') }}</div>
+                            <div class="text-sm font-bold text-gray-900">{{ $plan->year }}</div>
                         </td>
                         <td class="px-6 py-4 whitespace-nowrap">
-                            <div class="text-sm text-gray-900">
-                                {{ $plan->end_date ? $plan->end_date->format('d/m/Y') : '—' }}
+                            <div class="text-xs text-gray-600">
+                                <div>{{ $plan->start_date->format('d/m/Y') }}</div>
+                                @if($plan->end_date)
+                                <div>{{ $plan->end_date->format('d/m/Y') }}</div>
+                                @else
+                                <div class="text-green-600 font-medium">Vigente</div>
+                                @endif
                             </div>
                         </td>
                         <td class="px-6 py-4 whitespace-nowrap">

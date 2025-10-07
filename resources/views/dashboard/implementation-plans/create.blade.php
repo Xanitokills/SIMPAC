@@ -33,21 +33,42 @@
         <form action="{{ route('implementation-plans.store') }}" method="POST" enctype="multipart/form-data" class="p-6 space-y-6">
             @csrf
 
-            <!-- Número de RD -->
+            <!-- Tipo de Resolución -->
             <div>
-                <label for="rd_number" class="block text-sm font-medium text-gray-700 mb-2">
-                    Número de Resolución Directoral (RD) *
+                <label for="resolution_type" class="block text-sm font-medium text-gray-700 mb-2">
+                    Tipo de Acto Resolutivo *
+                </label>
+                <select 
+                    name="resolution_type" 
+                    id="resolution_type" 
+                    required
+                    class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent @error('resolution_type') border-red-500 @enderror"
+                >
+                    <option value="">Seleccione tipo</option>
+                    <option value="RM" {{ old('resolution_type') == 'RM' ? 'selected' : '' }}>RM - Resolución Ministerial</option>
+                    <option value="RD" {{ old('resolution_type') == 'RD' ? 'selected' : '' }}>RD - Resolución Directoral</option>
+                    <option value="DS" {{ old('resolution_type') == 'DS' ? 'selected' : '' }}>DS - Decreto Supremo</option>
+                </select>
+                @error('resolution_type')
+                <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                @enderror
+            </div>
+
+            <!-- Número de Resolución -->
+            <div>
+                <label for="resolution_number" class="block text-sm font-medium text-gray-700 mb-2">
+                    Número de Resolución *
                 </label>
                 <input 
                     type="text" 
-                    name="rd_number" 
-                    id="rd_number" 
-                    value="{{ old('rd_number') }}"
+                    name="resolution_number" 
+                    id="resolution_number" 
+                    value="{{ old('resolution_number') }}"
                     required
-                    placeholder="Ej: RD-001-2025-MEF/43.02"
-                    class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent @error('rd_number') border-red-500 @enderror"
+                    placeholder="Ej: RM-001-2025-MEF"
+                    class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent @error('resolution_number') border-red-500 @enderror"
                 >
-                @error('rd_number')
+                @error('resolution_number')
                 <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                 @enderror
             </div>
@@ -109,7 +130,7 @@
                 </p>
             </div>
 
-            <!-- Documento PDF -->
+            <!-- Documento PDF del Plan -->
             <div>
                 <label for="pdf_document" class="block text-sm font-medium text-gray-700 mb-2">
                     Documento PDF del Plan de Implementación *
@@ -122,7 +143,7 @@
                         accept=".pdf"
                         required
                         class="hidden"
-                        onchange="displayFileName(this)"
+                        onchange="displayFileName(this, 'file-name-plan')"
                     >
                     <label for="pdf_document" class="cursor-pointer">
                         <svg class="mx-auto h-12 w-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -131,11 +152,41 @@
                         <p class="mt-2 text-sm text-gray-600">
                             <span class="font-semibold text-blue-600">Haga clic para subir</span> o arrastre el archivo
                         </p>
-                        <p class="mt-1 text-xs text-gray-500">PDF (máximo 10 MB)</p>
-                        <p id="file-name" class="mt-2 text-sm text-green-600 font-medium"></p>
+                        <p class="mt-1 text-xs text-gray-500">PDF del Plan (máximo 10 MB)</p>
+                        <p id="file-name-plan" class="mt-2 text-sm text-green-600 font-medium"></p>
                     </label>
                 </div>
                 @error('pdf_document')
+                <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                @enderror
+            </div>
+
+            <!-- Documento PDF de la Resolución (Opcional) -->
+            <div>
+                <label for="resolution_pdf" class="block text-sm font-medium text-gray-700 mb-2">
+                    Documento PDF de la Resolución (Opcional)
+                </label>
+                <div class="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center hover:border-green-400 transition-colors">
+                    <input 
+                        type="file" 
+                        name="resolution_pdf" 
+                        id="resolution_pdf" 
+                        accept=".pdf"
+                        class="hidden"
+                        onchange="displayFileName(this, 'file-name-resolution')"
+                    >
+                    <label for="resolution_pdf" class="cursor-pointer">
+                        <svg class="mx-auto h-12 w-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+                        </svg>
+                        <p class="mt-2 text-sm text-gray-600">
+                            <span class="font-semibold text-green-600">Haga clic para subir</span> o arrastre el archivo
+                        </p>
+                        <p class="mt-1 text-xs text-gray-500">PDF de la Resolución (máximo 10 MB) - Opcional</p>
+                        <p id="file-name-resolution" class="mt-2 text-sm text-green-600 font-medium"></p>
+                    </label>
+                </div>
+                @error('resolution_pdf')
                 <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                 @enderror
             </div>
@@ -154,11 +205,13 @@
 </div>
 
 <script>
-function displayFileName(input) {
+function displayFileName(input, displayId) {
     const fileName = input.files[0]?.name;
-    const fileNameDisplay = document.getElementById('file-name');
+    const fileNameDisplay = document.getElementById(displayId);
     if (fileName) {
-        fileNameDisplay.textContent = `Archivo seleccionado: ${fileName}`;
+        fileNameDisplay.textContent = `✓ ${fileName}`;
+    } else {
+        fileNameDisplay.textContent = '';
     }
 }
 </script>
