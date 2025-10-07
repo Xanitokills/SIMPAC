@@ -13,13 +13,11 @@ return new class extends Migration
     {
         Schema::create('entities', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('implementation_plan_id')->constrained('implementation_plans')->onDelete('cascade');
             $table->string('code')->unique(); // Código único de la entidad (ej: MINSA, MINEDU)
             $table->string('name'); // Nombre completo de la entidad
-            $table->string('sector')->nullable(); // Sector al que pertenece
-            $table->string('type')->nullable(); // Tipo: Nacional, Regional, Local
+            $table->string('type')->nullable(); // Tipo: ministerio, organismo, gobierno_regional, municipalidad
             $table->text('description')->nullable(); // Descripción
-            $table->enum('status', ['active', 'inactive', 'transferred'])->default('active');
+            $table->enum('status', ['active', 'inactive'])->default('active');
             $table->timestamps();
             $table->softDeletes();
         });

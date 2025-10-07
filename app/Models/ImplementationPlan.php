@@ -74,14 +74,6 @@ class ImplementationPlan extends Model
     }
 
     /**
-     * Relación con entidades
-     */
-    public function entities(): HasMany
-    {
-        return $this->hasMany(Entity::class);
-    }
-
-    /**
      * Relación con asignaciones
      */
     public function assignments(): HasMany

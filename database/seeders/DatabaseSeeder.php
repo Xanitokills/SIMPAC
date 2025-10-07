@@ -19,5 +19,11 @@ class DatabaseSeeder extends Seeder
             'name' => 'Test User',
             'email' => 'test@example.com',
         ]);
+        
+        // Seed Peruvian state entities and sectoristas
+        $this->call([
+            EntitySeeder::class,
+            SectoristaSeeder::class,
+        ]);
     }
 }

@@ -4,6 +4,9 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\SimpleAuthController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\ImplementationPlanController;
+use App\Http\Controllers\EntityController;
+use App\Http\Controllers\SectoristaController;
+use App\Http\Controllers\EntityAssignmentController;
 
 // Redirigir la raíz al login
 Route::get('/', function () {
@@ -29,4 +32,17 @@ Route::middleware('simple.auth')->prefix('dashboard')->group(function () {
     Route::resource('implementation-plans', ImplementationPlanController::class);
     Route::post('implementation-plans/{implementationPlan}/close', [ImplementationPlanController::class, 'close'])
         ->name('implementation-plans.close');
+    
+    // Rutas de Entidades
+    Route::resource('entities', EntityController::class);
+    
+    // Rutas de Sectoristas
+    Route::resource('sectoristas', SectoristaController::class);
+    
+    // Rutas de Asignaciones de Entidades
+    Route::resource('entity-assignments', EntityAssignmentController::class);
+    Route::post('entity-assignments/{entityAssignment}/complete', [EntityAssignmentController::class, 'complete'])
+        ->name('entity-assignments.complete');
+    Route::post('entity-assignments/{entityAssignment}/cancel', [EntityAssignmentController::class, 'cancel'])
+        ->name('entity-assignments.cancel');
 });

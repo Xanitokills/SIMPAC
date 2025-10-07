@@ -12,22 +12,12 @@ class Entity extends Model
     use SoftDeletes;
 
     protected $fillable = [
-        'implementation_plan_id',
         'code',
         'name',
-        'sector',
         'type',
         'description',
         'status',
     ];
-
-    /**
-     * Relación con el plan de implementación
-     */
-    public function implementationPlan(): BelongsTo
-    {
-        return $this->belongsTo(ImplementationPlan::class);
-    }
 
     /**
      * Relación con asignaciones

@@ -18,7 +18,7 @@ return new class extends Migration
             $table->foreignId('implementation_plan_id')->constrained('implementation_plans')->onDelete('cascade');
             $table->date('assigned_date'); // Fecha de asignación
             $table->date('end_date')->nullable(); // Fecha de fin de asignación (si aplica)
-            $table->enum('status', ['active', 'completed', 'reassigned'])->default('active');
+            $table->enum('status', ['active', 'completed', 'cancelled'])->default('active');
             $table->foreignId('assigned_by')->nullable()->constrained('users')->onDelete('set null'); // Quien asignó
             $table->text('notes')->nullable(); // Notas sobre la asignación
             $table->timestamps();

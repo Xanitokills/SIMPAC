@@ -12,13 +12,12 @@ class Sectorista extends Model
     use SoftDeletes;
 
     protected $fillable = [
-        'code',
-        'full_name',
+        'employee_code',
+        'name',
         'email',
         'phone',
-        'area',
+        'department',
         'position',
-        'role',
         'status',
         'registered_by',
         'registered_at',
@@ -76,14 +75,6 @@ class Sectorista extends Model
     {
         return $query->where('status', 'active')
             ->whereNotNull('registered_at');
-    }
-
-    /**
-     * Scope por rol
-     */
-    public function scopeByRole($query, $role)
-    {
-        return $query->where('role', $role);
     }
 
     /**

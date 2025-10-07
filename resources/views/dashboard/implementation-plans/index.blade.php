@@ -105,17 +105,24 @@
     </div>
     @endif
 
-    <!-- Botón para registrar nuevo plan -->
-    @if(!$activePlan)
-    <div class="flex justify-end">
+    <!-- Botones de acción -->
+    <div class="flex justify-end gap-3">
+        @if($activePlan)
+        <a href="{{ route('entity-assignments.index', ['plan_id' => $activePlan->id]) }}" class="inline-flex items-center px-6 py-3 bg-indigo-600 text-white font-semibold rounded-lg hover:bg-indigo-700 transition-colors shadow-lg">
+            <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"/>
+            </svg>
+            Gestionar Asignaciones
+        </a>
+        @else
         <a href="{{ route('implementation-plans.create') }}" class="inline-flex items-center px-6 py-3 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700 transition-colors shadow-lg">
             <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
             </svg>
             Registrar Plan de Implementación
         </a>
+        @endif
     </div>
-    @endif
 
     <!-- Historial de Planes -->
     <div class="bg-white rounded-lg shadow-sm border border-gray-200">

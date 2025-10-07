@@ -151,6 +151,34 @@
         </div>
     </div>
 
+    <!-- Gestión de Asignaciones -->
+    @if($implementationPlan->status === 'active')
+    <div class="bg-gradient-to-br from-blue-50 to-indigo-50 rounded-lg shadow-sm border-2 border-blue-200">
+        <div class="p-6">
+            <div class="flex items-start justify-between">
+                <div class="flex-1">
+                    <div class="flex items-center space-x-2 mb-2">
+                        <svg class="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"/>
+                        </svg>
+                        <h3 class="text-lg font-bold text-gray-900">Asignación de Entidades</h3>
+                    </div>
+                    <p class="text-gray-600 mb-4">
+                        Configure las asignaciones de entidades a sectoristas (operarios) para este plan de implementación.
+                    </p>
+                    <a href="{{ route('entity-assignments.index', ['plan_id' => $implementationPlan->id]) }}" 
+                       class="inline-flex items-center px-6 py-3 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700 transition-colors shadow-md hover:shadow-lg">
+                        <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
+                        </svg>
+                        Gestionar Asignaciones
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+    @endif
+
     <!-- Acciones -->
     <div class="bg-white rounded-lg shadow-sm border border-gray-200">
         <div class="p-6">
