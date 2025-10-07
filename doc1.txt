@@ -1,0 +1,172 @@
+DOCUMENTO: PROCESO DE TRANSFERENCIA SEGÚN PLAN DE IMPLEMENTACIÓN DE LA PGE VIGENTE
+🎯 Objetivo del Proceso:
+Ejecutar la transferencia de funciones, recursos y responsabilidades entre entidades o áreas, conforme al Plan de Implementación de la PGE vigente, mediante la conformación de un Órgano Colegiado, la ejecución por componentes y la formalización mediante Decreto Supremo.
+
+👥 ROLES Y PERFILES INVOLUCRADOS
+Secretario de la CTPPGE
+Coordinador general del proceso, responsable de registrar documentos, emitir oficios, coordinar reuniones y gestionar el flujo documental en el SGD.
+Órgano Colegiado
+Comité encargado de aprobar el Plan de Trabajo, validar componentes y suscribir actas finales.
+Responsables de Componentes
+Encargados de ejecutar actividades específicas por área: Presupuesto, Bienes y Servicios, Acervo Documentario, Tecnología de la Información, Recursos Humanos.
+Procuraduría / Procurador(a)
+Revisa y valida legalmente los documentos, emite observaciones y suscribe actas de cierre.
+Entidad receptora o transferente
+Institución que recibe o entrega las funciones/activos.
+
+✅ *Nota: Todas las actividades se registran y gestionan a través del SGD (Sistema de Gestión Documental), pero el actor real es el perfil humano asignado.* 
+
+🔄 FLUJO DEL PROCESO (Fases y Actividades)
+🔹 FASE 1: INICIO Y PLANIFICACIÓN
+Actividad 1: Registrar Plan de Implementación de la PGE vigente
+Actor: Secretario de la CTPPGE
+Acción: Registrar oficialmente el Plan de Implementación en el SGD como insumo inicial.
+Documento: Plan de Implementación de la PGE vigente
+Tiempo estimado: 1 día
+Actividad 2: Solicitar conformación del Órgano Colegiado
+Actor: Secretario de la CTPPGE
+Acción: Elaborar y remitir oficio solicitando la conformación del Órgano Colegiado a través del SGD.
+Documento: Oficio de solicitud de conformación del Órgano Colegiado
+Tiempo estimado: 1 día
+Actividad 3: Recepcionar y derivar resolución de conformación
+Actor: Secretario de la CTPPGE
+Acción: Recepcionar la resolución de conformación del Órgano Colegiado en el SGD y derivar copia a los responsables.
+Documento: Resolución de conformación del Órgano Colegiado
+Tiempo estimado: 1 día
+Actividad 4: Coordinar reunión de inicio
+Actor: Secretario de la CTPPGE
+Acción: Coordinar y convocar reunión de inicio con los responsables de componentes.
+Documento: Invitación a reunión (correo/SGD)
+Tiempo estimado: 1 hora
+Actividad 5: Aprobar Plan de Trabajo preliminar
+Actor: Órgano Colegiado
+Acción: Revisar y aprobar el Plan de Trabajo preliminar durante la reunión de inicio.
+Documento: Acta de aprobación del Plan de Trabajo
+Tiempo estimado: 3 días (incluye revisión y socialización)
+🔹 FASE 2: EJECUCIÓN POR COMPONENTES
+Se ejecutan en paralelo según los 5 componentes clave. 
+
+Componente 1: Presupuesto
+Responsable: Responsable de Presupuesto
+Actividades:
+Levantamiento de información presupuestal
+Validación de anexos
+Seguimiento y actualización en base de datos
+Documento: Anexo de Presupuesto, BD de seguimiento en Excel
+Tiempo estimado: 5 días
+Componente 2: Bienes y Servicios
+Responsable: Responsable de Bienes y Servicios
+Actividades:
+Inventario y levantamiento de bienes
+Validación de conformidad
+Emisión de acta de cierre del componente
+Documento: Acta de cierre – Bienes y Servicios
+Tiempo estimado: 5 días
+Componente 3: Acervo Documentario
+Responsable: Responsable de Acervo Documentario
+Actividades:
+Custodia y digitalización del acervo
+Registro en carpeta compartida y base de datos
+Actualización del Excel compartido
+Documento: BD de acervo digital, Excel de registro
+Tiempo estimado: 5 días
+Componente 4: Tecnología de la Información
+Responsable: Responsable de TI
+Actividades:
+Instalación y configuración de sistemas
+Seguimiento al plan de trabajo
+Emisión de acta de cierre del componente
+Documento: Acta de cierre – TI
+Tiempo estimado: 5 días
+Componente 5: Recursos Humanos
+Responsable: Responsable de RRHH
+Actividades:
+Levantamiento de personal asignado
+Validación de nóminas y cargos
+Emisión de acta de cierre del componente
+Documento: Acta de cierre – RRHH
+Tiempo estimado: 5 días
+🔹 FASE 3: VALIDACIÓN Y CIERRE
+Actividad 6: Revisar y validar componentes
+Actor: Órgano Colegiado + Procuraduría
+Acción: Revisión integral de los componentes y validación de actas de cierre.
+Documento: Observaciones y validación final
+Tiempo estimado: 3 días
+Actividad 7: Suscribir actas de cierre de componentes
+Actor: Órgano Colegiado + Procuraduría
+Acción: Suscribir las actas de cierre de cada componente.
+Documento: Actas firmadas de cierre (Presupuesto, Bienes, TI, RRHH, Acervo)
+Tiempo estimado: 2 días
+Actividad 8: Elaborar Acta de Cierre Final
+Actor: Secretario de la CTPPGE
+Acción: Consolidar todas las actas de cierre y elaborar la Acta de Cierre Final del proceso.
+Documento: Acta de Cierre Final
+Tiempo estimado: 1 día
+Actividad 9: Emitir Decreto Supremo
+Actor: Procuraduría / Autoridad competente
+Acción: Elaborar y emitir el Decreto Supremo que formaliza la transferencia.
+Documento: Proyecto de Decreto Supremo
+Tiempo estimado: 3 días
+Actividad 10: Publicar en El Peruano
+Actor: Procuraduría / Entidad receptora
+Acción: Remitir el Decreto Supremo para su publicación en El Peruano.
+Documento: Decreto Supremo publicado
+Tiempo estimado: 1 día
+📁 DOCUMENTOS CLAVE DEL PROCESO
+Plan de Implementación de la PGE vigente
+Secretaría General
+Insumo inicial
+Oficio de solicitud de conformación del Órgano Colegiado
+Secretario CTPPGE
+Solicitud formal
+Resolución de conformación del Órgano Colegiado
+Autoridad competente
+Aprobación oficial
+Acta de aprobación del Plan de Trabajo
+Órgano Colegiado
+Guía ejecutiva
+Anexos de componentes
+Responsables de componentes
+Detalle técnico
+Actas de cierre por componente
+Órgano Colegiado + Procuraduría
+Validación final
+Acta de Cierre Final
+Secretario CTPPGE
+Consolidación del proceso
+Decreto Supremo
+Procuraduría
+Formalización legal
+Publicación en El Peruano
+Entidad receptora
+Disposición pública
+
+⏱️ TIEMPO ESTIMADO TOTAL DEL PROCESO
+Inicio y Planificación
+7 días
+Ejecución por componentes
+5 días (paralelos)
+Validación y Cierre
+6 días
+Total estimado
+18 días hábiles
+
+⚠️ Nota: El tiempo puede variar según complejidad, disponibilidad de recursos y número de revisiones. 
+
+🛡️ CONTROL DE CALIDAD Y SEGUIMIENTO
+Base de datos en Excel compartida: Para registro y actualización continua de avances por componente.
+Reuniones de seguimiento: Programadas semanalmente por el Secretario CTPPGE.
+Validación legal: Por parte de la Procuraduría en cada etapa crítica.
+Auditoría interna: Opcional, al final del proceso.
+📌 RECOMENDACIONES FINALES
+Clarificar roles en el SGD: Asignar perfiles específicos (Secretario, Responsable de componente, Procurador) para evitar confusiones.
+Automatizar notificaciones: Usar alertas en el SGD para recordatorios de plazos.
+Estándarizar formatos: Plantillas únicas para oficios, actas y anexos.
+Incluir checklist: Para verificar cumplimiento de actividades antes de pasar a la siguiente fase.
+✅ ¿Cómo usar este documento?
+Este documento puede servir como:
+
+Guía operativa para ejecutar el proceso de transferencia.
+Base para modelar el diagrama BPMN (con carriles por rol y eventos por documento).
+Manual de procedimientos para capacitación de nuevos responsables.
+Instrumento de control y auditoría del proceso.
