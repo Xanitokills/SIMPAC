@@ -4,6 +4,20 @@
 @section('page-description', 'Fase 1: Conformación del Órgano Colegiado y aprobación del Plan de Trabajo')
 
 @section('content')
+<!-- 🔍 DEBUG: Este es el archivo dashboard/planning.blade.php -->
+<div class="mb-4 p-4 bg-red-100 border-2 border-red-500 rounded-lg">
+    <p class="text-red-900 font-bold text-lg">🔍 ARCHIVO: dashboard/planning.blade.php</p>
+    <p class="text-red-700 text-sm">Si ves este mensaje, estás en el archivo CORRECTO</p>
+    @if(auth()->check())
+        <p class="text-red-700 text-xs mt-2">
+            Usuario: {{ auth()->user()->email }} | 
+            Rol: {{ auth()->user()->role }} | 
+            Es Sectorista: {{ auth()->user()->isSectorista() ? 'SÍ' : 'NO' }}
+        </p>
+    @endif
+</div>
+<!-- FIN DEBUG -->
+
 <div class="space-y-6">
     <!-- Phase Overview -->
     <div class="bg-gradient-to-r from-blue-500 to-blue-600 rounded-lg shadow-sm text-white">
@@ -72,24 +86,22 @@
                 </div>
             </div>
 
-            <!-- Activity 2 - In Progress -->
-            <div class="bg-white rounded-lg shadow-sm border border-gray-200 border-l-4 border-l-blue-500">
+            <!-- Activity 2 - Gestión del Órgano Colegiado -->
+            <div class="bg-white rounded-lg shadow-sm border border-gray-200 border-l-4 border-l-indigo-500">
                 <div class="p-6">
                     <div class="flex items-start justify-between">
                         <div class="flex items-start space-x-4">
                             <div class="flex-shrink-0">
-                                <div class="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center">
-                                    <svg class="w-5 h-5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
-                                    </svg>
+                                <div class="w-8 h-8 bg-indigo-100 rounded-full flex items-center justify-center">
+                                    <span class="text-sm font-bold text-indigo-600">2</span>
                                 </div>
                             </div>
                             <div class="flex-1">
                                 <h4 class="text-base font-semibold text-gray-900">Actividad 2: Solicitar conformación del Órgano Colegiado</h4>
-                                <p class="text-sm text-gray-600 mt-1">Elaborar y remitir oficio solicitando la conformación del Órgano Colegiado a través del SGD.</p>
+                                <p class="text-sm text-gray-600 mt-1">Gestión completa del proceso de conformación del Órgano Colegiado por entidad asignada.</p>
                                 <div class="flex items-center space-x-4 mt-3">
-                                    <span class="text-xs text-gray-500">Actor: Secretario CTPPGE</span>
-                                    <span class="text-xs text-gray-500">Tiempo: 1 día</span>
+                                    <span class="text-xs text-gray-500">Actor: Sectorista / Secretario CTPPGE</span>
+                                    <span class="text-xs text-gray-500">Tiempo: Variable por entidad</span>
                                 </div>
                                 <div class="mt-3">
                                     <span class="status-badge status-progress">En Progreso</span>
@@ -97,19 +109,92 @@
                             </div>
                         </div>
                     </div>
+                    
+                    <!-- Flujo de Actividad 2 -->
                     <div class="mt-4 pt-4 border-t border-gray-100">
-                        <div class="flex items-center justify-between text-sm">
-                            <span class="text-gray-500">Documento a generar:</span>
-                            <span class="text-blue-600">Oficio de solicitud de conformación</span>
+                        <h5 class="text-sm font-semibold text-gray-700 mb-3">Flujo del Proceso:</h5>
+                        <div class="space-y-2 text-xs text-gray-600 mb-4">
+                            <div class="flex items-start">
+                                <span class="text-indigo-600 mr-2">1.</span>
+                                <span>Visualizar entidades asignadas al sectorista</span>
+                            </div>
+                            <div class="flex items-start">
+                                <span class="text-indigo-600 mr-2">2.</span>
+                                <span>Coordinar reuniones (registro, reprogramación, historial)</span>
+                            </div>
+                            <div class="flex items-start">
+                                <span class="text-indigo-600 mr-2">3.</span>
+                                <span>Generar oficio de solicitud de conformación</span>
+                            </div>
+                            <div class="flex items-start">
+                                <span class="text-indigo-600 mr-2">4.</span>
+                                <span>Seguimiento visual de acuerdos y compromisos</span>
+                            </div>
+                            <div class="flex items-start">
+                                <span class="text-indigo-600 mr-2">5.</span>
+                                <span>Registrar acto resolutivo (PDF, fecha, número)</span>
+                            </div>
+                            <div class="flex items-start">
+                                <span class="text-indigo-600 mr-2">6.</span>
+                                <span>Control de vencimientos y oficios de reiteración</span>
+                            </div>
+                            <div class="flex items-start">
+                                <span class="text-indigo-600 mr-2">7.</span>
+                                <span>Programar sesión de inducción post-aprobación</span>
+                            </div>
                         </div>
-                        <div class="mt-3 flex space-x-3">
-                            <button class="px-4 py-2 bg-blue-600 text-white text-sm rounded-lg hover:bg-blue-700 transition-colors">
-                                Generar Oficio
-                            </button>
-                            <button class="px-4 py-2 bg-gray-100 text-gray-700 text-sm rounded-lg hover:bg-gray-200 transition-colors">
-                                Ver Plantilla
-                            </button>
-                        </div>
+                        
+                        <!-- DEBUG TEMPORAL - ELIMINAR DESPUÉS -->
+                        @if(auth()->check())
+                            <div class="mt-2 p-2 bg-yellow-100 border border-yellow-300 rounded text-xs">
+                                <strong>DEBUG:</strong> 
+                                Usuario: {{ auth()->user()->email }} | 
+                                Rol: {{ auth()->user()->role }} | 
+                                Es Sectorista: {{ auth()->user()->isSectorista() ? 'SÍ' : 'NO' }}
+                            </div>
+                        @endif
+                        <!-- FIN DEBUG -->
+                        
+                        <!-- Acciones Disponibles -->
+                        @if(auth()->check() && auth()->user()->isSectorista())
+                            <!-- SECTORISTAS: Vista completa de gestión -->
+                            <div class="space-y-3">
+                                <div class="grid grid-cols-2 gap-3">
+                                    <a href="{{ route('activity2.index', auth()->user()->sectorista_id ?? '') }}" 
+                                       class="px-4 py-3 bg-indigo-600 text-white text-sm font-medium rounded-lg hover:bg-indigo-700 transition-colors flex flex-col items-center gap-2 text-center shadow-sm">
+                                        <span class="text-2xl">📋</span>
+                                        <span>Mis Entidades</span>
+                                    </a>
+                                    
+                                    <a href="{{ route('activity2.index', auth()->user()->sectorista_id ?? '') }}" 
+                                       class="px-4 py-3 bg-blue-600 text-white text-sm font-medium rounded-lg hover:bg-blue-700 transition-colors flex flex-col items-center gap-2 text-center shadow-sm">
+                                        <span class="text-2xl">📊</span>
+                                        <span>Seguimiento</span>
+                                    </a>
+                                </div>
+                            </div>
+                        @elseif(auth()->check() && (auth()->user()->isSecretarioCTPPGE() || auth()->user()->isAdmin()))
+                            <!-- SECRETARIO/ADMIN: Vista de supervisión -->
+                            <div class="flex justify-center">
+                                <a href="{{ route('activity2.index') }}" 
+                                   class="px-6 py-3 bg-indigo-600 text-white text-sm font-medium rounded-lg hover:bg-indigo-700 transition-colors inline-flex items-center gap-2 shadow-sm">
+                                    📊 Seguimiento General de Entidades
+                                </a>
+                            </div>
+                            <div class="mt-3 pt-3 border-t border-gray-100">
+                                <p class="text-xs text-gray-500 text-center mb-2">
+                                    💡 Para asignar entidades a sectoristas, usa el módulo de administración
+                                </p>
+                            </div>
+                        @else
+                            <!-- OTROS ROLES: Vista básica -->
+                            <div class="flex justify-center">
+                                <a href="{{ route('activity2.index') }}" 
+                                   class="px-6 py-3 bg-gray-500 text-white text-sm font-medium rounded-lg hover:bg-gray-600 transition-colors inline-flex items-center gap-2">
+                                    👁️ Ver Actividad 2
+                                </a>
+                            </div>
+                        @endif
                     </div>
                 </div>
             </div>

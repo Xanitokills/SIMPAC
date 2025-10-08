@@ -86,30 +86,67 @@
             </button>
         </form>
 
-        <!-- Usuarios de Prueba - Roles según doc1.txt -->
+        <!-- Usuarios de Prueba - Roles del Sistema -->
         <div class="mt-8 pt-6 border-t border-gray-200">
-            <p class="text-xs text-gray-500 font-semibold mb-3 text-center">ROLES DEL SISTEMA (según doc1.txt):</p>
-            <div class="space-y-2 text-xs">
+            <p class="text-xs text-gray-500 font-semibold mb-3 text-center">USUARIOS DE PRUEBA - ROLES DEL SISTEMA:</p>
+            <div class="space-y-2 text-xs max-h-96 overflow-y-auto pr-2">
+                <!-- Admin -->
+                <div class="bg-red-50 p-3 rounded-lg border border-red-200">
+                    <p class="font-semibold text-red-800">👑 Administrador</p>
+                    <p class="text-red-600 text-[10px] mb-1">Acceso total al sistema - Puede ver y editar todo</p>
+                    <p class="text-gray-700">Email: <span class="font-mono">admin@simpac.com</span></p>
+                    <p class="text-gray-700">Contraseña: <span class="font-mono">admin123</span></p>
+                </div>
+
+                <!-- Secretario CTPPGE -->
                 <div class="bg-blue-50 p-3 rounded-lg border border-blue-200">
                     <p class="font-semibold text-blue-800">🎯 Secretario CTPPGE</p>
-                    <p class="text-blue-600 text-[10px] mb-1">Coordinador general del proceso</p>
+                    <p class="text-blue-600 text-[10px] mb-1">Coordinador general - Puede editar Actividad 1</p>
                     <p class="text-gray-700">Email: <span class="font-mono">secretario@simpac.com</span></p>
                     <p class="text-gray-700">Contraseña: <span class="font-mono">secretario123</span></p>
                 </div>
+
+                <!-- Procurador PGE -->
                 <div class="bg-purple-50 p-3 rounded-lg border border-purple-200">
                     <p class="font-semibold text-purple-800">⚖️ Procurador(a) PGE</p>
-                    <p class="text-purple-600 text-[10px] mb-1">Validación legal y suscripción de actas</p>
+                    <p class="text-purple-600 text-[10px] mb-1">Validación legal - Ve todos los módulos</p>
                     <p class="text-gray-700">Email: <span class="font-mono">procurador@simpac.com</span></p>
                     <p class="text-gray-700">Contraseña: <span class="font-mono">procurador123</span></p>
                 </div>
+
+                <!-- Sectoristas -->
+                <div class="bg-indigo-50 p-3 rounded-lg border border-indigo-200">
+                    <p class="font-semibold text-indigo-800">👥 Sectorista 1 - Juan Carlos Pérez</p>
+                    <p class="text-indigo-600 text-[10px] mb-1">4 entidades asignadas (MEF, SUNAT, Arequipa, etc.)</p>
+                    <p class="text-gray-700">Email: <span class="font-mono">juan.perez@simpac.com</span></p>
+                    <p class="text-gray-700">Contraseña: <span class="font-mono">sectorista123</span></p>
+                </div>
+
+                <div class="bg-indigo-50 p-3 rounded-lg border border-indigo-200">
+                    <p class="font-semibold text-indigo-800">👥 Sectorista 2 - María Rodríguez</p>
+                    <p class="text-indigo-600 text-[10px] mb-1">4 entidades asignadas (MINEDU, RENIEC, Cusco, etc.)</p>
+                    <p class="text-gray-700">Email: <span class="font-mono">maria.rodriguez@simpac.com</span></p>
+                    <p class="text-gray-700">Contraseña: <span class="font-mono">sectorista123</span></p>
+                </div>
+
+                <div class="bg-indigo-50 p-3 rounded-lg border border-indigo-200">
+                    <p class="font-semibold text-indigo-800">👥 Sectorista 3 - Carlos Mendoza</p>
+                    <p class="text-indigo-600 text-[10px] mb-1">4 entidades asignadas (MINSA, INDECOPI, Piura, etc.)</p>
+                    <p class="text-gray-700">Email: <span class="font-mono">carlos.mendoza@simpac.com</span></p>
+                    <p class="text-gray-700">Contraseña: <span class="font-mono">sectorista123</span></p>
+                </div>
+
+                <!-- Responsable de Componente -->
                 <div class="bg-green-50 p-3 rounded-lg border border-green-200">
-                    <p class="font-semibold text-green-800">� Responsable de Componente</p>
+                    <p class="font-semibold text-green-800">◆ Responsable de Componente</p>
                     <p class="text-green-600 text-[10px] mb-1">Ejecutor de componentes específicos</p>
                     <p class="text-gray-700">Email: <span class="font-mono">responsable@simpac.com</span></p>
                     <p class="text-gray-700">Contraseña: <span class="font-mono">responsable123</span></p>
                 </div>
+
+                <!-- Órgano Colegiado -->
                 <div class="bg-orange-50 p-3 rounded-lg border border-orange-200">
-                    <p class="font-semibold text-orange-800">� Órgano Colegiado</p>
+                    <p class="font-semibold text-orange-800">◆ Órgano Colegiado</p>
                     <p class="text-orange-600 text-[10px] mb-1">Aprobación de planes y validación</p>
                     <p class="text-gray-700">Email: <span class="font-mono">colegiado@simpac.com</span></p>
                     <p class="text-gray-700">Contraseña: <span class="font-mono">colegiado123</span></p>

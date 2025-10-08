@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 class EntityAssignment extends Model
@@ -59,11 +60,35 @@ class EntityAssignment extends Model
     }
 
     /**
+     * Relación con las reuniones
+     */
+    public function meetings(): HasMany
+    {
+        return $this->hasMany(Meeting::class);
+    }
+
+    /**
+     * Relación con los oficios
+     */
+    public function oficios(): HasMany
+    {
+        return $this->hasMany(Oficio::class);
+    }
+
+    /**
+     * Relación con las sesiones de inducción
+     */
+    public function inductionSessions(): HasMany
+    {
+        return $this->hasMany(InductionSession::class);
+    }
+
+    /**
      * Scope para asignaciones activas
      */
     public function scopeActive($query)
     {
-        return $query->where('status', 'active');
+        return $query->whereIn('status', ['in_progress', 'pending']);
     }
 
     /**

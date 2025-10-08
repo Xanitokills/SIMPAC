@@ -1,0 +1,111 @@
+<?php
+
+namespace App\Http\Controllers;
+
+use App\Models\EntityAssignment;
+use App\Models\Sectorista;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+
+class Activity2Controller extends Controller
+{
+    /**
+     * Mostrar panel principal de Actividad 2
+     * Lista todas las entidades asignadas al sectorista o todas si es Secretario CTPPGE
+     */
+    public function index($sectoristaId = null)
+    {
+        $user = Auth::user();
+
+        // Verificar que el usuario esté autenticado
+        if (!$user) {
+            return redirect()->route('login')
+                ->with('error', 'Debes iniciar sesión para acceder a esta sección.');
+        }
+
+        // Si es Secretario CTPPGE, mostrar todas las asignaciones
+        if ($user->isSecretarioCTPPGE()) {
+            // Vista global para el Secretario
+            $sectoristas = Sectorista::withCount('assignments')->get();
+            
+            $assignments = EntityAssignment::with([
+                'entity',
+                'sectorista',
+                'meetings' => function($query) {
+                    $query->latest()->limit(3);
+                },
+                'oficios' => function($query) {
+                    $query->latest()->limit(3);
+                },
+                'inductionSessions' => function($query) {
+                    $query->latest()->limit(3);
+                }
+            ])
+            ->paginate(12);
+
+            return view('activity2.index-secretario', compact('sectoristas', 'assignments'));
+        }
+
+        // Para sectoristas
+        if (!$sectoristaId && $user->isSectorista()) {
+            $sectoristaId = $user->sectorista_id;
+        }
+
+        if (!$sectoristaId) {
+            return redirect()->route('dashboard')
+                ->with('error', 'No se encontró sectorista asociado o no tiene permisos para acceder.');
+        }
+
+        // Verificar que el sectorista solo vea sus asignaciones
+        if ($user->isSectorista() && $user->sectorista_id != $sectoristaId) {
+            return redirect()->route('activity2.index')
+                ->with('error', 'No tiene permisos para ver las asignaciones de otro sectorista.');
+        }
+
+        $sectorista = Sectorista::with(['assignments.entity'])->findOrFail($sectoristaId);
+        
+        $assignments = EntityAssignment::where('sectorista_id', $sectoristaId)
+            ->with([
+                'entity',
+                'meetings' => function($query) {
+                    $query->latest()->limit(3);
+                },
+                'oficios' => function($query) {
+                    $query->latest()->limit(3);
+                },
+                'inductionSessions' => function($query) {
+                    $query->latest()->limit(3);
+                }
+            ])
+            ->paginate(12);
+
+        return view('activity2.index', compact('sectorista', 'assignments'));
+    }
+
+    /**
+     * Ver detalle completo de una entidad asignada
+     */
+    public function show($assignmentId)
+    {
+        $assignment = EntityAssignment::with([
+            'entity',
+            'sectorista',
+            'meetings.agreements',
+            'oficios.actoResolutivo',
+            'inductionSessions'
+        ])->findOrFail($assignmentId);
+
+        // Estadísticas rápidas
+        $stats = [
+            'meetings_total' => $assignment->meetings()->count(),
+            'meetings_completed' => $assignment->meetings()->completed()->count(),
+            'meetings_scheduled' => $assignment->meetings()->scheduled()->count(),
+            'oficios_pending' => $assignment->oficios()->pendiente()->count(),
+            'oficios_completed' => $assignment->oficios()->where('status', 'cumplido')->count(),
+            'oficios_overdue' => $assignment->oficios()->vencido()->count(),
+            'induction_sessions' => $assignment->inductionSessions()->count(),
+        ];
+
+        return view('activity2.show', compact('assignment', 'stats'));
+    }
+}
