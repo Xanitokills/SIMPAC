@@ -59,6 +59,10 @@ Route::middleware('simple.auth')->prefix('dashboard')->group(function () {
         ->name('activity2.index');
     Route::get('activity2/assignment/{assignment}', [Activity2Controller::class, 'show'])
         ->name('activity2.show');
+    Route::get('activity2/assignment/{assignment}/edit', [Activity2Controller::class, 'edit'])
+        ->name('activity2.edit');
+    Route::put('activity2/assignment/{assignment}', [Activity2Controller::class, 'update'])
+        ->name('activity2.update');
     
     // Reuniones - Gestión completa
     Route::prefix('assignments/{assignment}/meetings')->name('meetings.')->group(function () {

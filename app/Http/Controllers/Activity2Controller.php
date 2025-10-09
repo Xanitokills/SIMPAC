@@ -108,4 +108,52 @@ class Activity2Controller extends Controller
 
         return view('activity2.show', compact('assignment', 'stats'));
     }
+
+    /**
+     * Mostrar formulario de edición de asignación
+     */
+    public function edit($assignmentId)
+    {
+        $user = Auth::user();
+        
+        $assignment = EntityAssignment::with([
+            'entity',
+            'sectorista'
+        ])->findOrFail($assignmentId);
+
+        // Verificar permisos
+        if ($user->isSectorista() && $user->sectorista_id != $assignment->sectorista_id) {
+            return redirect()->route('activity2.index')
+                ->with('error', 'No tiene permisos para editar esta asignación.');
+        }
+
+        return view('activity2.edit', compact('assignment'));
+    }
+
+    /**
+     * Actualizar asignación de entidad
+     */
+    public function update(Request $request, $assignmentId)
+    {
+        $user = Auth::user();
+        
+        $assignment = EntityAssignment::findOrFail($assignmentId);
+
+        // Verificar permisos
+        if ($user->isSectorista() && $user->sectorista_id != $assignment->sectorista_id) {
+            return redirect()->route('activity2.index')
+                ->with('error', 'No tiene permisos para editar esta asignación.');
+        }
+
+        $validated = $request->validate([
+            'status' => 'required|in:active,pending,in_progress,completed,cancelled',
+            'priority' => 'nullable|in:low,medium,high,urgent',
+            'notes' => 'nullable|string|max:1000',
+        ]);
+
+        $assignment->update($validated);
+
+        return redirect()->route('activity2.show', $assignment->id)
+            ->with('success', 'Asignación actualizada exitosamente.');
+    }
 }

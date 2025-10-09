@@ -20,6 +20,7 @@ class EntityAssignment extends Model
         'status',
         'assigned_by',
         'notes',
+        'priority',
     ];
 
     protected $casts = [

@@ -1,4 +1,7 @@
-@extends('layouts.app')
+@extends('layouts.dashboard')
+
+@section('page-title', 'Detalles de Entidad')
+@section('page-description', $assignment->entity->name)
 
 @section('content')
 <div class="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
@@ -14,7 +17,7 @@
     <!-- Header con Información de la Entidad -->
     <div class="bg-white rounded-lg shadow-sm p-6 mb-6">
         <div class="flex items-start justify-between">
-            <div>
+            <div class="flex-1">
                 <h1 class="text-3xl font-bold text-gray-900">{{ $assignment->entity->name }}</h1>
                 <div class="mt-2 flex items-center space-x-3">
                     <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-purple-100 text-purple-800">
@@ -26,11 +29,36 @@
                 </div>
                 <p class="mt-2 text-gray-600">Sectorista: <span class="font-semibold">{{ $assignment->sectorista->name }}</span></p>
             </div>
-            <div class="text-right">
-                <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium 
-                    {{ $assignment->status === 'active' ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-800' }}">
-                    {{ ucfirst($assignment->status) }}
+            <div class="text-right flex flex-col items-end space-y-2">
+                @php
+                    $statusLabels = [
+                        'active' => 'Activo',
+                        'pending' => 'Pendiente',
+                        'in_progress' => 'En Progreso',
+                        'completed' => 'Completado',
+                        'cancelled' => 'Cancelado',
+                    ];
+                    $statusColors = [
+                        'active' => 'bg-green-100 text-green-800',
+                        'pending' => 'bg-yellow-100 text-yellow-800',
+                        'in_progress' => 'bg-blue-100 text-blue-800',
+                        'completed' => 'bg-purple-100 text-purple-800',
+                        'cancelled' => 'bg-red-100 text-red-800',
+                    ];
+                    $currentStatus = strtolower($assignment->status);
+                    $statusLabel = $statusLabels[$currentStatus] ?? ucfirst($assignment->status);
+                    $statusColor = $statusColors[$currentStatus] ?? 'bg-gray-100 text-gray-800';
+                @endphp
+                <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium {{ $statusColor }}">
+                    {{ $statusLabel }}
                 </span>
+                <a href="{{ route('activity2.edit', $assignment->id) }}" 
+                   class="inline-flex items-center px-4 py-2 bg-white border border-gray-300 rounded-md font-semibold text-xs text-gray-700 uppercase tracking-widest shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition ease-in-out duration-150">
+                    <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
+                    </svg>
+                    Editar
+                </a>
             </div>
         </div>
     </div>

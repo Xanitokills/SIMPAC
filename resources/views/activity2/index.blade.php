@@ -1,4 +1,7 @@
-@extends('layouts.app')
+@extends('layouts.dashboard')
+
+@section('page-title', 'Actividad 2: Órgano Colegiado')
+@section('page-description', 'Gestión de entidades asignadas')
 
 @section('content')
 <div class="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
@@ -60,14 +63,26 @@
                         <!-- Estado -->
                         <div class="mb-4">
                             @php
+                                $statusLabels = [
+                                    'active' => 'Activo',
+                                    'pending' => 'Pendiente',
+                                    'in_progress' => 'En Progreso',
+                                    'completed' => 'Completado',
+                                    'cancelled' => 'Cancelado',
+                                ];
                                 $statusColors = [
                                     'active' => 'bg-green-100 text-green-800',
                                     'pending' => 'bg-yellow-100 text-yellow-800',
-                                    'completed' => 'bg-blue-100 text-blue-800',
+                                    'in_progress' => 'bg-blue-100 text-blue-800',
+                                    'completed' => 'bg-purple-100 text-purple-800',
+                                    'cancelled' => 'bg-red-100 text-red-800',
                                 ];
+                                $currentStatus = strtolower($assignment->status);
+                                $statusLabel = $statusLabels[$currentStatus] ?? ucfirst($assignment->status);
+                                $statusColor = $statusColors[$currentStatus] ?? 'bg-gray-100 text-gray-800';
                             @endphp
-                            <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium {{ $statusColors[$assignment->status] ?? 'bg-gray-100 text-gray-800' }}">
-                                {{ ucfirst($assignment->status) }}
+                            <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium {{ $statusColor }}">
+                                {{ $statusLabel }}
                             </span>
                         </div>
 

@@ -1,4 +1,7 @@
-@extends('layouts.app')
+@extends('layouts.dashboard')
+
+@section('page-title', 'Reuniones')
+@section('page-description', 'Gestión de reuniones con ' . $assignment->entity->name)
 
 @section('content')
 <div class="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
