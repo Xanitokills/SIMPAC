@@ -94,7 +94,8 @@ class ExecutionMeetingController extends Controller
         $meeting = Meeting::with([
             'entityAssignment.entity',
             'entityAssignment.sectorista',
-            'agreements'
+            'agreements',
+            'actionPlan.items'
         ])->findOrFail($id);
 
         // Decodificar componentes
@@ -127,20 +128,20 @@ class ExecutionMeetingController extends Controller
         $meeting = Meeting::findOrFail($id);
 
         $validated = $request->validate([
-            'subject' => 'required|string|max:255',
-            'scheduled_date' => 'required|date',
-            'meeting_link' => 'nullable|url|max:500',
-            'contact_name' => 'required|string|max:255',
-            'contact_email' => 'nullable|email|max:255',
-            'contact_phone' => 'nullable|string|max:20',
-            'agenda' => 'nullable|string',
-            'components' => 'nullable|array',
-            'components.*' => 'string|in:presupuesto,bienes,acervo,tecnologia,rrhh',
-            'notes' => 'nullable|string',
-            'status' => 'required|in:scheduled,completed,cancelled',
+            'meeting_type' => 'required|string|in:coordination,presentation,follow_up',
+            'title' => 'required|string|max:255',
+            'description' => 'nullable|string',
+            'meeting_date' => 'required|date',
+            'meeting_time' => 'required|date_format:H:i',
+            'location' => 'nullable|string|max:255',
+            'participants' => 'nullable|string',
+            'outcome' => 'nullable|string',
         ]);
 
-        $validated['components'] = json_encode($request->components ?? []);
+        // Combinar fecha y hora
+        $meetingDateTime = $validated['meeting_date'] . ' ' . $validated['meeting_time'];
+        unset($validated['meeting_date'], $validated['meeting_time']);
+        $validated['meeting_date'] = $meetingDateTime;
 
         $meeting->update($validated);
 
@@ -150,40 +151,20 @@ class ExecutionMeetingController extends Controller
     }
 
     /**
-     * Marcar reunión como completada con acta
+     * Marcar reunión como completada
      */
     public function complete(Request $request, $id)
     {
         $meeting = Meeting::findOrFail($id);
 
-        $validated = $request->validate([
-            'actual_date' => 'required|date',
-            'attendees' => 'required|string',
-            'minutes' => 'required|string',
-            'proposal_presented' => 'required|boolean',
-            'proposal_document' => 'nullable|file|mimes:pdf,doc,docx|max:10240',
-            'agreements_reached' => 'nullable|string',
-        ]);
-
-        // Subir documento de propuesta si existe
-        if ($request->hasFile('proposal_document')) {
-            $path = $request->file('proposal_document')->store('execution/proposals', 'public');
-            $validated['proposal_document_path'] = $path;
-        }
-
         $meeting->update([
             'status' => 'completed',
-            'actual_date' => $validated['actual_date'],
-            'attendees' => $validated['attendees'],
-            'minutes' => $validated['minutes'],
-            'proposal_presented' => $validated['proposal_presented'],
-            'proposal_document_path' => $validated['proposal_document_path'] ?? null,
-            'agreements_reached' => $validated['agreements_reached'] ?? null,
+            'completed_at' => now(),
         ]);
 
         return redirect()
             ->route('execution.meetings.show', $meeting->id)
-            ->with('success', 'Reunión completada y acta registrada exitosamente.');
+            ->with('success', 'Reunión marcada como completada. Ahora puede registrar el plan de acción aprobado.');
     }
 
     /**
@@ -193,17 +174,12 @@ class ExecutionMeetingController extends Controller
     {
         $meeting = Meeting::findOrFail($id);
 
-        $validated = $request->validate([
-            'cancellation_reason' => 'required|string',
-        ]);
-
         $meeting->update([
             'status' => 'cancelled',
-            'cancellation_reason' => $validated['cancellation_reason'],
         ]);
 
         return redirect()
-            ->route('execution.meetings.index')
+            ->route('execution.meetings.show', $meeting->id)
             ->with('success', 'Reunión cancelada.');
     }
 }

@@ -64,7 +64,7 @@ class ExecutionNotificationController extends Controller
             
             $oficios = Oficio::with('entityAssignment.entity')
                 ->where('entity_assignment_id', $assignmentId)
-                ->whereIn('status', ['sent', 'pending_response'])
+                ->whereIn('status', ['pendiente', 'vencido'])
                 ->get();
             
             return view('dashboard.execution.notifications.create', [
@@ -146,26 +146,27 @@ class ExecutionNotificationController extends Controller
         ]);
 
         return redirect()
-            ->route('execution.notifications.show', $oficio->id)
+            ->route('execution.notifications.index')
             ->with('success', 'Notificación enviada y evidencia registrada exitosamente.');
     }
 
     /**
      * Mostrar detalle de notificación
+     * TODO: Crear vista para mostrar detalle de notificación
      */
-    public function show($id)
-    {
-        $notification = Oficio::with([
-            'entityAssignment.entity',
-            'entityAssignment.sectorista',
-            'actoResolutivo'
-        ])->findOrFail($id);
+    // public function show($id)
+    // {
+    //     $notification = Oficio::with([
+    //         'entityAssignment.entity',
+    //         'entityAssignment.sectorista',
+    //         'actoResolutivo'
+    //     ])->findOrFail($id);
 
-        // Decodificar evidencias
-        $notification->evidence_array = json_decode($notification->notification_evidence, true) ?? [];
+    //     // Decodificar evidencias
+    //     $notification->evidence_array = json_decode($notification->notification_evidence, true) ?? [];
 
-        return view('dashboard.execution.notifications.show', compact('notification'));
-    }
+    //     return view('dashboard.execution.notifications.show', compact('notification'));
+    // }
 
     /**
      * Adjuntar evidencia de seguimiento

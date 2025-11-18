@@ -105,7 +105,7 @@ class DashboardController extends Controller
 
         // Obtener reuniones de coordinación
         $meetings = \App\Models\Meeting::where('entity_assignment_id', $assignmentId)
-            ->where('meeting_type', 'coordination')
+            ->whereIn('meeting_type', ['coordination', 'general'])
             ->orderBy('scheduled_date', 'desc')
             ->get();
 
@@ -122,11 +122,19 @@ class DashboardController extends Controller
             'completed' => $oficios->where('notification_status', 'completed')->count(),
         ];
 
+        // Obtener plan de acción de la entidad
+        $actionPlan = \App\Models\ActionPlan::where('entity_assignment_id', $assignmentId)
+            ->with(['items' => function ($query) {
+                $query->orderBy('deadline', 'asc');
+            }])
+            ->first();
+
         return view('dashboard.execution.entity', compact(
             'assignment',
             'meetings',
             'oficios',
-            'notificationStats'
+            'notificationStats',
+            'actionPlan'
         ));
     }
 }

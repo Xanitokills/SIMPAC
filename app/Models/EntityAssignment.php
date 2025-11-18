@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 class EntityAssignment extends Model
@@ -82,6 +83,14 @@ class EntityAssignment extends Model
     public function inductionSessions(): HasMany
     {
         return $this->hasMany(InductionSession::class);
+    }
+
+    /**
+     * Relación con el plan de acción
+     */
+    public function actionPlan(): HasOne
+    {
+        return $this->hasOne(ActionPlan::class);
     }
 
     /**

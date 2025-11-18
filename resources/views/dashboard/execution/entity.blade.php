@@ -270,5 +270,149 @@
             @endif
         </div>
     </div>
+
+    <!-- Módulo 3: Plan de Acción Aprobado (HU5) -->
+    <div class="bg-white rounded-lg shadow-sm border border-gray-200">
+        <div class="p-6">
+            <div class="flex items-center justify-between mb-6">
+                <div>
+                    <h3 class="text-lg font-semibold text-gray-900">Plan de Acción Aprobado</h3>
+                    <p class="text-sm text-gray-500 mt-1">Gestión del plan de acción aprobado para esta entidad</p>
+                </div>
+                @if(!$actionPlan)
+                    <a href="{{ route('execution.action-plans.create', ['assignment' => $assignment->id]) }}" 
+                       class="bg-green-600 hover:bg-green-700 text-white font-medium py-2 px-4 rounded-lg transition-colors flex items-center space-x-2">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+                        </svg>
+                        <span>Registrar Plan de Acción</span>
+                    </a>
+                @endif
+            </div>
+
+            @if($actionPlan)
+                <!-- Plan de acción existente -->
+                <div class="bg-gradient-to-r from-green-50 to-emerald-50 rounded-lg border border-green-200 p-6 mb-4">
+                    <div class="flex items-start justify-between">
+                        <div class="flex-1">
+                            <h4 class="text-lg font-semibold text-gray-900 mb-2">{{ $actionPlan->title }}</h4>
+                            @if($actionPlan->description)
+                                <p class="text-sm text-gray-600 mb-3">{{ $actionPlan->description }}</p>
+                            @endif
+                            <div class="grid grid-cols-2 gap-4 text-sm">
+                                <div>
+                                    <span class="text-gray-600">Fecha de Aprobación:</span>
+                                    <span class="font-semibold ml-2">{{ $actionPlan->approval_date->format('d/m/Y') }}</span>
+                                </div>
+                                <div>
+                                    <span class="text-gray-600">Estado:</span>
+                                    <span class="ml-2 inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium 
+                                        {{ $actionPlan->status === 'active' ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-800' }}">
+                                        {{ $actionPlan->status === 'active' ? 'Activo' : 'Completado' }}
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                        <a href="{{ route('execution.action-plans.show', $actionPlan->id) }}" 
+                           class="ml-4 bg-green-600 hover:bg-green-700 text-white font-medium py-2 px-4 rounded-lg transition-colors flex items-center space-x-2">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
+                            </svg>
+                            <span>Ver Detalle</span>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Estadísticas del plan -->
+                <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-4">
+                    <div class="bg-blue-50 rounded-lg p-4 border border-blue-200">
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <p class="text-sm font-medium text-blue-900">Total Acciones</p>
+                                <p class="text-2xl font-bold text-blue-700">{{ $actionPlan->items->count() }}</p>
+                            </div>
+                            <svg class="w-8 h-8 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/>
+                            </svg>
+                        </div>
+                    </div>
+
+                    <div class="bg-gray-50 rounded-lg p-4 border border-gray-200">
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <p class="text-sm font-medium text-gray-900">Pendientes</p>
+                                <p class="text-2xl font-bold text-gray-700">{{ $actionPlan->items->where('status', 'pendiente')->count() }}</p>
+                            </div>
+                            <svg class="w-8 h-8 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                            </svg>
+                        </div>
+                    </div>
+
+                    <div class="bg-yellow-50 rounded-lg p-4 border border-yellow-200">
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <p class="text-sm font-medium text-yellow-900">En Proceso</p>
+                                <p class="text-2xl font-bold text-yellow-700">{{ $actionPlan->items->where('status', 'en_proceso')->count() }}</p>
+                            </div>
+                            <svg class="w-8 h-8 text-yellow-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/>
+                            </svg>
+                        </div>
+                    </div>
+
+                    <div class="bg-green-50 rounded-lg p-4 border border-green-200">
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <p class="text-sm font-medium text-green-900">Finalizadas</p>
+                                <p class="text-2xl font-bold text-green-700">{{ $actionPlan->items->where('status', 'finalizado')->count() }}</p>
+                            </div>
+                            <svg class="w-8 h-8 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                            </svg>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Próximas acciones -->
+                @if($actionPlan->items->where('status', '!=', 'finalizado')->count() > 0)
+                    <div class="bg-white border border-gray-200 rounded-lg p-4">
+                        <h4 class="text-sm font-semibold text-gray-900 mb-3">Próximas Acciones</h4>
+                        <div class="space-y-2">
+                            @foreach($actionPlan->items->where('status', '!=', 'finalizado')->take(5) as $item)
+                                <div class="flex items-center justify-between py-2 border-b border-gray-100 last:border-0">
+                                    <div class="flex-1">
+                                        <p class="text-sm text-gray-900">{{ Str::limit($item->action_description, 60) }}</p>
+                                        <p class="text-xs text-gray-500">Responsable: {{ $item->responsible }}</p>
+                                    </div>
+                                    <div class="flex items-center space-x-3">
+                                        <span class="text-xs text-gray-600">{{ \Carbon\Carbon::parse($item->deadline)->format('d/m/Y') }}</span>
+                                        @if($item->status === 'pendiente')
+                                            <span class="px-2 py-1 bg-gray-100 text-gray-700 text-xs font-medium rounded">Pendiente</span>
+                                        @elseif($item->status === 'en_proceso')
+                                            <span class="px-2 py-1 bg-yellow-100 text-yellow-700 text-xs font-medium rounded">En Proceso</span>
+                                        @endif
+                                    </div>
+                                </div>
+                            @endforeach
+                        </div>
+                    </div>
+                @endif
+            @else
+                <!-- Sin plan de acción -->
+                <div class="text-center py-12">
+                    <svg class="w-16 h-16 text-gray-400 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+                    </svg>
+                    <p class="text-gray-500 mb-4">No hay plan de acción registrado para esta entidad</p>
+                    <a href="{{ route('execution.action-plans.create', ['assignment' => $assignment->id]) }}" 
+                       class="text-green-600 hover:text-green-700 font-medium">
+                        Registrar plan de acción →
+                    </a>
+                </div>
+            @endif
+        </div>
+    </div>
 </div>
 @endsection

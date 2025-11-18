@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Meeting extends Model
@@ -50,6 +51,14 @@ class Meeting extends Model
     public function agreements(): HasMany
     {
         return $this->hasMany(MeetingAgreement::class);
+    }
+
+    /**
+     * Relación con el plan de acción aprobado
+     */
+    public function actionPlan(): HasOne
+    {
+        return $this->hasOne(ActionPlan::class);
     }
 
     /**

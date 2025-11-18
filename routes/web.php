@@ -165,4 +165,17 @@ Route::middleware('simple.auth')->prefix('dashboard')->group(function () {
         Route::patch('{notification}/status', [\App\Http\Controllers\ExecutionNotificationController::class, 'updateStatus'])
             ->name('update-status');
     });
+
+    // Planes de Acción (HU5 - Gestión de Planes Aprobados)
+    Route::prefix('execution/action-plans')->name('execution.action-plans.')->group(function () {
+        Route::get('create/{assignment}', [\App\Http\Controllers\ActionPlanController::class, 'create'])->name('create');
+        Route::post('{assignment}', [\App\Http\Controllers\ActionPlanController::class, 'store'])->name('store');
+        Route::get('{actionPlan}', [\App\Http\Controllers\ActionPlanController::class, 'show'])->name('show');
+        Route::patch('{actionPlan}/items/{item}', [\App\Http\Controllers\ActionPlanController::class, 'updateItem'])
+            ->name('update-item');
+        Route::delete('{actionPlan}/items/{item}/file', [\App\Http\Controllers\ActionPlanController::class, 'deleteFile'])
+            ->name('delete-file');
+        Route::get('{actionPlan}/items/{item}/download', [\App\Http\Controllers\ActionPlanController::class, 'downloadFile'])
+            ->name('download-file');
+    });
 });

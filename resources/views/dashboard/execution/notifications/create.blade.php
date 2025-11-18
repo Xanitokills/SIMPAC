@@ -47,10 +47,10 @@
                         @foreach($oficios as $oficio)
                             <option value="{{ $oficio->id }}" 
                                     data-entity="{{ $oficio->entityAssignment->entity->name }}"
-                                    data-number="{{ $oficio->numero_oficio }}"
-                                    data-date="{{ $oficio->fecha_envio->format('d/m/Y') }}">
-                                {{ $oficio->numero_oficio }} - {{ $oficio->entityAssignment->entity->name }} 
-                                ({{ $oficio->fecha_envio->format('d/m/Y') }})
+                                    data-number="{{ $oficio->oficio_number }}"
+                                    data-date="{{ $oficio->issue_date->format('d/m/Y') }}">
+                                {{ $oficio->oficio_number }} - {{ $oficio->entityAssignment->entity->name }} 
+                                ({{ $oficio->issue_date->format('d/m/Y') }})
                             </option>
                         @endforeach
                     </select>
