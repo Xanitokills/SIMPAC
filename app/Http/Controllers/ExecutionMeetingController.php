@@ -26,16 +26,34 @@ class ExecutionMeetingController extends Controller
     /**
      * Mostrar formulario para crear reunión de coordinación
      */
-    public function create()
+    public function create(Request $request)
     {
-        // Obtener todas las asignaciones disponibles para seleccionar
+        // Si viene assignment_id por parámetro, usar solo esa asignación
+        $assignmentId = $request->query('assignment');
+        
+        if ($assignmentId) {
+            $assignment = EntityAssignment::with(['entity', 'sectorista'])
+                ->findOrFail($assignmentId);
+            
+            return view('dashboard.execution.meetings.create', [
+                'assignment' => $assignment,
+                'assignments' => null,
+                'sectoristas' => null
+            ]);
+        }
+        
+        // Si no viene assignment_id, mostrar todas las asignaciones disponibles
         $assignments = EntityAssignment::with(['entity', 'sectorista'])
             ->where('status', 'active')
             ->get();
 
         $sectoristas = Sectorista::all();
 
-        return view('dashboard.execution.meetings.create', compact('assignments', 'sectoristas'));
+        return view('dashboard.execution.meetings.create', [
+            'assignment' => null,
+            'assignments' => $assignments,
+            'sectoristas' => $sectoristas
+        ]);
     }
 
     /**

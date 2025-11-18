@@ -15,24 +15,46 @@
             @csrf
 
             <div class="space-y-6">
-                <!-- Seleccionar Asignación -->
-                <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-2">
-                        Entidad / Sectorista <span class="text-red-500">*</span>
-                    </label>
-                    <select name="entity_assignment_id" required 
-                            class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
-                        <option value="">Seleccione una entidad...</option>
-                        @foreach($assignments as $assignment)
-                            <option value="{{ $assignment->id }}">
-                                {{ $assignment->entity->name }} - {{ $assignment->sectorista->name }}
-                            </option>
-                        @endforeach
-                    </select>
-                    @error('entity_assignment_id')
-                        <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
-                    @enderror
-                </div>
+                @if(isset($assignment) && $assignment)
+                    <!-- Asignación Pre-seleccionada (desde entity panel) -->
+                    <input type="hidden" name="entity_assignment_id" value="{{ $assignment->id }}">
+                    
+                    <div class="bg-blue-50 border border-blue-200 rounded-lg p-4">
+                        <div class="flex items-start">
+                            <div class="flex-shrink-0">
+                                <svg class="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                                </svg>
+                            </div>
+                            <div class="ml-3 flex-1">
+                                <h3 class="text-sm font-medium text-blue-900">Reunión para:</h3>
+                                <div class="mt-2 text-sm text-blue-700">
+                                    <p class="font-semibold">{{ $assignment->entity->name }}</p>
+                                    <p class="text-xs mt-1">Sectorista: {{ $assignment->sectorista->name }}</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                @else
+                    <!-- Seleccionar Asignación -->
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">
+                            Entidad / Sectorista <span class="text-red-500">*</span>
+                        </label>
+                        <select name="entity_assignment_id" required 
+                                class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                            <option value="">Seleccione una entidad...</option>
+                            @foreach($assignments as $assignmentItem)
+                                <option value="{{ $assignmentItem->id }}">
+                                    {{ $assignmentItem->entity->name }} - {{ $assignmentItem->sectorista->name }}
+                                </option>
+                            @endforeach
+                        </select>
+                        @error('entity_assignment_id')
+                            <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
+                        @enderror
+                    </div>
+                @endif
 
                 <!-- Asunto -->
                 <div>

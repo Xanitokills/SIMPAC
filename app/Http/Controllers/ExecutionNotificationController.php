@@ -53,8 +53,28 @@ class ExecutionNotificationController extends Controller
     /**
      * Mostrar formulario para crear notificación
      */
-    public function create()
+    public function create(Request $request)
     {
+        // Si viene assignment_id por parámetro, usar solo esa asignación
+        $assignmentId = $request->query('assignment');
+        
+        if ($assignmentId) {
+            $assignment = EntityAssignment::with(['entity', 'sectorista'])
+                ->findOrFail($assignmentId);
+            
+            $oficios = Oficio::with('entityAssignment.entity')
+                ->where('entity_assignment_id', $assignmentId)
+                ->whereIn('status', ['sent', 'pending_response'])
+                ->get();
+            
+            return view('dashboard.execution.notifications.create', [
+                'assignment' => $assignment,
+                'assignments' => null,
+                'oficios' => $oficios
+            ]);
+        }
+        
+        // Si no viene assignment_id, mostrar todas las asignaciones disponibles
         $assignments = EntityAssignment::with(['entity', 'sectorista'])
             ->where('status', 'active')
             ->get();
@@ -63,7 +83,11 @@ class ExecutionNotificationController extends Controller
             ->whereIn('status', ['sent', 'pending_response'])
             ->get();
 
-        return view('dashboard.execution.notifications.create', compact('assignments', 'oficios'));
+        return view('dashboard.execution.notifications.create', [
+            'assignment' => null,
+            'assignments' => $assignments,
+            'oficios' => $oficios
+        ]);
     }
 
     /**
