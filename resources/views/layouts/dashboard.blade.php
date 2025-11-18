@@ -139,7 +139,7 @@
                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/>
                         </svg>
-                        <span class="flex-1">Ejecución por Componentes</span>
+                        <span class="flex-1">Ejecución del Plan de Acción</span>
                         <span class="text-[10px] bg-green-500/20 text-green-300 px-2 py-0.5 rounded-full font-medium">5d</span>
                     </a>
 

@@ -131,4 +131,38 @@ Route::middleware('simple.auth')->prefix('dashboard')->group(function () {
         Route::get('sectorista/{sectorista}/dashboard', [AgreementTrackingController::class, 'dashboard'])
             ->name('dashboard');
     });
+
+    // ===== MÓDULOS DE EJECUCIÓN =====
+    
+    // Selección de Entidad para Seguimiento de Ejecución
+    Route::get('execution/select-entity', [DashboardController::class, 'selectEntity'])->name('execution.select-entity');
+    Route::get('execution/entity/{assignment}', [DashboardController::class, 'executionEntity'])->name('execution.entity');
+    
+    // Reuniones de Coordinación y Presentación de Propuestas (Fase Ejecución)
+    Route::prefix('execution/meetings')->name('execution.meetings.')->group(function () {
+        Route::get('/', [\App\Http\Controllers\ExecutionMeetingController::class, 'index'])->name('index');
+        Route::get('create', [\App\Http\Controllers\ExecutionMeetingController::class, 'create'])->name('create');
+        Route::post('/', [\App\Http\Controllers\ExecutionMeetingController::class, 'store'])->name('store');
+        Route::get('{meeting}', [\App\Http\Controllers\ExecutionMeetingController::class, 'show'])->name('show');
+        Route::get('{meeting}/edit', [\App\Http\Controllers\ExecutionMeetingController::class, 'edit'])->name('edit');
+        Route::put('{meeting}', [\App\Http\Controllers\ExecutionMeetingController::class, 'update'])->name('update');
+        Route::post('{meeting}/complete', [\App\Http\Controllers\ExecutionMeetingController::class, 'complete'])->name('complete');
+        Route::post('{meeting}/cancel', [\App\Http\Controllers\ExecutionMeetingController::class, 'cancel'])->name('cancel');
+    });
+
+    // Notificaciones y Seguimiento de Respuestas (Fase Ejecución)
+    Route::prefix('execution/notifications')->name('execution.notifications.')->group(function () {
+        Route::get('/', [\App\Http\Controllers\ExecutionNotificationController::class, 'index'])->name('index');
+        Route::get('create', [\App\Http\Controllers\ExecutionNotificationController::class, 'create'])->name('create');
+        Route::post('/', [\App\Http\Controllers\ExecutionNotificationController::class, 'store'])->name('store');
+        Route::get('{notification}', [\App\Http\Controllers\ExecutionNotificationController::class, 'show'])->name('show');
+        Route::post('{notification}/attach-evidence', [\App\Http\Controllers\ExecutionNotificationController::class, 'attachEvidence'])
+            ->name('attach-evidence');
+        Route::post('{notification}/mark-responded', [\App\Http\Controllers\ExecutionNotificationController::class, 'markAsResponded'])
+            ->name('mark-responded');
+        Route::get('{notification}/evidence/{index}/download', [\App\Http\Controllers\ExecutionNotificationController::class, 'downloadEvidence'])
+            ->name('download-evidence');
+        Route::patch('{notification}/status', [\App\Http\Controllers\ExecutionNotificationController::class, 'updateStatus'])
+            ->name('update-status');
+    });
 });
