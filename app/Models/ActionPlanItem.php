@@ -9,10 +9,11 @@ class ActionPlanItem extends Model
 {
     protected $fillable = [
         'action_plan_id',
-        'action_description',
+        'action_name',
+        'description',
         'responsible',
         'predecessor_action',
-        'deadline',
+        'due_date',
         'start_date',
         'end_date',
         'business_days',
@@ -20,14 +21,41 @@ class ActionPlanItem extends Model
         'comments',
         'problems',
         'corrective_measures',
-        'file_path',
+        'attachments',
+        'order',
     ];
 
     protected $casts = [
-        'deadline' => 'date',
+        'due_date' => 'date',
         'start_date' => 'date',
         'end_date' => 'date',
+        'attachments' => 'array',
     ];
+
+    /**
+     * Calcular los días hábiles entre dos fechas
+     */
+    public function calculateBusinessDays()
+    {
+        if (!$this->start_date || !$this->end_date) {
+            return null;
+        }
+
+        $start = $this->start_date;
+        $end = $this->end_date;
+        $days = 0;
+
+        while ($start <= $end) {
+            // Contar solo días de lunes a viernes
+            if ($start->dayOfWeek !== 0 && $start->dayOfWeek !== 6) {
+                $days++;
+            }
+            $start = $start->addDay();
+        }
+
+        $this->business_days = $days;
+        return $days;
+    }
 
     /**
      * Relación con el plan de acción

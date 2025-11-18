@@ -1,7 +1,10 @@
-@extends('layouts.app')
+@extends('layouts.dashboard')
+
+@section('page-title', 'Detalle del Plan de Acción')
+@section('page-description', $actionPlan->title)
 
 @section('content')
-<div class="container mx-auto px-4 py-8">
+<div class="space-y-6">
     <div class="max-w-6xl mx-auto">
         <!-- Header -->
         <div class="bg-gradient-to-r from-blue-600 to-blue-700 rounded-lg shadow-lg text-white p-6 mb-6">
@@ -57,7 +60,7 @@
                 <div class="flex items-center justify-between">
                     <div>
                         <p class="text-sm text-gray-600">En Proceso</p>
-                        <p class="text-2xl font-bold text-yellow-600">{{ $actionPlan->items->where('status', 'en_proceso')->count() }}</p>
+                        <p class="text-2xl font-bold text-yellow-600">{{ $actionPlan->items->whereIn('status', ['en_proceso', 'proceso'])->count() }}</p>
                     </div>
                     <div class="w-12 h-12 bg-yellow-100 rounded-full flex items-center justify-center">
                         <svg class="w-6 h-6 text-yellow-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -99,7 +102,7 @@
                                             <span class="px-3 py-1 bg-gray-100 text-gray-700 text-xs font-semibold rounded-full">
                                                 Pendiente
                                             </span>
-                                        @elseif($item->status === 'en_proceso')
+                                        @elseif($item->status === 'en_proceso' || $item->status === 'proceso')
                                             <span class="px-3 py-1 bg-yellow-100 text-yellow-700 text-xs font-semibold rounded-full">
                                                 En Proceso
                                             </span>
@@ -109,15 +112,41 @@
                                             </span>
                                         @endif
                                         
-                                        <span class="text-sm text-gray-600">
-                                            Vence: {{ $item->deadline->format('d/m/Y') }}
-                                        </span>
+                                        @if($item->end_date)
+                                            <span class="text-sm text-gray-600">
+                                                Vence: {{ $item->end_date->format('d/m/Y') }}
+                                            </span>
+                                        @endif
                                     </div>
                                     
-                                    <p class="text-gray-800 font-medium">{{ $item->action_description }}</p>
+                                    <p class="text-gray-800 font-medium">
+                                        <span class="text-xs text-gray-500">{{ $item->action_name }}</span> - {{ $item->description }}
+                                    </p>
                                     <p class="text-sm text-gray-600 mt-1">
                                         <span class="font-semibold">Responsable:</span> {{ $item->responsible }}
                                     </p>
+                                    
+                                    @if($item->predecessor_action)
+                                        <p class="text-sm text-gray-600 mt-1">
+                                            <span class="font-semibold">Acción Predecesora:</span> {{ $item->predecessor_action }}
+                                        </p>
+                                    @endif
+                                    
+                                    @if($item->start_date && $item->end_date)
+                                        <div class="flex items-center space-x-4 mt-2 text-sm text-gray-600">
+                                            <span>
+                                                <span class="font-semibold">Inicio:</span> {{ $item->start_date->format('d/m/Y') }}
+                                            </span>
+                                            <span>
+                                                <span class="font-semibold">Fin:</span> {{ $item->end_date->format('d/m/Y') }}
+                                            </span>
+                                            @if($item->business_days)
+                                                <span class="px-2 py-1 bg-blue-50 text-blue-700 text-xs rounded">
+                                                    {{ $item->business_days }} días hábiles
+                                                </span>
+                                            @endif
+                                        </div>
+                                    @endif
                                     
                                     @if($item->comments)
                                         <div class="mt-2 p-3 bg-blue-50 rounded-lg">
@@ -126,26 +155,52 @@
                                             </p>
                                         </div>
                                     @endif
+
+                                    @if($item->problems)
+                                        <div class="mt-2 p-3 bg-yellow-50 rounded-lg">
+                                            <p class="text-sm text-gray-700">
+                                                <span class="font-semibold">Problemas:</span> {{ $item->problems }}
+                                            </p>
+                                        </div>
+                                    @endif
+
+                                    @if($item->corrective_measures)
+                                        <div class="mt-2 p-3 bg-green-50 rounded-lg">
+                                            <p class="text-sm text-gray-700">
+                                                <span class="font-semibold">Medidas Correctivas:</span> {{ $item->corrective_measures }}
+                                            </p>
+                                        </div>
+                                    @endif
                                     
-                                    @if($item->file_path)
-                                        <div class="mt-2 flex items-center space-x-2">
-                                            <svg class="w-5 h-5 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.172 7l-6.586 6.586a2 2 0 102.828 2.828l6.414-6.586a4 4 0 00-5.656-5.656l-6.415 6.585a6 6 0 108.486 8.486L20.5 13"/>
-                                            </svg>
-                                            <a href="{{ route('action-plans.items.download-file', $item->id) }}" 
-                                               class="text-blue-600 hover:text-blue-800 text-sm font-medium">
-                                                Descargar archivo adjunto
-                                            </a>
-                                            <form action="{{ route('action-plans.items.delete-file', $item->id) }}" 
-                                                  method="POST" 
-                                                  class="inline"
-                                                  onsubmit="return confirm('¿Está seguro de eliminar este archivo?')">
-                                                @csrf
-                                                @method('DELETE')
-                                                <button type="submit" class="text-red-600 hover:text-red-800 text-sm font-medium ml-2">
-                                                    Eliminar
-                                                </button>
-                                            </form>
+                                    @if($item->attachments && count($item->attachments) > 0)
+                                        <div class="mt-3">
+                                            <p class="text-sm font-semibold text-gray-700 mb-2">Archivos Adjuntos:</p>
+                                            <div class="space-y-2">
+                                                @foreach($item->attachments as $index => $attachment)
+                                                    <div class="flex items-center space-x-2 bg-gray-50 p-2 rounded">
+                                                        <svg class="w-5 h-5 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.172 7l-6.586 6.586a2 2 0 102.828 2.828l6.414-6.586a4 4 0 00-5.656-5.656l-6.415 6.585a6 6 0 108.486 8.486L20.5 13"/>
+                                                        </svg>
+                                                        <a href="{{ route('execution.action-plans.items.download-file', ['item' => $item->id, 'index' => $index]) }}" 
+                                                           class="text-blue-600 hover:text-blue-800 text-sm font-medium flex-1">
+                                                            {{ $attachment['filename'] ?? 'Archivo ' . ($index + 1) }}
+                                                        </a>
+                                                        <span class="text-xs text-gray-500">
+                                                            {{ isset($attachment['size']) ? number_format($attachment['size'] / 1024, 1) . ' KB' : '' }}
+                                                        </span>
+                                                        <form action="{{ route('execution.action-plans.items.delete-file', ['item' => $item->id, 'index' => $index]) }}" 
+                                                              method="POST" 
+                                                              class="inline"
+                                                              onsubmit="return confirm('¿Está seguro de eliminar este archivo?')">
+                                                            @csrf
+                                                            @method('DELETE')
+                                                            <button type="submit" class="text-red-600 hover:text-red-800 text-xs font-medium">
+                                                                Eliminar
+                                                            </button>
+                                                        </form>
+                                                    </div>
+                                                @endforeach
+                                            </div>
                                         </div>
                                     @endif
                                 </div>
@@ -175,9 +230,9 @@
 
         <!-- Botón volver -->
         <div class="mt-6">
-            <a href="{{ route('execution.meetings.show', $actionPlan->meeting->id) }}" 
+            <a href="{{ route('execution.entity', $actionPlan->entityAssignment->id) }}" 
                class="inline-block bg-gray-600 hover:bg-gray-700 text-white font-medium py-2 px-6 rounded-lg transition-colors">
-                ← Volver a la Reunión
+                ← Volver al Panel de la Entidad
             </a>
         </div>
     </div>
@@ -188,7 +243,7 @@
     <div class="bg-white rounded-lg shadow-xl max-w-md w-full mx-4">
         <form id="editForm" method="POST" enctype="multipart/form-data">
             @csrf
-            @method('PUT')
+            @method('PATCH')
             
             <div class="p-6">
                 <h3 class="text-xl font-semibold text-gray-800 mb-4">Actualizar Acción</h3>
@@ -322,6 +377,8 @@
         </form>
     </div>
 </div>
+</div>
+<!-- cierre de space-y-6 -->
 
 <script>
 // Calcular días hábiles entre dos fechas (excluyendo sábados y domingos)
@@ -362,7 +419,7 @@ function openEditModal(itemId, status, comments, predecessor = '', startDate = '
     const modal = document.getElementById('editModal');
     const form = document.getElementById('editForm');
     
-    form.action = `/dashboard/action-plans/items/${itemId}`;
+    form.action = `/dashboard/execution/action-plans/items/${itemId}`;
     document.getElementById('editStatus').value = status;
     document.getElementById('editComments').value = comments || '';
     document.getElementById('editPredecessor').value = predecessor || '';

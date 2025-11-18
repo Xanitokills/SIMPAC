@@ -13,7 +13,7 @@
 
         <!-- Formulario -->
         <div class="bg-white rounded-lg shadow-md">
-            <form action="{{ route('execution.action-plans.store', $assignment->id) }}" method="POST" id="actionPlanForm" class="p-6">
+            <form action="{{ route('execution.action-plans.store', $assignment->id) }}" method="POST" enctype="multipart/form-data" id="actionPlanForm" class="p-6">
                 @csrf
 
                 <!-- Información general del plan -->
@@ -130,7 +130,7 @@ function addActionItem() {
     
     const actionHtml = `
         <div class="action-item border border-gray-300 rounded-lg p-4 bg-gray-50" id="action-${actionCounter}">
-            <div class="flex justify-between items-start mb-3">
+            <div class="flex justify-between items-start mb-4">
                 <h3 class="font-semibold text-gray-700">Acción #${actionCounter}</h3>
                 <button type="button" 
                         onclick="removeActionItem(${actionCounter})"
@@ -139,17 +139,31 @@ function addActionItem() {
                 </button>
             </div>
             
-            <div class="space-y-3">
+            <div class="space-y-4">
+                <!-- Nombre de la acción -->
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">
+                        Nombre/Código de la Acción <span class="text-red-500">*</span>
+                    </label>
+                    <input type="text" 
+                           name="items[${actionCounter}][action_name]" 
+                           class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500"
+                           placeholder="Ej: 1.1.1"
+                           required>
+                </div>
+
+                <!-- Descripción -->
                 <div>
                     <label class="block text-sm font-medium text-gray-700 mb-1">
                         Descripción de la Acción <span class="text-red-500">*</span>
                     </label>
-                    <textarea name="items[${actionCounter}][action_description]" 
+                    <textarea name="items[${actionCounter}][description]" 
                               rows="2"
                               class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500"
                               required></textarea>
                 </div>
                 
+                <!-- Responsable y Acción Predecesora -->
                 <div class="grid grid-cols-2 gap-3">
                     <div>
                         <label class="block text-sm font-medium text-gray-700 mb-1">
@@ -158,24 +172,156 @@ function addActionItem() {
                         <input type="text" 
                                name="items[${actionCounter}][responsible]" 
                                class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500"
+                               placeholder="Ej: Comisión PGE - SIS"
                                required>
                     </div>
                     
                     <div>
                         <label class="block text-sm font-medium text-gray-700 mb-1">
-                            Fecha Límite <span class="text-red-500">*</span>
+                            Acción Predecesora
+                        </label>
+                        <input type="text" 
+                               name="items[${actionCounter}][predecessor_action]" 
+                               class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500"
+                               placeholder="Ej: 1.1.1">
+                    </div>
+                </div>
+
+                <!-- Fechas -->
+                <div class="grid grid-cols-3 gap-3">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">
+                            Fecha de Inicio <span class="text-red-500">*</span>
                         </label>
                         <input type="date" 
-                               name="items[${actionCounter}][deadline]" 
+                               name="items[${actionCounter}][start_date]" 
+                               id="start_date_${actionCounter}"
                                class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500"
+                               onchange="calculateBusinessDays(${actionCounter})"
                                required>
                     </div>
+
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">
+                            Fecha de Término <span class="text-red-500">*</span>
+                        </label>
+                        <input type="date" 
+                               name="items[${actionCounter}][end_date]" 
+                               id="end_date_${actionCounter}"
+                               class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500"
+                               onchange="calculateBusinessDays(${actionCounter})"
+                               required>
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">
+                            Días Hábiles (auto)
+                        </label>
+                        <input type="number" 
+                               name="items[${actionCounter}][business_days]" 
+                               id="business_days_${actionCounter}"
+                               class="w-full px-3 py-2 border border-gray-300 rounded-lg bg-gray-100"
+                               readonly>
+                    </div>
+                </div>
+
+                <!-- Estado -->
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">
+                        Estado <span class="text-red-500">*</span>
+                    </label>
+                    <select name="items[${actionCounter}][status]" 
+                            class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500"
+                            required>
+                        <option value="pendiente" selected>Pendiente</option>
+                        <option value="proceso">Proceso</option>
+                        <option value="finalizado">Finalizado</option>
+                    </select>
+                </div>
+
+                <!-- Comentarios -->
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">
+                        Comentarios
+                    </label>
+                    <textarea name="items[${actionCounter}][comments]" 
+                              rows="2"
+                              class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500"
+                              placeholder="Observaciones generales"></textarea>
+                </div>
+
+                <!-- Problemas y Medidas Correctivas -->
+                <div class="grid grid-cols-2 gap-3">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">
+                            Problemas Presentados
+                        </label>
+                        <textarea name="items[${actionCounter}][problems]" 
+                                  rows="2"
+                                  class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500"
+                                  placeholder="Describe los problemas encontrados"></textarea>
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">
+                            Medidas Correctivas
+                        </label>
+                        <textarea name="items[${actionCounter}][corrective_measures]" 
+                                  rows="2"
+                                  class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500"
+                                  placeholder="Acciones tomadas para resolver"></textarea>
+                    </div>
+                </div>
+
+                <!-- Documentos de sustento -->
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">
+                        Documentos de Sustento (PDF o Excel)
+                    </label>
+                    <input type="file" 
+                           name="items_files_${actionCounter}[]" 
+                           class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500"
+                           accept=".pdf,.xls,.xlsx"
+                           multiple>
+                    <p class="text-xs text-gray-500 mt-1">Puede seleccionar múltiples archivos PDF o Excel</p>
                 </div>
             </div>
         </div>
     `;
     
     container.insertAdjacentHTML('beforeend', actionHtml);
+}
+
+function calculateBusinessDays(id) {
+    const startDateInput = document.getElementById(`start_date_${id}`);
+    const endDateInput = document.getElementById(`end_date_${id}`);
+    const businessDaysInput = document.getElementById(`business_days_${id}`);
+
+    if (startDateInput.value && endDateInput.value) {
+        const startDate = new Date(startDateInput.value);
+        const endDate = new Date(endDateInput.value);
+        
+        if (endDate < startDate) {
+            alert('La fecha de término debe ser posterior a la fecha de inicio');
+            endDateInput.value = '';
+            businessDaysInput.value = '';
+            return;
+        }
+
+        let businessDays = 0;
+        let currentDate = new Date(startDate);
+
+        while (currentDate <= endDate) {
+            // 0 = Domingo, 6 = Sábado
+            const dayOfWeek = currentDate.getDay();
+            if (dayOfWeek !== 0 && dayOfWeek !== 6) {
+                businessDays++;
+            }
+            currentDate.setDate(currentDate.getDate() + 1);
+        }
+
+        businessDaysInput.value = businessDays;
+    }
 }
 
 function removeActionItem(id) {
