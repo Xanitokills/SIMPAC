@@ -168,9 +168,13 @@ Route::middleware('simple.auth')->prefix('dashboard')->group(function () {
 
     // Planes de Acción (HU5 - Gestión de Planes Aprobados)
     Route::prefix('execution/action-plans')->name('execution.action-plans.')->group(function () {
+        // Esta ruta debe ir ANTES de las rutas con parámetros
+        Route::get('template', [\App\Http\Controllers\ActionPlanController::class, 'getTemplate'])->name('template');
+        
         Route::get('create/{assignment}', [\App\Http\Controllers\ActionPlanController::class, 'create'])->name('create');
         Route::post('{assignment}', [\App\Http\Controllers\ActionPlanController::class, 'store'])->name('store');
         Route::get('{actionPlan}', [\App\Http\Controllers\ActionPlanController::class, 'show'])->name('show');
+        Route::delete('{actionPlan}', [\App\Http\Controllers\ActionPlanController::class, 'destroy'])->name('destroy');
         
         // Rutas para items del plan de acción
         Route::patch('items/{item}', [\App\Http\Controllers\ActionPlanController::class, 'updateItem'])

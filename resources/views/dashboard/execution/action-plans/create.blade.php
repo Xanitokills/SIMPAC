@@ -81,13 +81,29 @@
 
                 <!-- Acciones del plan -->
                 <div class="mb-6">
-                    <div class="flex justify-between items-center mb-4">
-                        <h2 class="text-xl font-semibold text-gray-700">Acciones del Plan</h2>
-                        <button type="button" 
-                                onclick="addActionItem()"
-                                class="bg-green-600 hover:bg-green-700 text-white text-sm font-medium py-2 px-4 rounded-lg transition-colors">
-                            + Agregar Acción
-                        </button>
+                    <div class="flex justify-between items-start mb-4">
+                        <div>
+                            <h2 class="text-xl font-semibold text-gray-700">Acciones del Plan</h2>
+                            <p class="text-sm text-gray-500 mt-1">
+                                💡 <strong>Tip:</strong> Use "⚡ Acciones Estándar" para cargar automáticamente 7 acciones predefinidas y solo ajustar los detalles.
+                            </p>
+                        </div>
+                        <div class="flex space-x-2">
+                            <button type="button" 
+                                    onclick="loadTemplate()"
+                                    class="bg-purple-600 hover:bg-purple-700 text-white text-sm font-medium py-2 px-4 rounded-lg transition-colors flex items-center shadow-md"
+                                    title="Cargar acciones estándar predefinidas automáticamente">
+                                <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/>
+                                </svg>
+                                ⚡ Usar Acciones Estándar
+                            </button>
+                            <button type="button" 
+                                    onclick="addActionItem()"
+                                    class="bg-green-600 hover:bg-green-700 text-white text-sm font-medium py-2 px-4 rounded-lg transition-colors">
+                                + Agregar Acción Manual
+                            </button>
+                        </div>
                     </div>
 
                     <div id="actionsContainer" class="space-y-4">
@@ -122,6 +138,17 @@ let actionCounter = 0;
 // Agregar una acción al iniciar la página
 document.addEventListener('DOMContentLoaded', function() {
     addActionItem();
+    
+    // Expandir todas las secciones antes de enviar el formulario
+    const form = document.getElementById('actionPlanForm');
+    if (form) {
+        form.addEventListener('submit', function(e) {
+            // Expandir todas las secciones ocultas para que la validación funcione
+            document.querySelectorAll('.section-content.hidden').forEach(section => {
+                section.classList.remove('hidden');
+            });
+        });
+    }
 });
 
 function addActionItem() {
@@ -333,6 +360,307 @@ function removeActionItem(id) {
             element.remove();
         } else {
             alert('Debe haber al menos una acción en el plan.');
+        }
+    }
+}
+
+/**
+ * Cargar plantilla predefinida de acciones
+ */
+async function loadTemplate() {
+    // Confirmar con el usuario
+    if (!confirm('⚡ ¿Desea cargar las acciones estándar predefinidas?\n\n' +
+                 'El sistema llenará automáticamente el formulario con 42 acciones típicas organizadas en 7 secciones.\n' +
+                 'Solo tendrá que ajustar los detalles específicos de su entidad.\n\n' +
+                 'Nota: Esto reemplazará las acciones actuales.')) {
+        return;
+    }
+
+    try {
+        // Mostrar loading
+        const btn = event.target.closest('button');
+        const originalText = btn.innerHTML;
+        btn.disabled = true;
+        btn.innerHTML = '<svg class="animate-spin h-5 w-5 mr-2 inline" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg> Cargando...';
+
+        // Obtener la plantilla del servidor
+        const response = await fetch('{{ route("execution.action-plans.template") }}', {
+            method: 'GET',
+            headers: {
+                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
+                'Accept': 'application/json',
+            }
+        });
+
+        if (!response.ok) {
+            throw new Error('Error al cargar la plantilla');
+        }
+
+        const data = await response.json();
+        
+        if (!data.success || !data.data || data.data.length === 0) {
+            throw new Error('No hay plantillas disponibles');
+        }
+
+        // Limpiar acciones existentes
+        const container = document.getElementById('actionsContainer');
+        container.innerHTML = '';
+        
+        // Resetear contador
+        actionCounter = 0;
+
+        // Agrupar acciones por sección
+        const sections = {};
+        data.data.forEach(template => {
+            const section = template.section || 'Sin sección';
+            if (!sections[section]) {
+                sections[section] = [];
+            }
+            sections[section].push(template);
+        });
+
+        // Crear secciones colapsables
+        Object.keys(sections).forEach((sectionName, sectionIndex) => {
+            const sectionId = `section-${sectionIndex}`;
+            const isOpen = true; // TODAS las secciones abiertas por defecto
+            
+            // Header de la sección (colapsable)
+            const sectionHeader = `
+                <div class="section-header bg-gradient-to-r from-blue-600 to-blue-700 rounded-lg p-4 mb-2 cursor-pointer hover:from-blue-700 hover:to-blue-800 transition-colors" onclick="toggleSection('${sectionId}')">
+                    <div class="flex justify-between items-center text-white">
+                        <div class="flex items-center">
+                            <svg id="icon-${sectionId}" class="w-5 h-5 mr-3 transform transition-transform ${isOpen ? 'rotate-90' : ''}" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+                            </svg>
+                            <h3 class="text-lg font-bold">${sectionName}</h3>
+                        </div>
+                        <span class="bg-white text-blue-700 px-3 py-1 rounded-full text-sm font-semibold">
+                            ${sections[sectionName].length} ${sections[sectionName].length === 1 ? 'acción' : 'acciones'}
+                        </span>
+                    </div>
+                </div>
+            `;
+            
+            container.insertAdjacentHTML('beforeend', sectionHeader);
+            
+            // Contenedor de acciones de la sección
+            const sectionContent = document.createElement('div');
+            sectionContent.id = sectionId;
+            sectionContent.className = `section-content space-y-4 mb-6 ${isOpen ? '' : 'hidden'}`;
+            
+            // Crear cada acción de la sección
+            sections[sectionName].forEach((template, index) => {
+                const id = actionCounter++;
+                
+                const actionHtml = `
+                    <div class="action-item border-2 border-gray-300 rounded-lg p-4 bg-white shadow-sm hover:shadow-md transition-shadow ml-8" id="action-${id}">
+                        <div class="flex justify-between items-center mb-3">
+                            <h4 class="text-md font-semibold text-gray-800 flex items-center">
+                                <span class="bg-blue-100 text-blue-800 px-2 py-1 rounded mr-2 text-sm font-mono">${template.code}</span>
+                                ${template.name}
+                            </h4>
+                            <button type="button" 
+                                    onclick="removeActionItem(${id})"
+                                    class="text-red-600 hover:text-red-800 text-sm font-medium">
+                                ✕ Eliminar
+                            </button>
+                        </div>
+
+                    <div class="grid grid-cols-2 gap-4 mb-3">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">
+                                Código de Acción <span class="text-red-500">*</span>
+                            </label>
+                            <input type="text" 
+                                   name="items[${id}][action_name]" 
+                                   value="${template.code}"
+                                   class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500"
+                                   placeholder="Ej: 1.1.1"
+                                   required>
+                        </div>
+
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">
+                                Responsable(s) <span class="text-red-500">*</span>
+                            </label>
+                            <input type="text" 
+                                   name="items[${id}][responsible]" 
+                                   value="${template.default_responsible || ''}"
+                                   class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500"
+                                   placeholder="Ej: Comisión PGE - SIS"
+                                   required>
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="block text-sm font-medium text-gray-700 mb-1">
+                            Descripción de la Acción <span class="text-red-500">*</span>
+                        </label>
+                        <textarea name="items[${id}][description]" 
+                                  rows="2"
+                                  class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500"
+                                  placeholder="Describe qué se debe realizar"
+                                  required>${template.description}</textarea>
+                    </div>
+
+                    <div class="grid grid-cols-4 gap-3 mb-3">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">
+                                Acción Predecesora
+                            </label>
+                            <input type="text" 
+                                   name="items[${id}][predecessor_action]" 
+                                   value="${template.predecessor_action || ''}"
+                                   class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500"
+                                   placeholder="Ej: 1.1.1">
+                        </div>
+
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">
+                                Fecha de Inicio
+                            </label>
+                            <input type="date" 
+                                   name="items[${id}][start_date]" 
+                                   id="start_date_${id}"
+                                   onchange="calculateBusinessDays(${id})"
+                                   class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500">
+                        </div>
+
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">
+                                Fecha de Término <span class="text-red-500">*</span>
+                            </label>
+                            <input type="date" 
+                                   name="items[${id}][end_date]" 
+                                   id="end_date_${id}"
+                                   onchange="calculateBusinessDays(${id})"
+                                   class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500"
+                                   required>
+                        </div>
+
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">
+                                Días Hábiles
+                            </label>
+                            <input type="number" 
+                                   name="items[${id}][business_days]" 
+                                   id="business_days_${id}"
+                                   value="${template.default_business_days || ''}"
+                                   class="w-full px-3 py-2 border border-gray-300 rounded-lg bg-gray-100"
+                                   readonly>
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="block text-sm font-medium text-gray-700 mb-1">
+                            Estado <span class="text-red-500">*</span>
+                        </label>
+                        <select name="items[${id}][status]" 
+                                class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500"
+                                required>
+                            <option value="pendiente" selected>PENDIENTE</option>
+                            <option value="proceso">PROCESO</option>
+                            <option value="finalizado">FINALIZADO</option>
+                        </select>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="block text-sm font-medium text-gray-700 mb-1">
+                            Comentarios
+                        </label>
+                        <textarea name="items[${id}][comments]" 
+                                  rows="2"
+                                  class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500"
+                                  placeholder="Observaciones generales"></textarea>
+                    </div>
+
+                    <div class="grid grid-cols-2 gap-3">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">
+                                Problemas Presentados
+                            </label>
+                            <textarea name="items[${id}][problems]" 
+                                      rows="2"
+                                      class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500"
+                                      placeholder="Describe los problemas encontrados"></textarea>
+                        </div>
+
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">
+                                Medidas Correctivas
+                            </label>
+                            <textarea name="items[${id}][corrective_measures]" 
+                                      rows="2"
+                                      class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500"
+                                      placeholder="Acciones tomadas para resolver"></textarea>
+                        </div>
+                    </div>
+
+                    <div class="mt-3">
+                        <label class="block text-sm font-medium text-gray-700 mb-1">
+                            Documentos de Sustento (PDF o Excel)
+                        </label>
+                        <input type="file" 
+                               name="items_files_${id}[]" 
+                               class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500"
+                               accept=".pdf,.xls,.xlsx"
+                               multiple>
+                        <p class="text-xs text-gray-500 mt-1">Puede seleccionar múltiples archivos PDF o Excel</p>
+                    </div>
+                </div>
+            `;
+                
+                sectionContent.insertAdjacentHTML('beforeend', actionHtml);
+            });
+            
+            container.appendChild(sectionContent);
+        });
+
+        // Restaurar botón
+        btn.disabled = false;
+        btn.innerHTML = originalText;
+
+        // Mostrar mensaje de éxito
+        const totalSections = Object.keys(sections).length;
+        const totalActions = data.data.length;
+        
+        console.log(`✅ Plantilla cargada: ${totalActions} acciones en ${totalSections} secciones`);
+        console.log('Secciones:', Object.keys(sections));
+        
+        alert(`✅ ¡Plantilla cargada exitosamente!\n\n📋 ${totalActions} acciones cargadas\n📁 ${totalSections} secciones organizadas\n\n💡 Todas las secciones están visibles.\n💡 Haz clic en las barras azules para contraer/expandir.\n\n⚠️ IMPORTANTE: Complete las fechas requeridas antes de guardar.`);
+
+        // Scroll al primer elemento
+        const firstSection = document.querySelector('.section-header');
+        if (firstSection) {
+            firstSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+
+    } catch (error) {
+        console.error('Error al cargar plantilla:', error);
+        alert('Error al cargar la plantilla: ' + error.message);
+        
+        // Restaurar botón en caso de error
+        if (btn) {
+            btn.disabled = false;
+            btn.innerHTML = originalText;
+        }
+    }
+}
+
+/**
+ * Toggle (expandir/contraer) una sección
+ */
+function toggleSection(sectionId) {
+    const section = document.getElementById(sectionId);
+    const icon = document.getElementById('icon-' + sectionId);
+    
+    if (section && icon) {
+        if (section.classList.contains('hidden')) {
+            section.classList.remove('hidden');
+            icon.classList.add('rotate-90');
+        } else {
+            section.classList.add('hidden');
+            icon.classList.remove('rotate-90');
         }
     }
 }

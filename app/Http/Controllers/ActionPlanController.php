@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\ActionPlan;
 use App\Models\ActionPlanItem;
+use App\Models\ActionPlanTemplate;
 use App\Models\EntityAssignment;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
@@ -260,5 +261,44 @@ class ActionPlanController extends Controller
         return redirect()
             ->back()
             ->with('error', 'El archivo no existe.');
+    }
+
+    /**
+     * Obtener plantilla de acciones predefinidas
+     */
+    public function getTemplate()
+    {
+        $templates = ActionPlanTemplate::getAllOrdered();
+        
+        return response()->json([
+            'success' => true,
+            'data' => $templates
+        ]);
+    }
+
+    /**
+     * Eliminar un plan de acción y sus items asociados
+     */
+    public function destroy($id)
+    {
+        $actionPlan = ActionPlan::with(['items', 'entityAssignment'])
+            ->findOrFail($id);
+
+        // Guardar el ID de la asignación para redirigir después
+        $assignmentId = $actionPlan->entity_assignment_id;
+
+        // Eliminar archivos asociados a los items
+        foreach ($actionPlan->items as $item) {
+            if ($item->file_path && Storage::disk('public')->exists($item->file_path)) {
+                Storage::disk('public')->delete($item->file_path);
+            }
+        }
+
+        // Eliminar el plan (los items se eliminan en cascada si está configurado)
+        $actionPlan->delete();
+
+        return redirect()
+            ->route('execution.entity', $assignmentId)
+            ->with('success', 'Plan de acción eliminado correctamente.');
     }
 }

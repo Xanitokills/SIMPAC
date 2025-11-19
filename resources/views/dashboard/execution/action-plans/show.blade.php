@@ -228,13 +228,28 @@
             </div>
         </div>
 
-        <!-- Botón volver -->
-        <div class="mt-6">
+        <!-- Botones de acción -->
+        <div class="mt-6 flex justify-between items-center">
             <a href="{{ route('execution.entity', $actionPlan->entityAssignment->id) }}" 
                class="inline-block bg-gray-600 hover:bg-gray-700 text-white font-medium py-2 px-6 rounded-lg transition-colors">
                 ← Volver al Panel de la Entidad
             </a>
+            
+            <button type="button" 
+                    onclick="confirmDelete()" 
+                    class="inline-block bg-red-600 hover:bg-red-700 text-white font-medium py-2 px-6 rounded-lg transition-colors">
+                🗑️ Eliminar Plan de Acción
+            </button>
         </div>
+
+        <!-- Formulario oculto para eliminación -->
+        <form id="deleteForm" 
+              action="{{ route('execution.action-plans.destroy', $actionPlan->id) }}" 
+              method="POST" 
+              class="hidden">
+            @csrf
+            @method('DELETE')
+        </form>
     </div>
 </div>
 
@@ -445,5 +460,12 @@ document.getElementById('editModal').addEventListener('click', function(e) {
         closeEditModal();
     }
 });
+
+// Confirmar eliminación del plan de acción
+function confirmDelete() {
+    if (confirm('⚠️ ¿Está seguro de que desea eliminar este plan de acción?\n\nSe eliminarán:\n- Todas las acciones del plan\n- Todos los archivos adjuntos\n- Todo el historial de cambios\n\nEsta acción NO se puede deshacer.')) {
+        document.getElementById('deleteForm').submit();
+    }
+}
 </script>
 @endsection
