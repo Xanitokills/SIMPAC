@@ -12,7 +12,7 @@ class ActionPlanTemplateSeeder extends Seeder
      */
     public function run(): void
     {
-        DB::table('action_plan_templates')->insert([
+        $rows = [
             [
                 'code' => '1.1.1',
                 'name' => 'Revisión de las actividades del plan de acción y anexos (formatos)',
@@ -219,6 +219,22 @@ class ActionPlanTemplateSeeder extends Seeder
             ],
             // Continúa con todas las demás acciones...
             // Por brevedad, aquí muestro solo algunas. El archivo completo tendría todas las 44 acciones
-        ]);
+        ];
+
+        // Usar upsert para evitar errores por duplicados en la columna única 'code'
+        DB::table('action_plan_templates')->upsert(
+            $rows,
+            ['code'], // unique by code
+            [
+                'name',
+                'description',
+                'default_responsible',
+                'predecessor_action',
+                'default_business_days',
+                'section',
+                'order',
+                'updated_at'
+            ]
+        );
     }
 }

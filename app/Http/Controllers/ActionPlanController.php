@@ -8,6 +8,7 @@ use App\Models\ActionPlanTemplate;
 use App\Models\EntityAssignment;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Schema;
 
 class ActionPlanController extends Controller
 {
@@ -27,6 +28,31 @@ class ActionPlanController extends Controller
         }
 
         return view('dashboard.execution.action-plans.create', compact('assignment'));
+    }
+
+    /**
+     * Retornar plantilla estándar de acciones en formato JSON
+     */
+    public function getTemplate(Request $request)
+    {
+        try {
+            // Obtener plantillas ordenadas como array plano
+            // El frontend se encargará de agruparlas por sección
+            $templates = ActionPlanTemplate::orderBy('order')->get();
+
+            return response()->json([
+                'success' => true,
+                'data' => $templates,
+            ]);
+        } catch (\Exception $e) {
+            // Registrar el error y retornar respuesta JSON para evitar error 500 al cliente
+            \Log::error('Error fetching action plan templates: ' . $e->getMessage());
+
+            return response()->json([
+                'success' => false,
+                'message' => 'Error al obtener la plantilla estándar.'
+            ], 500);
+        }
     }
 
     /**
@@ -56,7 +82,8 @@ class ActionPlanController extends Controller
             'items.*.start_date' => 'nullable|date',
             'items.*.end_date' => 'required|date',
             'items.*.business_days' => 'nullable|integer',
-            'items.*.status' => 'required|in:pendiente,proceso,finalizado',
+            // Accept both legacy and normalized status values
+            'items.*.status' => 'required|in:pendiente,proceso,finalizado,en_proceso,completado',
             'items.*.comments' => 'nullable|string',
             'items.*.problems' => 'nullable|string',
             'items.*.corrective_measures' => 'nullable|string',
@@ -74,10 +101,19 @@ class ActionPlanController extends Controller
 
         // Crear los items del plan
         foreach ($validated['items'] as $index => $item) {
+            // Normalizar estado para la DB (SQLite espera valores antiguos)
+            if (isset($item['status'])) {
+                if ($item['status'] === 'proceso') {
+                    $item['status'] = 'en_proceso';
+                } elseif ($item['status'] === 'finalizado') {
+                    $item['status'] = 'completado';
+                }
+            }
+
             // Manejar archivos adjuntos
             $attachments = [];
             $fileKey = "items_files_{$index}";
-            
+
             if ($request->hasFile($fileKey)) {
                 foreach ($request->file($fileKey) as $file) {
                     $filename = time() . '_' . uniqid() . '_' . $file->getClientOriginalName();
@@ -92,28 +128,52 @@ class ActionPlanController extends Controller
             }
 
             // Crear el item
-            $actionPlanItem = ActionPlanItem::create([
+            $itemData = [
                 'action_plan_id' => $actionPlan->id,
                 'action_name' => $item['action_name'],
                 'description' => $item['description'],
                 'responsible' => $item['responsible'],
                 'predecessor_action' => $item['predecessor_action'] ?? null,
-                'start_date' => $item['start_date'],
+                'start_date' => $item['start_date'] ?? null,
                 'end_date' => $item['end_date'],
                 'business_days' => $item['business_days'] ?? null,
-                'status' => $item['status'],
+                'status' => $item['status'] ?? 'pendiente',
                 'comments' => $item['comments'] ?? null,
                 'problems' => $item['problems'] ?? null,
                 'corrective_measures' => $item['corrective_measures'] ?? null,
                 'attachments' => !empty($attachments) ? $attachments : null,
                 'order' => $index + 1,
-            ]);
+            ];
+
+            // Añadir sección solo si la columna existe (migraación puede no haberse ejecutado)
+            if (Schema::hasColumn('action_plan_items', 'section_name')) {
+                if (!empty($item['section'])) {
+                    $itemData['section_name'] = $item['section'];
+                } else {
+                    // Intentar obtener el título completo de la sección desde las plantillas por prefijo de código
+                    $sectionName = null;
+                    $code = $item['action_name'] ?? '';
+                    $parts = explode('.', $code);
+                    if (count($parts) >= 2) {
+                        $prefix = $parts[0] . '.' . $parts[1];
+                        // Buscar en ActionPlanTemplate un registro con código que empiece por el prefijo
+                        $templateSection = ActionPlanTemplate::where('code', 'like', $prefix . '.%')->value('section');
+                        $sectionName = $templateSection ?: $prefix;
+                    }
+
+                    $itemData['section_name'] = $sectionName;
+                }
+            }
+
+            // Crear el item
+            $actionPlanItem = ActionPlanItem::create($itemData);
 
             // Calcular días hábiles si no se proporcionaron
-            if (!$item['business_days'] && $actionPlanItem->start_date && $actionPlanItem->end_date) {
+            if ((!isset($item['business_days']) || !$item['business_days']) && $actionPlanItem->start_date && $actionPlanItem->end_date) {
                 $actionPlanItem->calculateBusinessDays();
                 $actionPlanItem->save();
             }
+
         }
 
         return redirect()
@@ -122,183 +182,188 @@ class ActionPlanController extends Controller
     }
 
     /**
-     * Mostrar detalle del plan de acción
+     * Mostrar plan de acción
      */
     public function show($id)
     {
-        $actionPlan = ActionPlan::with([
-            'entityAssignment.entity',
-            'entityAssignment.sectorista',
-            'items' => function ($query) {
-                $query->orderBy('deadline', 'asc');
+        $actionPlan = ActionPlan::with(['entityAssignment.entity', 'entityAssignment.sectorista', 'items'])
+            ->findOrFail($id);
+
+        // Agrupar items por sección para la vista
+        $groupedItems = $actionPlan->items->groupBy(function($item) {
+            // Usar section_name si existe, sino derivar del código
+            if (!empty($item->section_name)) {
+                return $item->section_name;
             }
-        ])->findOrFail($id);
+            
+            // Derivar sección del código (ej: "1.1.1" -> "1.1")
+            $code = $item->action_name;
+            $parts = explode('.', $code);
+            if (count($parts) >= 2) {
+                return $parts[0] . '.' . $parts[1];
+            }
+            
+            return 'Sin sección';
+        });
 
-        return view('dashboard.execution.action-plans.show', compact('actionPlan'));
+        return view('dashboard.execution.action-plans.show', compact('actionPlan', 'groupedItems'));
     }
 
     /**
-     * Mostrar formulario para editar item del plan
+     * Mostrar formulario para editar plan de acción
      */
-    public function editItem($itemId)
+    public function edit($id)
     {
-        $item = ActionPlanItem::with('actionPlan.entityAssignment')->findOrFail($itemId);
+        $actionPlan = ActionPlan::with(['entityAssignment.entity', 'entityAssignment.sectorista', 'items'])->findOrFail($id);
 
-        return view('dashboard.execution.action-plans.edit-item', compact('item'));
+        return view('dashboard.execution.action-plans.edit', compact('actionPlan'));
     }
 
     /**
-     * Actualizar item del plan de acción
+     * Actualizar plan de acción
      */
-    public function updateItem(Request $request, $itemId)
+    public function update(Request $request, $id)
     {
-        $item = ActionPlanItem::findOrFail($itemId);
+        $actionPlan = ActionPlan::findOrFail($id);
 
         $validated = $request->validate([
-            'status' => 'required|in:pendiente,proceso,en_proceso,finalizado',
-            'predecessor_action' => 'nullable|string|max:50',
-            'start_date' => 'nullable|date',
-            'end_date' => 'nullable|date|after_or_equal:start_date',
-            'business_days' => 'nullable|integer|min:0',
-            'problems' => 'nullable|string',
-            'corrective_measures' => 'nullable|string',
-            'comments' => 'nullable|string',
-            'file' => 'nullable|file|mimes:pdf,xls,xlsx|max:10240',
+            'title' => 'required|string|max:255',
+            'description' => 'nullable|string',
+            'approval_date' => 'required|date',
+            'notes' => 'nullable|string',
+            'items' => 'required|array|min:1',
+            'items.*.action_name' => 'required|string|max:255',
+            'items.*.description' => 'required|string',
+            'items.*.responsible' => 'required|string|max:255',
+            'items.*.predecessor_action' => 'nullable|string|max:255',
+            'items.*.start_date' => 'nullable|date',
+            'items.*.end_date' => 'required|date',
+            'items.*.business_days' => 'nullable|integer',
+            // Accept both legacy and normalized status values
+            'items.*.status' => 'required|in:pendiente,proceso,finalizado,en_proceso,completado',
+            'items.*.comments' => 'nullable|string',
+            'items.*.problems' => 'nullable|string',
+            'items.*.corrective_measures' => 'nullable|string',
         ]);
 
-        // Normalizar status (convertir en_proceso a proceso)
-        if (isset($validated['status']) && $validated['status'] === 'en_proceso') {
-            $validated['status'] = 'proceso';
-        }
+        // Actualizar el plan de acción
+        $actionPlan->update([
+            'title' => $validated['title'],
+            'description' => $validated['description'],
+            'approval_date' => $validated['approval_date'],
+            'notes' => $validated['notes'],
+        ]);
 
-        // Subir archivo si existe
-        if ($request->hasFile('file')) {
-            $file = $request->file('file');
-            $filename = time() . '_' . uniqid() . '_' . $file->getClientOriginalName();
-            $path = $file->storeAs('action_plans/attachments', $filename, 'public');
-            
-            // Obtener attachments existentes o crear un array vacío
-            $attachments = $item->attachments ?? [];
-            
-            // Agregar el nuevo archivo al array de attachments
-            $attachments[] = [
-                'filename' => $file->getClientOriginalName(),
-                'path' => $path,
-                'mime_type' => $file->getMimeType(),
-                'size' => $file->getSize(),
-                'uploaded_at' => now()->toDateTimeString(),
+        // Actualizar los items del plan
+        foreach ($validated['items'] as $index => $item) {
+            // Normalizar estado para la DB (SQLite espera valores antiguos)
+            if (isset($item['status'])) {
+                if ($item['status'] === 'proceso') {
+                    $item['status'] = 'en_proceso';
+                } elseif ($item['status'] === 'finalizado') {
+                    $item['status'] = 'completado';
+                }
+            }
+
+            // Manejar archivos adjuntos
+            $attachments = [];
+            $fileKey = "items_files_{$index}";
+
+            if ($request->hasFile($fileKey)) {
+                foreach ($request->file($fileKey) as $file) {
+                    $filename = time() . '_' . uniqid() . '_' . $file->getClientOriginalName();
+                    $path = $file->storeAs('action_plans/attachments', $filename, 'public');
+                    $attachments[] = [
+                        'filename' => $file->getClientOriginalName(),
+                        'path' => $path,
+                        'mime_type' => $file->getMimeType(),
+                        'size' => $file->getSize(),
+                    ];
+                }
+            }
+
+            // Datos para actualizar o crear el item
+            $itemData = [
+                'action_name' => $item['action_name'],
+                'description' => $item['description'],
+                'responsible' => $item['responsible'],
+                'predecessor_action' => $item['predecessor_action'] ?? null,
+                'start_date' => $item['start_date'] ?? null,
+                'end_date' => $item['end_date'],
+                'business_days' => $item['business_days'] ?? null,
+                'status' => $item['status'] ?? 'pendiente',
+                'comments' => $item['comments'] ?? null,
+                'problems' => $item['problems'] ?? null,
+                'corrective_measures' => $item['corrective_measures'] ?? null,
+                'attachments' => !empty($attachments) ? $attachments : null,
+                'order' => $index + 1,
             ];
-            
-            $validated['attachments'] = $attachments;
-        }
 
-        // Actualizar el item
-        $item->update($validated);
+            // Añadir sección solo si la columna existe (migraación puede no haberse ejecutado)
+            if (Schema::hasColumn('action_plan_items', 'section_name')) {
+                if (!empty($item['section'])) {
+                    $itemData['section_name'] = $item['section'];
+                } else {
+                    // Intentar obtener el título completo de la sección desde las plantillas por prefijo de código
+                    $sectionName = null;
+                    $code = $item['action_name'] ?? '';
+                    $parts = explode('.', $code);
+                    if (count($parts) >= 2) {
+                        $prefix = $parts[0] . '.' . $parts[1];
+                        // Buscar en ActionPlanTemplate un registro con código que empiece por el prefijo
+                        $templateSection = ActionPlanTemplate::where('code', 'like', $prefix . '.%')->value('section');
+                        $sectionName = $templateSection ?: $prefix;
+                    }
 
-        // Recalcular días hábiles si se actualizaron las fechas
-        if (($request->has('start_date') || $request->has('end_date')) && $item->start_date && $item->end_date) {
-            $item->calculateBusinessDays();
-            $item->save();
-        }
-
-        return redirect()
-            ->route('execution.action-plans.show', $item->action_plan_id)
-            ->with('success', 'Acción actualizada exitosamente.');
-    }
-
-    /**
-     * Eliminar archivo de un item
-     */
-    public function deleteFile($itemId, Request $request)
-    {
-        $item = ActionPlanItem::findOrFail($itemId);
-        $attachmentIndex = $request->query('index', 0);
-
-        $attachments = $item->attachments ?? [];
-
-        if (isset($attachments[$attachmentIndex])) {
-            $attachment = $attachments[$attachmentIndex];
-            
-            // Eliminar el archivo del storage
-            if (isset($attachment['path']) && Storage::disk('public')->exists($attachment['path'])) {
-                Storage::disk('public')->delete($attachment['path']);
+                    $itemData['section_name'] = $sectionName;
+                }
             }
 
-            // Remover el archivo del array
-            array_splice($attachments, $attachmentIndex, 1);
-            
-            // Actualizar el item
-            $item->update(['attachments' => empty($attachments) ? null : $attachments]);
+            // Buscar el item existente o crear uno nuevo
+            $actionPlanItem = ActionPlanItem::find($item['id']);
 
-            return redirect()
-                ->route('execution.action-plans.show', $item->action_plan_id)
-                ->with('success', 'Archivo eliminado exitosamente.');
-        }
+            if ($actionPlanItem) {
+                // Actualizar el item existente
+                $actionPlanItem->update($itemData);
+            } else {
+                // Crear el nuevo item
+                $actionPlanItem = ActionPlanItem::create($itemData);
+            }
 
-        return redirect()
-            ->route('execution.action-plans.show', $item->action_plan_id)
-            ->with('error', 'El archivo no existe.');
-    }
-
-    /**
-     * Descargar archivo de un item
-     */
-    public function downloadFile($itemId, Request $request)
-    {
-        $item = ActionPlanItem::findOrFail($itemId);
-        $attachmentIndex = $request->query('index', 0);
-
-        $attachments = $item->attachments ?? [];
-
-        if (isset($attachments[$attachmentIndex])) {
-            $attachment = $attachments[$attachmentIndex];
-            
-            if (isset($attachment['path']) && Storage::disk('public')->exists($attachment['path'])) {
-                return Storage::disk('public')->download($attachment['path'], $attachment['filename'] ?? null);
+            // Calcular días hábiles si no se proporcionaron
+            if ((!isset($item['business_days']) || !$item['business_days']) && $actionPlanItem->start_date && $actionPlanItem->end_date) {
+                $actionPlanItem->calculateBusinessDays();
+                $actionPlanItem->save();
             }
         }
 
         return redirect()
-            ->back()
-            ->with('error', 'El archivo no existe.');
+            ->route('execution.action-plans.show', $actionPlan->id)
+            ->with('success', 'Plan de acción actualizado exitosamente.');
     }
 
     /**
-     * Obtener plantilla de acciones predefinidas
-     */
-    public function getTemplate()
-    {
-        $templates = ActionPlanTemplate::getAllOrdered();
-        
-        return response()->json([
-            'success' => true,
-            'data' => $templates
-        ]);
-    }
-
-    /**
-     * Eliminar un plan de acción y sus items asociados
+     * Eliminar plan de acción
      */
     public function destroy($id)
     {
-        $actionPlan = ActionPlan::with(['items', 'entityAssignment'])
-            ->findOrFail($id);
-
-        // Guardar el ID de la asignación para redirigir después
+        $actionPlan = ActionPlan::with('items', 'entityAssignment')->findOrFail($id);
         $assignmentId = $actionPlan->entity_assignment_id;
 
-        // Eliminar archivos asociados a los items
+        // Eliminar archivos adjuntos de los items
         foreach ($actionPlan->items as $item) {
-            if ($item->file_path && Storage::disk('public')->exists($item->file_path)) {
-                Storage::disk('public')->delete($item->file_path);
+            if (!empty($item->attachments)) {
+                foreach ($item->attachments as $attachment) {
+                    Storage::disk('public')->delete($attachment['path']);
+                }
             }
         }
 
-        // Eliminar el plan (los items se eliminan en cascada si está configurado)
+        // Eliminar el plan de acción y sus items
         $actionPlan->delete();
 
         return redirect()
-            ->route('execution.entity', $assignmentId)
-            ->with('success', 'Plan de acción eliminado correctamente.');
+            ->route('execution.action-plans.create', $assignmentId)
+            ->with('success', 'Plan de acción eliminado exitosamente. Puede crear uno nuevo.');
     }
 }

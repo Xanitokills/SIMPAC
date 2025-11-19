@@ -74,7 +74,7 @@
                 <div class="flex items-center justify-between">
                     <div>
                         <p class="text-sm text-gray-600">Completadas</p>
-                        <p class="text-2xl font-bold text-green-600">{{ $actionPlan->items->where('status', 'finalizado')->count() }}</p>
+                        <p class="text-2xl font-bold text-green-600">{{ $actionPlan->items->where('status', 'completado')->count() }}</p>
                     </div>
                     <div class="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center">
                         <svg class="w-6 h-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -93,138 +93,74 @@
 
             <div class="p-6">
                 <div class="space-y-4">
-                    @forelse($actionPlan->items as $item)
-                        <div class="border border-gray-200 rounded-lg p-4 hover:shadow-md transition-shadow">
-                            <div class="flex justify-between items-start mb-3">
-                                <div class="flex-1">
-                                    <div class="flex items-center space-x-3 mb-2">
-                                        @if($item->status === 'pendiente')
-                                            <span class="px-3 py-1 bg-gray-100 text-gray-700 text-xs font-semibold rounded-full">
-                                                Pendiente
-                                            </span>
-                                        @elseif($item->status === 'en_proceso' || $item->status === 'proceso')
-                                            <span class="px-3 py-1 bg-yellow-100 text-yellow-700 text-xs font-semibold rounded-full">
-                                                En Proceso
-                                            </span>
-                                        @else
-                                            <span class="px-3 py-1 bg-green-100 text-green-700 text-xs font-semibold rounded-full">
-                                                ✓ Finalizado
-                                            </span>
-                                        @endif
-                                        
-                                        @if($item->end_date)
-                                            <span class="text-sm text-gray-600">
-                                                Vence: {{ $item->end_date->format('d/m/Y') }}
-                                            </span>
-                                        @endif
+                    @if(!empty($groupedItems))
+                        @foreach($groupedItems as $sectionKey => $items)
+                            @php $idx = $loop->index; @endphp
+                            <div class="bg-white rounded-lg border mb-2 overflow-hidden">
+                                <div class="px-4 py-3 bg-gradient-to-r from-blue-600 to-blue-700 text-white cursor-pointer flex justify-between items-center" onclick="toggleShowSection('show-section-{{ $idx }}', 'show-icon-{{ $idx }}')">
+                                    <div class="flex items-center space-x-3">
+                                        <svg id="show-icon-{{ $idx }}" class="w-5 h-5 mr-2 transform transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+                                        <h4 class="font-semibold">{{ $sectionKey }}</h4>
                                     </div>
-                                    
-                                    <p class="text-gray-800 font-medium">
-                                        <span class="text-xs text-gray-500">{{ $item->action_name }}</span> - {{ $item->description }}
-                                    </p>
-                                    <p class="text-sm text-gray-600 mt-1">
-                                        <span class="font-semibold">Responsable:</span> {{ $item->responsible }}
-                                    </p>
-                                    
-                                    @if($item->predecessor_action)
-                                        <p class="text-sm text-gray-600 mt-1">
-                                            <span class="font-semibold">Acción Predecesora:</span> {{ $item->predecessor_action }}
-                                        </p>
-                                    @endif
-                                    
-                                    @if($item->start_date && $item->end_date)
-                                        <div class="flex items-center space-x-4 mt-2 text-sm text-gray-600">
-                                            <span>
-                                                <span class="font-semibold">Inicio:</span> {{ $item->start_date->format('d/m/Y') }}
-                                            </span>
-                                            <span>
-                                                <span class="font-semibold">Fin:</span> {{ $item->end_date->format('d/m/Y') }}
-                                            </span>
-                                            @if($item->business_days)
-                                                <span class="px-2 py-1 bg-blue-50 text-blue-700 text-xs rounded">
-                                                    {{ $item->business_days }} días hábiles
-                                                </span>
-                                            @endif
-                                        </div>
-                                    @endif
-                                    
-                                    @if($item->comments)
-                                        <div class="mt-2 p-3 bg-blue-50 rounded-lg">
-                                            <p class="text-sm text-gray-700">
-                                                <span class="font-semibold">Comentarios:</span> {{ $item->comments }}
-                                            </p>
-                                        </div>
-                                    @endif
+                                    <span class="bg-white text-blue-700 px-3 py-1 rounded-full text-sm font-semibold">{{ count($items) }} {{ count($items) === 1 ? 'acción' : 'acciones' }}</span>
+                                </div>
 
-                                    @if($item->problems)
-                                        <div class="mt-2 p-3 bg-yellow-50 rounded-lg">
-                                            <p class="text-sm text-gray-700">
-                                                <span class="font-semibold">Problemas:</span> {{ $item->problems }}
-                                            </p>
-                                        </div>
-                                    @endif
-
-                                    @if($item->corrective_measures)
-                                        <div class="mt-2 p-3 bg-green-50 rounded-lg">
-                                            <p class="text-sm text-gray-700">
-                                                <span class="font-semibold">Medidas Correctivas:</span> {{ $item->corrective_measures }}
-                                            </p>
-                                        </div>
-                                    @endif
-                                    
-                                    @if($item->attachments && count($item->attachments) > 0)
-                                        <div class="mt-3">
-                                            <p class="text-sm font-semibold text-gray-700 mb-2">Archivos Adjuntos:</p>
-                                            <div class="space-y-2">
-                                                @foreach($item->attachments as $index => $attachment)
-                                                    <div class="flex items-center space-x-2 bg-gray-50 p-2 rounded">
-                                                        <svg class="w-5 h-5 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.172 7l-6.586 6.586a2 2 0 102.828 2.828l6.414-6.586a4 4 0 00-5.656-5.656l-6.415 6.585a6 6 0 108.486 8.486L20.5 13"/>
-                                                        </svg>
-                                                        <a href="{{ route('execution.action-plans.items.download-file', ['item' => $item->id, 'index' => $index]) }}" 
-                                                           class="text-blue-600 hover:text-blue-800 text-sm font-medium flex-1">
-                                                            {{ $attachment['filename'] ?? 'Archivo ' . ($index + 1) }}
-                                                        </a>
-                                                        <span class="text-xs text-gray-500">
-                                                            {{ isset($attachment['size']) ? number_format($attachment['size'] / 1024, 1) . ' KB' : '' }}
-                                                        </span>
-                                                        <form action="{{ route('execution.action-plans.items.delete-file', ['item' => $item->id, 'index' => $index]) }}" 
-                                                              method="POST" 
-                                                              class="inline"
-                                                              onsubmit="return confirm('¿Está seguro de eliminar este archivo?')">
-                                                            @csrf
-                                                            @method('DELETE')
-                                                            <button type="submit" class="text-red-600 hover:text-red-800 text-xs font-medium">
-                                                                Eliminar
-                                                            </button>
-                                                        </form>
+                                <div id="show-section-{{ $idx }}" style="display: none;" class="p-4">
+                                    @foreach($items as $item)
+                                        <div class="border border-gray-200 rounded-lg p-4 hover:shadow-md transition-shadow mb-3">
+                                            <div class="flex justify-between items-start mb-3">
+                                                <div class="flex-1">
+                                                    <div class="flex items-center space-x-3 mb-2">
+                                                        @if($item->status === 'pendiente')
+                                                            <span class="px-3 py-1 bg-gray-100 text-gray-700 text-xs font-semibold rounded-full">Pendiente</span>
+                                                        @elseif($item->status === 'en_proceso' || $item->status === 'proceso')
+                                                            <span class="px-3 py-1 bg-yellow-100 text-yellow-700 text-xs font-semibold rounded-full">En Proceso</span>
+                                                        @else
+                                                            <span class="px-3 py-1 bg-green-100 text-green-700 text-xs font-semibold rounded-full">
+-                                                ✓ Finalizado
++                                                ✓ Completado
+                                            </span>
+                                                        @endif
+                                                        @if($item->end_date)
+                                                            <span class="text-sm text-gray-600">Vence: {{ $item->end_date->format('d/m/Y') }}</span>
+                                                        @endif
                                                     </div>
-                                                @endforeach
+                                                    <p class="text-gray-800 font-medium"><span class="text-xs text-gray-500">{{ $item->action_name }}</span> - {{ $item->description }}</p>
+                                                    <p class="text-sm text-gray-600 mt-1"><span class="font-semibold">Responsable:</span> {{ $item->responsible }}</p>
+                                                    @if($item->predecessor_action)
+                                                        <p class="text-sm text-gray-600 mt-1"><span class="font-semibold">Acción Predecesora:</span> {{ $item->predecessor_action }}</p>
+                                                    @endif
+                                                    @if($item->start_date && $item->end_date)
+                                                        <div class="flex items-center space-x-4 mt-2 text-sm text-gray-600">
+                                                            <span><span class="font-semibold">Inicio:</span> {{ $item->start_date->format('d/m/Y') }}</span>
+                                                            <span><span class="font-semibold">Fin:</span> {{ $item->end_date->format('d/m/Y') }}</span>
+                                                            @if($item->business_days)
+                                                                <span class="px-2 py-1 bg-blue-50 text-blue-700 text-xs rounded">{{ $item->business_days }} días hábiles</span>
+                                                            @endif
+                                                        </div>
+                                                    @endif
+                                                </div>
+                                                <button onclick="openEditModal(
+                                                    {{ $item->id }},
+                                                    '{{ $item->status }}',
+                                                    `{{ $item->comments ?? '' }}`,
+                                                    '{{ $item->predecessor_action ?? '' }}',
+                                                    '{{ $item->start_date ? $item->start_date->format('Y-m-d') : '' }}',
+                                                    '{{ $item->end_date ? $item->end_date->format('Y-m-d') : '' }}',
+                                                    '{{ $item->business_days ?? '' }}',
+                                                    `{{ $item->problems ?? '' }}`,
+                                                    `{{ $item->corrective_measures ?? '' }}`
+                                                )" class="ml-4 bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium py-2 px-4 rounded-lg transition-colors">Actualizar</button>
                                             </div>
                                         </div>
-                                    @endif
+                                    @endforeach
                                 </div>
-                                
-                                <button onclick="openEditModal(
-                                    {{ $item->id }}, 
-                                    '{{ $item->status }}', 
-                                    `{{ $item->comments ?? '' }}`,
-                                    '{{ $item->predecessor_action ?? '' }}',
-                                    '{{ $item->start_date ? $item->start_date->format('Y-m-d') : '' }}',
-                                    '{{ $item->end_date ? $item->end_date->format('Y-m-d') : '' }}',
-                                    '{{ $item->business_days ?? '' }}',
-                                    `{{ $item->problems ?? '' }}`,
-                                    `{{ $item->corrective_measures ?? '' }}`
-                                )"
-                                        class="ml-4 bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium py-2 px-4 rounded-lg transition-colors">
-                                    Actualizar
-                                </button>
                             </div>
-                        </div>
-                    @empty
+                        @endforeach
+                    @else
                         <p class="text-gray-500 text-center py-8">No hay acciones registradas en este plan.</p>
-                    @endforelse
-                </div>
+                    @endif
+                 </div>
             </div>
         </div>
 
@@ -324,7 +260,7 @@
                                 required>
                             <option value="pendiente">PENDIENTE</option>
                             <option value="en_proceso">PROCESO</option>
-                            <option value="finalizado">FINALIZADO</option>
+                            <option value="completado">COMPLETADO</option>
                         </select>
                     </div>
 
@@ -465,6 +401,20 @@ document.getElementById('editModal').addEventListener('click', function(e) {
 function confirmDelete() {
     if (confirm('⚠️ ¿Está seguro de que desea eliminar este plan de acción?\n\nSe eliminarán:\n- Todas las acciones del plan\n- Todos los archivos adjuntos\n- Todo el historial de cambios\n\nEsta acción NO se puede deshacer.')) {
         document.getElementById('deleteForm').submit();
+    }
+}
+
+// Mostrar/Ocultar sección
+function toggleShowSection(sectionId, iconId) {
+    const section = document.getElementById(sectionId);
+    const icon = document.getElementById(iconId);
+    if (!section) return;
+    if (section.style.display === 'none' || section.style.display === '') {
+        section.style.display = 'block';
+        if (icon) icon.classList.add('rotate-90');
+    } else {
+        section.style.display = 'none';
+        if (icon) icon.classList.remove('rotate-90');
     }
 }
 </script>

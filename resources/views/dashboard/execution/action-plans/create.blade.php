@@ -91,7 +91,7 @@
                         </div>
                         <div class="flex space-x-2">
                             <button type="button" 
-                                    onclick="loadTemplate()"
+                                    onclick="loadTemplate(this)"
                                     class="bg-purple-600 hover:bg-purple-700 text-white text-sm font-medium py-2 px-4 rounded-lg transition-colors flex items-center shadow-md"
                                     title="Cargar acciones estándar predefinidas automáticamente">
                                 <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -144,6 +144,26 @@ document.addEventListener('DOMContentLoaded', function() {
     const form = document.getElementById('actionPlanForm');
     if (form) {
         form.addEventListener('submit', function(e) {
+            // Ensure each action has a section value: derive from action_name prefix if missing
+            document.querySelectorAll('.action-item').forEach(itemDiv => {
+                try {
+                    const sectionInput = itemDiv.querySelector('input[name$="[section]"]');
+                    if (sectionInput && (!sectionInput.value || sectionInput.value.trim() === '')) {
+                        const actionNameInput = itemDiv.querySelector('input[name$="[action_name]"]');
+                        if (actionNameInput && actionNameInput.value) {
+                            const parts = actionNameInput.value.split('.');
+                            if (parts.length >= 2) {
+                                sectionInput.value = parts[0] + '.' + parts[1];
+                            } else {
+                                sectionInput.value = 'Sin sección';
+                            }
+                        }
+                    }
+                } catch (err) {
+                    console.warn('No se pudo derivar la sección para un item', err);
+                }
+            });
+
             // Expandir todas las secciones ocultas para que la validación funcione
             document.querySelectorAll('.section-content').forEach(section => {
                 if (section.style.display === 'none') {
@@ -151,9 +171,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     // Rotar los iconos también
                     const sectionId = section.id;
                     const icon = document.getElementById('icon-' + sectionId);
-                    if (icon) {
-                        icon.classList.add('rotate-90');
-                    }
+                    if (icon) { icon.classList.add('rotate-90'); }
                 }
             });
             
@@ -200,7 +218,8 @@ function addActionItem() {
     
     const actionHtml = `
         <div class="action-item border border-gray-300 rounded-lg p-4 bg-gray-50" id="action-${actionCounter}">
-            <div class="flex justify-between items-start mb-4">
+            <input type="hidden" name="items[${actionCounter}][section]" value="">
+             <div class="flex justify-between items-start mb-4">
                 <h3 class="font-semibold text-gray-700">Acción #${actionCounter}</h3>
                 <button type="button" 
                         onclick="removeActionItem(${actionCounter})"
@@ -303,8 +322,8 @@ function addActionItem() {
                             class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500"
                             required>
                         <option value="pendiente" selected>Pendiente</option>
-                        <option value="proceso">Proceso</option>
-                        <option value="finalizado">Finalizado</option>
+                        <option value="en_proceso">Proceso</option>
+                        <option value="completado">Finalizado</option>
                     </select>
                 </div>
 
@@ -409,7 +428,7 @@ function removeActionItem(id) {
 /**
  * Cargar plantilla predefinida de acciones
  */
-async function loadTemplate() {
+async function loadTemplate(btn) {
     // Confirmar con el usuario
     if (!confirm('⚡ ¿Desea cargar las acciones estándar predefinidas?\n\n' +
                  'El sistema llenará automáticamente el formulario con 42 acciones típicas organizadas en 7 secciones.\n' +
@@ -418,12 +437,20 @@ async function loadTemplate() {
         return;
     }
 
+    // Definir variables del botón fuera del try para poder restaurarlas en el catch
+    let originalText = null;
+ 
     try {
-        // Mostrar loading
-        const btn = event.target.closest('button');
-        const originalText = btn.innerHTML;
-        btn.disabled = true;
-        btn.innerHTML = '<svg class="animate-spin h-5 w-5 mr-2 inline" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg> Cargando...';
+        // Mostrar loading (btn viene como parámetro desde el onclick)
+        if (!btn) {
+            // fallback si no se pasó el elemento
+            btn = document.querySelector('button[onclick*="loadTemplate"]');
+        }
+        if (btn) {
+            originalText = btn.innerHTML;
+            btn.disabled = true;
+            btn.innerHTML = '<svg class="animate-spin h-5 w-5 mr-2 inline" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg> Cargando...';
+        }
 
         // Obtener la plantilla del servidor
         const response = await fetch('{{ route("execution.action-plans.template") }}', {
@@ -454,7 +481,12 @@ async function loadTemplate() {
         // Agrupar acciones por sección
         const sections = {};
         data.data.forEach(template => {
-            const section = template.section || 'Sin sección';
+            // Si la plantilla no trae sección, derivar por prefijo del código (ej: '1.1')
+            const section = (template.section && template.section.trim() !== '') ? template.section : (function() {
+                const code = (template.code || 'Sin código').toString();
+                const parts = code.split('.');
+                return parts.length >= 2 ? `${parts[0]}.${parts[1]}` : 'Sin sección';
+            })();
             if (!sections[section]) {
                 sections[section] = [];
             }
@@ -499,6 +531,7 @@ async function loadTemplate() {
                 
                 const actionHtml = `
                     <div class="action-item border-2 border-gray-300 rounded-lg p-4 bg-white shadow-sm hover:shadow-md transition-shadow ml-8" id="action-${id}">
+                        <input type="hidden" name="items[${id}][section]" value="${sectionName}">
                         <div class="flex justify-between items-center mb-3">
                             <h4 class="text-md font-semibold text-gray-800 flex items-center">
                                 <span class="bg-blue-100 text-blue-800 px-2 py-1 rounded mr-2 text-sm font-mono">${template.code}</span>
@@ -604,8 +637,8 @@ async function loadTemplate() {
                                 class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500"
                                 required>
                             <option value="pendiente" selected>PENDIENTE</option>
-                            <option value="proceso">PROCESO</option>
-                            <option value="finalizado">FINALIZADO</option>
+                            <option value="en_proceso">PROCESO</option>
+                            <option value="completado">FINALIZADO</option>
                         </select>
                     </div>
 
@@ -672,13 +705,23 @@ async function loadTemplate() {
             const endDateInput = document.getElementById(`end_date_${i}`);
             if (endDateInput) {
                 endDateInput.value = defaultDateStr;
+                // Calcular días hábiles para este item si existe función
+                try {
+                    if (typeof calculateBusinessDays === 'function') {
+                        calculateBusinessDays(i);
+                    }
+                } catch (err) {
+                    console.warn('No se pudo calcular días hábiles para el elemento', i, err);
+                }
                 filledCount++;
             }
         }
         
         // Restaurar botón
-        btn.disabled = false;
-        btn.innerHTML = originalText;
+        if (btn) {
+            btn.disabled = false;
+            btn.innerHTML = originalText;
+        }
 
         // Mostrar mensaje de éxito
         const totalSections = Object.keys(sections).length;
@@ -702,8 +745,8 @@ async function loadTemplate() {
         
         // Restaurar botón en caso de error
         if (btn) {
-            btn.disabled = false;
-            btn.innerHTML = originalText;
+            try { btn.disabled = false; } catch (e) {}
+            try { btn.innerHTML = originalText; } catch (e) {}
         }
     }
 }

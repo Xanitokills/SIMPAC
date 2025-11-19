@@ -12,6 +12,7 @@ class ActionPlanItem extends Model
         'action_name',
         'description',
         'responsible',
+        'section_name',
         'predecessor_action',
         'due_date',
         'start_date',
@@ -63,5 +64,23 @@ class ActionPlanItem extends Model
     public function actionPlan(): BelongsTo
     {
         return $this->belongsTo(ActionPlan::class);
+    }
+
+    /**
+     * Normalizar valores de status antes de guardarlos en la BD
+     */
+    public function setStatusAttribute($value)
+    {
+        if ($value === 'proceso') {
+            $this->attributes['status'] = 'en_proceso';
+            return;
+        }
+        if ($value === 'finalizado') {
+            $this->attributes['status'] = 'completado';
+            return;
+        }
+
+        // Otros valores se guardan tal cual
+        $this->attributes['status'] = $value;
     }
 }
