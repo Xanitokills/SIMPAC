@@ -5,7 +5,7 @@
 
 @section('content')
 <div class="space-y-6">
-    <div id="mainContainer" class="max-w-6xl mx-auto transition-all duration-300">
+    <div id="mainContainer" class="w-full px-4 transition-all duration-300">
         <!-- Header -->
         <div class="bg-gradient-to-r from-blue-600 to-blue-700 rounded-lg shadow-lg text-white p-6 mb-6">
             <div class="flex justify-between items-start">
@@ -815,20 +815,6 @@ function switchTab(tabName) {
     if (selectedButton) {
         selectedButton.classList.add('active', 'border-blue-500', 'text-blue-600');
         selectedButton.classList.remove('border-transparent', 'text-gray-500');
-    }
-    
-    // *** EXPANDIR/CONTRAER LAYOUT SEGÚN EL TAB ***
-    const mainContainer = document.getElementById('mainContainer');
-    if (mainContainer) {
-        if (tabName === 'list') {
-            // Vista JIRA: expandir a tamaño completo
-            mainContainer.classList.remove('max-w-6xl');
-            mainContainer.classList.add('max-w-full', 'px-4');
-        } else {
-            // Vista por componentes: mantener ancho limitado
-            mainContainer.classList.add('max-w-6xl');
-            mainContainer.classList.remove('max-w-full', 'px-4');
-        }
     }
     
     // Guardar tab activo en localStorage
