@@ -17,6 +17,7 @@
     <style>
         :root {
             --sidebar-width: 280px;
+            --sidebar-collapsed-width: 72px;
             --primary-blue: #3B82F6;
             --primary-blue-dark: #2563EB;
             --secondary-gray: #F8FAFC;
@@ -31,7 +32,50 @@
         .sidebar {
             width: var(--sidebar-width);
             flex-shrink: 0;
-            transition: transform 0.3s ease;
+            transition: all 0.3s ease;
+        }
+        
+        .sidebar.collapsed {
+            width: var(--sidebar-collapsed-width);
+        }
+        
+        .sidebar.collapsed .sidebar-text,
+        .sidebar.collapsed .sidebar-badge,
+        .sidebar.collapsed .sidebar-logo-text,
+        .sidebar.collapsed .sidebar-user-info,
+        .sidebar.collapsed .sidebar-section-title,
+        .sidebar.collapsed .sidebar-logout-text {
+            display: none;
+        }
+        
+        .sidebar.collapsed .nav-item {
+            justify-content: center;
+            padding-left: 0;
+            padding-right: 0;
+        }
+        
+        .sidebar.collapsed .nav-item svg {
+            margin: 0;
+        }
+        
+        .sidebar.collapsed .sidebar-logo-container {
+            justify-content: center;
+            padding-left: 0;
+            padding-right: 0;
+        }
+        
+        .sidebar.collapsed .sidebar-user-container {
+            justify-content: center;
+        }
+        
+        .sidebar.collapsed .sidebar-logout-btn {
+            justify-content: center;
+            padding-left: 0.5rem;
+            padding-right: 0.5rem;
+        }
+        
+        .sidebar.collapsed .sidebar-collapse-btn {
+            transform: rotate(180deg);
         }
         
         .main-content {
@@ -97,71 +141,79 @@
         <aside id="sidebar" class="sidebar bg-gradient-to-b from-[#1e3a5f] via-[#2c4f7c] to-[#1a2f4d] shadow-2xl flex flex-col border-r border-blue-800/30">
             <!-- Logo Section -->
             <div class="flex items-center justify-between h-20 px-6 border-b border-slate-700/50 bg-gradient-to-r from-[#1a2f4d] to-[#2c4f7c]/80">
-                <div class="flex items-center space-x-3">
-                    <div class="w-10 h-10 bg-gradient-to-br from-blue-600 to-blue-800 rounded-lg flex items-center justify-center shadow-lg ring-2 ring-blue-500/30">
+                <div class="sidebar-logo-container flex items-center space-x-3">
+                    <div class="w-10 h-10 bg-gradient-to-br from-blue-600 to-blue-800 rounded-lg flex items-center justify-center shadow-lg ring-2 ring-blue-500/30 flex-shrink-0">
                         <svg class="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 20 20">
                             <path d="M3 4a1 1 0 011-1h12a1 1 0 011 1v2a1 1 0 01-1 1H4a1 1 0 01-1-1V4zM3 10a1 1 0 011-1h6a1 1 0 011 1v6a1 1 0 01-1 1H4a1 1 0 01-1-1v-6zM14 9a1 1 0 00-1 1v6a1 1 0 001 1h2a1 1 0 001-1v-6a1 1 0 00-1-1h-2z"/>
                         </svg>
                     </div>
-                    <h1 class="text-2xl font-bold text-white tracking-tight">SIMPAC</h1>
+                    <h1 class="sidebar-logo-text text-2xl font-bold text-white tracking-tight">SIMPAC</h1>
                 </div>
-                <button id="sidebar-close" class="lg:hidden p-2 rounded-lg hover:bg-white/5 text-blue-400">
-                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
-                    </svg>
-                </button>
+                <div class="flex items-center space-x-2">
+                    <!-- Botón colapsar sidebar (solo desktop) -->
+                    <button id="sidebar-collapse" class="hidden lg:flex sidebar-collapse-btn p-2 rounded-lg hover:bg-white/10 text-blue-300 transition-all duration-300" title="Colapsar menú">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 19l-7-7 7-7m8 14l-7-7 7-7"/>
+                        </svg>
+                    </button>
+                    <button id="sidebar-close" class="lg:hidden p-2 rounded-lg hover:bg-white/5 text-blue-400">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                        </svg>
+                    </button>
+                </div>
             </div>
 
             <!-- Navigation -->
             <nav class="flex-1 px-4 py-6 space-y-1 overflow-y-auto custom-scrollbar">
                 <!-- Dashboard Overview -->
-                <a href="{{ route('dashboard') }}" class="nav-item {{ request()->routeIs('dashboard') ? 'active' : '' }}">
-                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <a href="{{ route('dashboard') }}" class="nav-item {{ request()->routeIs('dashboard') ? 'active' : '' }}" title="Panel Principal">
+                    <svg class="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2H5a2 2 0 00-2-2z"/>
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 5a2 2 0 012-2h4a2 2 0 012 2v3H8V5z"/>
                     </svg>
-                    <span>Panel Principal</span>
+                    <span class="sidebar-text">Panel Principal</span>
                 </a>
 
                 <!-- Process Phases -->
                 <div class="pt-6">
-                    <h3 class="px-3 mb-3 text-[10px] font-bold text-blue-300/80 uppercase tracking-widest">Fases del Proceso</h3>
+                    <h3 class="sidebar-section-title px-3 mb-3 text-[10px] font-bold text-blue-300/80 uppercase tracking-widest">Fases del Proceso</h3>
                     
-                    <a href="{{ route('dashboard.planning') }}" class="nav-item {{ request()->routeIs('dashboard.planning') ? 'active' : '' }}">
-                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <a href="{{ route('dashboard.planning') }}" class="nav-item {{ request()->routeIs('dashboard.planning') ? 'active' : '' }}" title="Actividades previas">
+                        <svg class="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/>
                         </svg>
-                        <span class="flex-1">Actividades previas</span>
-                        <span class="text-[10px] bg-blue-500/20 text-blue-300 px-2 py-0.5 rounded-full font-medium">7d</span>
+                        <span class="sidebar-text flex-1">Actividades previas</span>
+                        <span class="sidebar-badge text-[10px] bg-blue-500/20 text-blue-300 px-2 py-0.5 rounded-full font-medium">7d</span>
                     </a>
 
-                    <a href="{{ route('dashboard.execution') }}" class="nav-item {{ request()->routeIs('dashboard.execution') ? 'active' : '' }}">
-                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <a href="{{ route('dashboard.execution') }}" class="nav-item {{ request()->routeIs('dashboard.execution') ? 'active' : '' }}" title="Ejecución del Plan de Acción">
+                        <svg class="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/>
                         </svg>
-                        <span class="flex-1">Ejecución del Plan de Acción</span>
-                        <span class="text-[10px] bg-green-500/20 text-green-300 px-2 py-0.5 rounded-full font-medium">5d</span>
+                        <span class="sidebar-text flex-1">Ejecución del Plan de Acción</span>
+                        <span class="sidebar-badge text-[10px] bg-green-500/20 text-green-300 px-2 py-0.5 rounded-full font-medium">5d</span>
                     </a>
 
-                    <a href="{{ route('dashboard.validation') }}" class="nav-item {{ request()->routeIs('dashboard.validation') ? 'active' : '' }}">
-                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <a href="{{ route('dashboard.validation') }}" class="nav-item {{ request()->routeIs('dashboard.validation') ? 'active' : '' }}" title="Validación y Cierre">
+                        <svg class="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
                         </svg>
-                        <span class="flex-1">Validación y Cierre</span>
-                        <span class="text-[10px] bg-purple-500/20 text-purple-300 px-2 py-0.5 rounded-full font-medium">6d</span>
+                        <span class="sidebar-text flex-1">Validación y Cierre</span>
+                        <span class="sidebar-badge text-[10px] bg-purple-500/20 text-purple-300 px-2 py-0.5 rounded-full font-medium">6d</span>
                     </a>
                 </div>
             </nav>
 
             <!-- User Section -->
             <div class="p-6 border-t border-slate-700/50 bg-gradient-to-r from-[#1a2f4d]/90 to-[#2c4f7c]/50">
-                <div class="flex items-center space-x-3 mb-4">
-                    <div class="w-12 h-12 bg-gradient-to-br from-blue-500 to-blue-700 rounded-full flex items-center justify-center shadow-lg ring-2 ring-blue-500/40">
+                <div class="sidebar-user-container flex items-center space-x-3 mb-4">
+                    <div class="w-12 h-12 bg-gradient-to-br from-blue-500 to-blue-700 rounded-full flex items-center justify-center shadow-lg ring-2 ring-blue-500/40 flex-shrink-0">
                         <svg class="w-7 h-7 text-white" fill="currentColor" viewBox="0 0 20 20">
                             <path fill-rule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clip-rule="evenodd"/>
                         </svg>
                     </div>
-                    <div class="flex-1">
+                    <div class="sidebar-user-info flex-1">
                         <p class="text-sm font-bold text-white">{{ session('user_name', 'Usuario') }}</p>
                         <p class="text-xs text-blue-200/80">{{ session('user_role', 'Sistema PGE') }}</p>
                     </div>
@@ -170,11 +222,11 @@
                 <!-- Logout Button -->
                 <form method="POST" action="{{ route('logout') }}" class="w-full">
                     @csrf
-                    <button type="submit" class="w-full flex items-center justify-center space-x-2 px-4 py-3 bg-gradient-to-r from-red-600 to-red-700 hover:from-red-700 hover:to-red-800 text-white text-sm font-semibold rounded-lg transition-all duration-200 shadow-lg hover:shadow-xl">
-                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <button type="submit" class="sidebar-logout-btn w-full flex items-center justify-center space-x-2 px-4 py-3 bg-gradient-to-r from-red-600 to-red-700 hover:from-red-700 hover:to-red-800 text-white text-sm font-semibold rounded-lg transition-all duration-200 shadow-lg hover:shadow-xl">
+                        <svg class="w-4 h-4 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/>
                         </svg>
-                        <span>Cerrar Sesión</span>
+                        <span class="sidebar-logout-text">Cerrar Sesión</span>
                     </button>
                 </form>
             </div>
@@ -192,6 +244,12 @@
                             </svg>
                         </button>
                         <div>
+                            <!-- Breadcrumb -->
+                            @hasSection('breadcrumb')
+                                <nav class="flex items-center text-sm text-gray-500 mb-1" aria-label="Breadcrumb">
+                                    @yield('breadcrumb')
+                                </nav>
+                            @endif
                             <h2 class="text-2xl font-bold text-gray-800">
                                 @yield('page-title', 'Dashboard')
                             </h2>
@@ -232,8 +290,15 @@
         // Sidebar toggle functionality
         const sidebarToggle = document.getElementById('sidebar-toggle');
         const sidebarClose = document.getElementById('sidebar-close');
+        const sidebarCollapse = document.getElementById('sidebar-collapse');
         const sidebar = document.getElementById('sidebar');
         const overlay = document.getElementById('sidebar-overlay');
+
+        // Cargar estado del sidebar desde localStorage
+        const sidebarState = localStorage.getItem('sidebarCollapsed');
+        if (sidebarState === 'true' && window.innerWidth >= 1024) {
+            sidebar.classList.add('collapsed');
+        }
 
         function openSidebar() {
             sidebar.classList.add('open');
@@ -245,8 +310,15 @@
             overlay.classList.add('hidden');
         }
 
+        function toggleSidebarCollapse() {
+            sidebar.classList.toggle('collapsed');
+            // Guardar estado en localStorage
+            localStorage.setItem('sidebarCollapsed', sidebar.classList.contains('collapsed'));
+        }
+
         sidebarToggle?.addEventListener('click', openSidebar);
         sidebarClose?.addEventListener('click', closeSidebar);
+        sidebarCollapse?.addEventListener('click', toggleSidebarCollapse);
         overlay?.addEventListener('click', closeSidebar);
 
         // Active navigation highlighting - Estilo corporativo azul metálico
