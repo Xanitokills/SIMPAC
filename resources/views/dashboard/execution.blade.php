@@ -311,6 +311,7 @@
     ====================================================================
     -->
     
+    {{-- Header con gradiente informativo --}}
     <div class="bg-gradient-to-r from-indigo-500 to-purple-600 rounded-lg shadow-lg text-white">
         <div class="p-8">
             <div class="text-center">
@@ -320,61 +321,226 @@
                     </svg>
                 </div>
                 <h3 class="text-2xl font-bold mb-2">Coordinación y Seguimiento de Ejecución</h3>
-                <p class="text-indigo-100 mb-6 max-w-2xl mx-auto">
-                    Seleccione la entidad para gestionar reuniones de coordinación, notificaciones y realizar el seguimiento de la ejecución.
+                <p class="text-indigo-100 max-w-2xl mx-auto">
+                    Seleccione una entidad de las tarjetas de abajo para gestionar reuniones de coordinación, notificaciones y realizar el seguimiento de la ejecución.
                 </p>
-                
-                <div class="max-w-xl mx-auto">
-                    <form action="{{ route('execution.select-entity') }}" method="GET" class="space-y-4">
-                        <div class="bg-white bg-opacity-10 backdrop-blur-sm rounded-lg p-6">
-                            <label for="entity_select" class="block text-left text-sm font-medium text-indigo-100 mb-2">
-                                <svg class="w-5 h-5 inline mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
-                                </svg>
-                                Seleccionar Entidad Asignada
-                            </label>
-                            <select id="entity_select" name="entity_assignment_id" required 
-                                    class="w-full px-4 py-3 bg-white text-gray-900 border border-indigo-300 rounded-lg focus:ring-2 focus:ring-white focus:border-transparent shadow-sm">
-                                <option value="">-- Seleccione una entidad --</option>
-                                @forelse($assignedEntities ?? [] as $entity)
-                                    @php
-                                        // Buscar la asignación de esta entidad
-                                        $assignment = \App\Models\EntityAssignment::where('entity_id', $entity->id)
-                                            ->with('sectorista')
-                                            ->first();
-                                    @endphp
-                                    @if($assignment)
-                                        <option value="{{ $assignment->id }}">
-                                            {{ $entity->name }} 
-                                            @if(Auth::user()->role !== 'sectorista' && $assignment->sectorista)
-                                                - Sectorista: {{ $assignment->sectorista->name }}
-                                            @endif
-                                        </option>
-                                    @endif
-                                @empty
-                                    <option value="" disabled>No hay entidades asignadas</option>
-                                @endforelse
-                            </select>
+            </div>
+        </div>
+    </div>
+
+    {{-- ========================================
+         RESUMEN DE ALERTAS Y ESTADÍSTICAS (PRIMERO)
+         Panel de resumen para visualización rápida del estado general
+    ========================================= --}}
+    <div class="bg-white rounded-lg shadow-sm border border-gray-200">
+        <div class="p-6">
+            <div class="flex items-center justify-between mb-4">
+                <h3 class="text-lg font-semibold text-gray-900 flex items-center">
+                    <svg class="w-5 h-5 mr-2 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/>
+                    </svg>
+                    Resumen de Estado General
+                </h3>
+                <span class="text-xs text-gray-500">Última actualización: {{ now()->format('d M Y, H:i') }}</span>
+            </div>
+            
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                {{-- Vencidos --}}
+                <div class="bg-gradient-to-br from-red-50 to-red-100 rounded-xl p-5 border border-red-200 hover:shadow-md transition-shadow cursor-pointer group">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <p class="text-sm font-medium text-red-800">Vencidos</p>
+                            <p class="text-3xl font-bold text-red-700 mt-1">3</p>
+                            <p class="text-xs text-red-600 mt-1">Requieren atención inmediata</p>
                         </div>
-                        
-                        <button type="submit" 
-                                class="w-full bg-white text-indigo-600 font-semibold py-3 px-6 rounded-lg hover:bg-indigo-50 transition-all duration-200 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 flex items-center justify-center space-x-2">
-                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6"/>
+                        <div class="w-14 h-14 bg-red-200 rounded-full flex items-center justify-center group-hover:bg-red-300 transition-colors">
+                            <svg class="w-7 h-7 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
                             </svg>
-                            <span>Acceder al Panel de Seguimiento</span>
-                        </button>
-                    </form>
+                        </div>
+                    </div>
                 </div>
 
-                <div class="mt-6 text-sm text-indigo-100">
-                    <p>💡 Una vez seleccionada la entidad, podrá programar reuniones y gestionar notificaciones</p>
+                {{-- Próximos a vencer --}}
+                <div class="bg-gradient-to-br from-yellow-50 to-amber-100 rounded-xl p-5 border border-yellow-200 hover:shadow-md transition-shadow cursor-pointer group">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <p class="text-sm font-medium text-yellow-800">Próximos a vencer</p>
+                            <p class="text-3xl font-bold text-yellow-700 mt-1">5</p>
+                            <p class="text-xs text-yellow-600 mt-1">En los próximos 7 días</p>
+                        </div>
+                        <div class="w-14 h-14 bg-yellow-200 rounded-full flex items-center justify-center group-hover:bg-yellow-300 transition-colors">
+                            <svg class="w-7 h-7 text-yellow-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                            </svg>
+                        </div>
+                    </div>
+                </div>
+
+                {{-- Pendientes --}}
+                <div class="bg-gradient-to-br from-blue-50 to-blue-100 rounded-xl p-5 border border-blue-200 hover:shadow-md transition-shadow cursor-pointer group">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <p class="text-sm font-medium text-blue-800">Pendientes</p>
+                            <p class="text-3xl font-bold text-blue-700 mt-1">8</p>
+                            <p class="text-xs text-blue-600 mt-1">En espera de respuesta</p>
+                        </div>
+                        <div class="w-14 h-14 bg-blue-200 rounded-full flex items-center justify-center group-hover:bg-blue-300 transition-colors">
+                            <svg class="w-7 h-7 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/>
+                            </svg>
+                        </div>
+                    </div>
+                </div>
+
+                {{-- Completados --}}
+                <div class="bg-gradient-to-br from-green-50 to-emerald-100 rounded-xl p-5 border border-green-200 hover:shadow-md transition-shadow cursor-pointer group">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <p class="text-sm font-medium text-green-800">Completados</p>
+                            <p class="text-3xl font-bold text-green-700 mt-1">12</p>
+                            <p class="text-xs text-green-600 mt-1">Finalizados exitosamente</p>
+                        </div>
+                        <div class="w-14 h-14 bg-green-200 rounded-full flex items-center justify-center group-hover:bg-green-300 transition-colors">
+                            <svg class="w-7 h-7 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                            </svg>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- Módulos disponibles después de seleccionar entidad (Vista previa) -->
+    {{-- Tarjetas de Entidades Asignadas --}}
+    @if(isset($assignedEntities) && $assignedEntities->count() > 0)
+    <div class="bg-white rounded-lg shadow-sm border border-gray-200">
+        <div class="p-6">
+            <div class="flex items-center justify-between mb-6">
+                <div>
+                    <h3 class="text-lg font-semibold text-gray-900">Entidades Asignadas</h3>
+                    <p class="text-sm text-gray-500">Haga clic en una entidad para acceder a su panel de seguimiento</p>
+                </div>
+                <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-indigo-100 text-indigo-800">
+                    {{ $assignedEntities->count() }} Entidades Asignadas
+                </span>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+                @foreach($assignedEntities as $entity)
+                    @php
+                        $assignment = \App\Models\EntityAssignment::where('entity_id', $entity->id)
+                            ->with(['sectorista', 'entity', 'actionPlan', 'meetings', 'oficios'])
+                            ->first();
+                        
+                        // Contar reuniones, oficios, etc.
+                        $reunionesCount = $assignment ? $assignment->meetings->count() : 0;
+                        $oficiosCount = $assignment ? $assignment->oficios->count() : 0;
+                        $hasActionPlan = $assignment && $assignment->actionPlan ? 1 : 0;
+                        
+                        // Determinar el tipo y color
+                        $entityType = $entity->type ?? 'gobierno';
+                        $entityTypeLabel = match($entityType) {
+                            'ministerio' => 'Ministerio',
+                            'organismo_publico' => 'Organismo Público',
+                            'gobierno_regional' => 'Gobierno Regional',
+                            'gobierno_local' => 'Gobierno Local',
+                            default => 'Entidad'
+                        };
+                        $entityScope = $entity->scope ?? 'Nacional';
+                    @endphp
+                    
+                    @if($assignment)
+                    <a href="{{ route('execution.entity', $assignment->id) }}" 
+                       class="block bg-white rounded-lg border border-gray-200 hover:border-indigo-300 hover:shadow-lg transition-all duration-200 overflow-hidden group">
+                        {{-- Header de la tarjeta --}}
+                        <div class="p-4">
+                            <h4 class="font-semibold text-gray-900 group-hover:text-indigo-600 transition-colors mb-2">
+                                {{ $entity->name }}
+                            </h4>
+                            
+                            {{-- Badges de tipo y ámbito --}}
+                            <div class="flex flex-wrap gap-1 mb-3">
+                                <span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-indigo-100 text-indigo-700">
+                                    {{ $entityTypeLabel }}
+                                </span>
+                                <span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-gray-100 text-gray-600">
+                                    {{ $entityScope }}
+                                </span>
+                            </div>
+                            
+                            {{-- Estadísticas --}}
+                            <div class="space-y-1 text-sm text-gray-600">
+                                <div class="flex justify-between">
+                                    <span>Plan de Acción:</span>
+                                    <span class="font-medium text-gray-900">{{ $hasActionPlan ? 'Sí' : 'No' }}</span>
+                                </div>
+                                <div class="flex justify-between">
+                                    <span>Reuniones:</span>
+                                    <span class="font-medium text-gray-900">{{ $reunionesCount }}</span>
+                                </div>
+                                <div class="flex justify-between">
+                                    <span>Oficios:</span>
+                                    <span class="font-medium text-gray-900">{{ $oficiosCount }}</span>
+                                </div>
+                            </div>
+                            
+                            {{-- Estado --}}
+                            <div class="mt-3">
+                                <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
+                                    En Progreso
+                                </span>
+                            </div>
+                        </div>
+                        
+                        {{-- Botón de acción --}}
+                        <div class="bg-gradient-to-r from-indigo-500 to-purple-600 px-4 py-3 text-center group-hover:from-indigo-600 group-hover:to-purple-700 transition-all">
+                            <span class="text-white font-medium text-sm">Ver Detalles</span>
+                        </div>
+                        
+                        {{-- Sectorista (para admin/secretario) --}}
+                        @if(Auth::user()->role !== 'sectorista' && $assignment->sectorista)
+                        <div class="px-4 py-2 bg-gray-50 border-t border-gray-100">
+                            <div class="flex items-center text-xs text-gray-500">
+                                <svg class="w-3 h-3 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/>
+                                </svg>
+                                Sectorista: {{ $assignment->sectorista->name }}
+                            </div>
+                        </div>
+                        @endif
+                    </a>
+                    @endif
+                @endforeach
+            </div>
+        </div>
+    </div>
+    @else
+    {{-- Mensaje cuando no hay entidades --}}
+    <div class="bg-white rounded-lg shadow-sm border border-gray-200">
+        <div class="p-8 text-center">
+            <div class="w-20 h-20 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                <svg class="w-10 h-10 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/>
+                </svg>
+            </div>
+            <h3 class="text-xl font-semibold text-gray-900 mb-2">No hay entidades asignadas</h3>
+            <p class="text-gray-500 max-w-md mx-auto">
+                @if(Auth::user()->role === 'sectorista')
+                    Actualmente no tiene entidades asignadas. Contacte al administrador para recibir asignaciones.
+                @else
+                    No hay entidades con asignación en el sistema. Primero debe asignar entidades a sectoristas.
+                @endif
+            </p>
+        </div>
+    </div>
+    @endif
+
+    {{-- ========================================
+         MÓDULOS DE SEGUIMIENTO - COMENTADO TEMPORALMENTE
+         Vista previa de módulos disponibles después de seleccionar entidad
+    ========================================= --}}
+    {{--
     <div class="bg-white rounded-lg shadow-sm border border-gray-200">
         <div class="p-8">
             <div class="text-center">
@@ -412,6 +578,7 @@
             </div>
         </div>
     </div>
+    --}}
 
     <!-- 
     ====================================================================
@@ -644,54 +811,18 @@
                 </table>
             </div>
 
-            <!-- Resumen de alertas -->
-            <div class="mt-6 grid grid-cols-1 md:grid-cols-4 gap-4">
-                <div class="bg-red-50 rounded-lg p-4 border border-red-200">
-                    <div class="flex items-center justify-between">
-                        <div>
-                            <p class="text-sm font-medium text-red-900">Vencidos</p>
-                            <p class="text-2xl font-bold text-red-700">3</p>
-                        </div>
-                        <svg class="w-8 h-8 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
-                        </svg>
-                    </div>
+            <!-- Paginación y acciones rápidas -->
+            <div class="mt-6 flex items-center justify-between">
+                <div class="text-sm text-gray-500">
+                    Mostrando <span class="font-medium">1-3</span> de <span class="font-medium">28</span> notificaciones
                 </div>
-
-                <div class="bg-yellow-50 rounded-lg p-4 border border-yellow-200">
-                    <div class="flex items-center justify-between">
-                        <div>
-                            <p class="text-sm font-medium text-yellow-900">Próximos a vencer</p>
-                            <p class="text-2xl font-bold text-yellow-700">5</p>
-                        </div>
-                        <svg class="w-8 h-8 text-yellow-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
-                        </svg>
-                    </div>
-                </div>
-
-                <div class="bg-blue-50 rounded-lg p-4 border border-blue-200">
-                    <div class="flex items-center justify-between">
-                        <div>
-                            <p class="text-sm font-medium text-blue-900">Pendientes</p>
-                            <p class="text-2xl font-bold text-blue-700">8</p>
-                        </div>
-                        <svg class="w-8 h-8 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/>
-                        </svg>
-                    </div>
-                </div>
-
-                <div class="bg-green-50 rounded-lg p-4 border border-green-200">
-                    <div class="flex items-center justify-between">
-                        <div>
-                            <p class="text-sm font-medium text-green-900">Completados</p>
-                            <p class="text-2xl font-bold text-green-700">12</p>
-                        </div>
-                        <svg class="w-8 h-8 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
-                        </svg>
-                    </div>
+                <div class="flex items-center space-x-2">
+                    <button class="px-3 py-1 text-sm border border-gray-300 rounded-md text-gray-700 bg-white hover:bg-gray-50 disabled:opacity-50" disabled>
+                        Anterior
+                    </button>
+                    <button class="px-3 py-1 text-sm border border-gray-300 rounded-md text-gray-700 bg-white hover:bg-gray-50">
+                        Siguiente
+                    </button>
                 </div>
             </div>
         </div>
