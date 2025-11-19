@@ -189,7 +189,7 @@ class ActionPlanController extends Controller
         $actionPlan = ActionPlan::with(['entityAssignment.entity', 'entityAssignment.sectorista', 'items'])
             ->findOrFail($id);
 
-        // Agrupar items por sección para la vista
+        // Agrupar items por sección para la vista por componentes
         $groupedItems = $actionPlan->items->groupBy(function($item) {
             // Usar section_name si existe, sino derivar del código
             if (!empty($item->section_name)) {
@@ -206,7 +206,82 @@ class ActionPlanController extends Controller
             return 'Sin sección';
         });
 
-        return view('dashboard.execution.action-plans.show', compact('actionPlan', 'groupedItems'));
+        // Obtener items ordenados para la vista tipo lista
+        $items = $actionPlan->items()->orderBy('order')->get();
+
+        // Estadísticas de items
+        $totalItems = $items->count();
+        $pendingItems = $items->where('status', 'pendiente')->count();
+        $inProgressItems = $items->where('status', 'en_proceso')->count();
+        $completedItems = $items->where('status', 'completado')->count();
+
+        // Obtener secciones únicas para el filtro
+        $sections = $items->pluck('section_name')->filter()->unique()->sort()->values();
+
+        // Obtener responsables únicos para el filtro
+        $responsibles = $items->pluck('responsible')->filter()->unique()->sort()->values();
+
+        // Debug temporal
+        \Log::info('ActionPlan Show Debug', [
+            'action_plan_id' => $id,
+            'items_count' => $items->count(),
+            'totalItems' => $totalItems,
+            'sections_count' => $sections->count(),
+        ]);
+
+        return view('dashboard.execution.action-plans.show', compact(
+            'actionPlan',
+            'groupedItems',
+            'items',
+            'totalItems',
+            'pendingItems',
+            'inProgressItems',
+            'completedItems',
+            'sections',
+            'responsibles'
+        ));
+    }
+
+    /**
+     * Mostrar vista de lista/tabla editable tipo JIRA para mantenimiento
+     */
+    public function manage($id)
+    {
+        $actionPlan = ActionPlan::with(['assignment.entity', 'assignment.sectorista', 'items'])
+            ->findOrFail($id);
+
+        // Obtener items ordenados
+        $items = $actionPlan->items()->orderBy('order')->get();
+
+        // Debug temporal
+        \Log::info('ActionPlan Manage Debug', [
+            'action_plan_id' => $id,
+            'items_count' => $items->count(),
+            'items' => $items->toArray(),
+        ]);
+
+        // Estadísticas de items
+        $totalItems = $items->count();
+        $pendingItems = $items->where('status', 'pendiente')->count();
+        $inProgressItems = $items->where('status', 'en_proceso')->count();
+        $completedItems = $items->where('status', 'completado')->count();
+
+        // Obtener secciones únicas para el filtro
+        $sections = $items->pluck('section_name')->filter()->unique()->sort()->values();
+
+        // Obtener responsables únicos para el filtro
+        $responsibles = $items->pluck('responsible')->filter()->unique()->sort()->values();
+
+        return view('dashboard.execution.action-plans.manage', compact(
+            'actionPlan',
+            'items',
+            'totalItems',
+            'pendingItems',
+            'inProgressItems',
+            'completedItems',
+            'sections',
+            'responsibles'
+        ));
     }
 
     /**
@@ -365,5 +440,130 @@ class ActionPlanController extends Controller
         return redirect()
             ->route('execution.action-plans.create', $assignmentId)
             ->with('success', 'Plan de acción eliminado exitosamente. Puede crear uno nuevo.');
+    }
+
+    /**
+     * Actualizar un item individual del plan de acción (para edición inline)
+     */
+    public function updateItem(Request $request, $itemId)
+    {
+        $item = ActionPlanItem::findOrFail($itemId);
+
+        $validated = $request->validate([
+            'description' => 'nullable|string',
+            'section_name' => 'nullable|string|max:255',
+            'responsible' => 'nullable|string|max:255',
+            'status' => 'nullable|in:pendiente,proceso,finalizado,en_proceso,completado',
+            'due_date' => 'nullable|date',
+            'start_date' => 'nullable|date',
+            'end_date' => 'nullable|date',
+            'comments' => 'nullable|string',
+            'problems' => 'nullable|string',
+            'corrective_measures' => 'nullable|string',
+        ]);
+
+        // Normalizar estado
+        if (isset($validated['status'])) {
+            if ($validated['status'] === 'proceso') {
+                $validated['status'] = 'en_proceso';
+            } elseif ($validated['status'] === 'finalizado') {
+                $validated['status'] = 'completado';
+            }
+        }
+
+        // Mapear due_date a end_date si es necesario
+        if (isset($validated['due_date'])) {
+            $validated['end_date'] = $validated['due_date'];
+            unset($validated['due_date']);
+        }
+
+        $item->update($validated);
+
+        // Recalcular días hábiles si las fechas cambiaron
+        if (isset($validated['start_date']) || isset($validated['end_date'])) {
+            if ($item->start_date && $item->end_date) {
+                $item->calculateBusinessDays();
+                $item->save();
+            }
+        }
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Item actualizado exitosamente',
+            'item' => $item->fresh(),
+        ]);
+    }
+
+    /**
+     * Subir archivo de evidencia para un item
+     */
+    public function uploadFile(Request $request, $itemId)
+    {
+        $item = ActionPlanItem::findOrFail($itemId);
+
+        $request->validate([
+            'evidence_file' => 'required|file|max:5120|mimes:pdf,doc,docx,xls,xlsx,jpg,jpeg,png',
+        ]);
+
+        // Eliminar archivo anterior si existe
+        if ($item->evidence_file) {
+            Storage::disk('public')->delete($item->evidence_file);
+        }
+
+        // Guardar nuevo archivo
+        $file = $request->file('evidence_file');
+        $filename = time() . '_' . uniqid() . '_' . $file->getClientOriginalName();
+        $path = $file->storeAs('action_plans/evidence', $filename, 'public');
+
+        $item->update(['evidence_file' => $path]);
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Archivo subido exitosamente',
+            'file_path' => $path,
+        ]);
+    }
+
+    /**
+     * Descargar archivo de evidencia de un item
+     */
+    public function downloadFile($itemId)
+    {
+        $item = ActionPlanItem::findOrFail($itemId);
+
+        if (!$item->evidence_file) {
+            abort(404, 'No se encontró archivo de evidencia.');
+        }
+
+        $filePath = storage_path('app/public/' . $item->evidence_file);
+
+        if (!file_exists($filePath)) {
+            abort(404, 'El archivo no existe en el servidor.');
+        }
+
+        return response()->download($filePath);
+    }
+
+    /**
+     * Eliminar archivo de evidencia de un item
+     */
+    public function deleteFile($itemId)
+    {
+        $item = ActionPlanItem::findOrFail($itemId);
+
+        if (!$item->evidence_file) {
+            return response()->json([
+                'success' => false,
+                'message' => 'No hay archivo para eliminar.',
+            ], 404);
+        }
+
+        Storage::disk('public')->delete($item->evidence_file);
+        $item->update(['evidence_file' => null]);
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Archivo eliminado exitosamente',
+        ]);
     }
 }

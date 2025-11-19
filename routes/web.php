@@ -174,11 +174,14 @@ Route::middleware('simple.auth')->prefix('dashboard')->group(function () {
         Route::get('create/{assignment}', [\App\Http\Controllers\ActionPlanController::class, 'create'])->name('create');
         Route::post('{assignment}', [\App\Http\Controllers\ActionPlanController::class, 'store'])->name('store');
         Route::get('{actionPlan}', [\App\Http\Controllers\ActionPlanController::class, 'show'])->name('show');
+        Route::get('{actionPlan}/manage', [\App\Http\Controllers\ActionPlanController::class, 'manage'])->name('manage');
         Route::delete('{actionPlan}', [\App\Http\Controllers\ActionPlanController::class, 'destroy'])->name('destroy');
         
         // Rutas para items del plan de acción
         Route::patch('items/{item}', [\App\Http\Controllers\ActionPlanController::class, 'updateItem'])
             ->name('items.update');
+        Route::post('items/{item}/upload-file', [\App\Http\Controllers\ActionPlanController::class, 'uploadFile'])
+            ->name('items.upload-file');
         Route::delete('items/{item}/file', [\App\Http\Controllers\ActionPlanController::class, 'deleteFile'])
             ->name('items.delete-file');
         Route::get('items/{item}/download', [\App\Http\Controllers\ActionPlanController::class, 'downloadFile'])

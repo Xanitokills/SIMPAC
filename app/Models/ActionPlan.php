@@ -30,6 +30,14 @@ class ActionPlan extends Model
     }
 
     /**
+     * Alias para entityAssignment
+     */
+    public function assignment(): BelongsTo
+    {
+        return $this->belongsTo(EntityAssignment::class, 'entity_assignment_id');
+    }
+
+    /**
      * Relación con los items del plan de acción
      */
     public function items(): HasMany

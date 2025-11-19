@@ -23,6 +23,7 @@ class ActionPlanItem extends Model
         'problems',
         'corrective_measures',
         'attachments',
+        'evidence_file',
         'order',
     ];
 
