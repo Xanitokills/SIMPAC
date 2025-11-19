@@ -85,7 +85,8 @@
                         <div>
                             <h2 class="text-xl font-semibold text-gray-700">Acciones del Plan</h2>
                             <p class="text-sm text-gray-500 mt-1">
-                                💡 <strong>Tip:</strong> Use "⚡ Acciones Estándar" para cargar automáticamente 7 acciones predefinidas y solo ajustar los detalles.
+                                💡 <strong>Tip:</strong> Use "⚡ Acciones Estándar" para cargar automáticamente 42 acciones predefinidas.<br>
+                                ⚠️ <strong>Importante:</strong> Deberá completar las fechas y responsables antes de guardar.
                             </p>
                         </div>
                         <div class="flex space-x-2">
@@ -144,9 +145,51 @@ document.addEventListener('DOMContentLoaded', function() {
     if (form) {
         form.addEventListener('submit', function(e) {
             // Expandir todas las secciones ocultas para que la validación funcione
-            document.querySelectorAll('.section-content.hidden').forEach(section => {
-                section.classList.remove('hidden');
+            document.querySelectorAll('.section-content').forEach(section => {
+                if (section.style.display === 'none') {
+                    section.style.display = 'block';
+                    // Rotar los iconos también
+                    const sectionId = section.id;
+                    const icon = document.getElementById('icon-' + sectionId);
+                    if (icon) {
+                        icon.classList.add('rotate-90');
+                    }
+                }
             });
+            
+            // Validar campos requeridos y mostrar mensaje específico
+            const requiredFields = form.querySelectorAll('[required]');
+            const emptyFields = [];
+            
+            requiredFields.forEach(field => {
+                if (!field.value || field.value.trim() === '') {
+                    // Encontrar el label asociado
+                    const label = field.closest('div').querySelector('label');
+                    const fieldName = label ? label.textContent.replace('*', '').trim() : 'Campo sin nombre';
+                    
+                    // Encontrar en qué acción está
+                    const actionDiv = field.closest('.action-item');
+                    const actionHeader = actionDiv ? actionDiv.querySelector('h4, h3') : null;
+                    const actionName = actionHeader ? actionHeader.textContent.trim() : 'Acción sin nombre';
+                    
+                    emptyFields.push(`• ${fieldName} en "${actionName}"`);
+                }
+            });
+            
+            // Si hay campos vacíos, mostrar alerta detallada
+            if (emptyFields.length > 0) {
+                e.preventDefault();
+                alert(`⚠️ FALTAN CAMPOS OBLIGATORIOS\n\nPor favor complete los siguientes campos:\n\n${emptyFields.slice(0, 10).join('\n')}${emptyFields.length > 10 ? '\n\n...y ' + (emptyFields.length - 10) + ' campos más.' : ''}\n\n💡 Los campos con (*) son obligatorios.`);
+                
+                // Hacer scroll al primer campo vacío
+                const firstEmptyField = Array.from(requiredFields).find(f => !f.value || f.value.trim() === '');
+                if (firstEmptyField) {
+                    firstEmptyField.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    firstEmptyField.focus();
+                }
+                
+                return false;
+            }
         });
     }
 });
@@ -218,14 +261,13 @@ function addActionItem() {
                 <div class="grid grid-cols-3 gap-3">
                     <div>
                         <label class="block text-sm font-medium text-gray-700 mb-1">
-                            Fecha de Inicio <span class="text-red-500">*</span>
+                            Fecha de Inicio
                         </label>
                         <input type="date" 
                                name="items[${actionCounter}][start_date]" 
                                id="start_date_${actionCounter}"
                                class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500"
-                               onchange="calculateBusinessDays(${actionCounter})"
-                               required>
+                               onchange="calculateBusinessDays(${actionCounter})">
                     </div>
 
                     <div>
@@ -422,14 +464,14 @@ async function loadTemplate() {
         // Crear secciones colapsables
         Object.keys(sections).forEach((sectionName, sectionIndex) => {
             const sectionId = `section-${sectionIndex}`;
-            const isOpen = true; // TODAS las secciones abiertas por defecto
+            const isOpen = false; // TODAS las secciones COLAPSADAS por defecto
             
             // Header de la sección (colapsable)
             const sectionHeader = `
                 <div class="section-header bg-gradient-to-r from-blue-600 to-blue-700 rounded-lg p-4 mb-2 cursor-pointer hover:from-blue-700 hover:to-blue-800 transition-colors" onclick="toggleSection('${sectionId}')">
                     <div class="flex justify-between items-center text-white">
                         <div class="flex items-center">
-                            <svg id="icon-${sectionId}" class="w-5 h-5 mr-3 transform transition-transform ${isOpen ? 'rotate-90' : ''}" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <svg id="icon-${sectionId}" class="w-5 h-5 mr-3 transform transition-transform duration-200 ${isOpen ? 'rotate-90' : ''}" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
                             </svg>
                             <h3 class="text-lg font-bold">${sectionName}</h3>
@@ -446,7 +488,10 @@ async function loadTemplate() {
             // Contenedor de acciones de la sección
             const sectionContent = document.createElement('div');
             sectionContent.id = sectionId;
-            sectionContent.className = `section-content space-y-4 mb-6 ${isOpen ? '' : 'hidden'}`;
+            // NO usar 'hidden' porque los campos ocultos no se envían en el form
+            // En su lugar, usar CSS para ocultar visualmente
+            sectionContent.className = `section-content space-y-4 mb-6`;
+            sectionContent.style.display = isOpen ? 'block' : 'none';
             
             // Crear cada acción de la sección
             sections[sectionName].forEach((template, index) => {
@@ -616,6 +661,21 @@ async function loadTemplate() {
             container.appendChild(sectionContent);
         });
 
+        // Auto-llenar fechas con fecha por defecto (3 meses desde hoy)
+        const today = new Date();
+        const defaultEndDate = new Date(today.getFullYear(), today.getMonth() + 3, today.getDate());
+        const defaultDateStr = defaultEndDate.toISOString().split('T')[0];
+        
+        // Llenar todas las fechas de término automáticamente
+        let filledCount = 0;
+        for (let i = 0; i < actionCounter; i++) {
+            const endDateInput = document.getElementById(`end_date_${i}`);
+            if (endDateInput) {
+                endDateInput.value = defaultDateStr;
+                filledCount++;
+            }
+        }
+        
         // Restaurar botón
         btn.disabled = false;
         btn.innerHTML = originalText;
@@ -626,9 +686,10 @@ async function loadTemplate() {
         
         console.log(`✅ Plantilla cargada: ${totalActions} acciones en ${totalSections} secciones`);
         console.log('Secciones:', Object.keys(sections));
+        console.log(`📅 Fechas auto-completadas: ${filledCount} con fecha ${defaultDateStr}`);
         
-        alert(`✅ ¡Plantilla cargada exitosamente!\n\n📋 ${totalActions} acciones cargadas\n📁 ${totalSections} secciones organizadas\n\n💡 Todas las secciones están visibles.\n💡 Haz clic en las barras azules para contraer/expandir.\n\n⚠️ IMPORTANTE: Complete las fechas requeridas antes de guardar.`);
-
+        alert(`✅ ¡Plantilla cargada exitosamente!\n\n📋 ${totalActions} acciones organizadas en ${totalSections} secciones\n📅 Fechas de término: ${defaultDateStr} (automático)\n\n💡 Todas las secciones están COLAPSADAS:\n   • Haz clic en las barras azules para expandir\n   • Ajusta fechas y responsables según tu entidad\n\n✓ Listo para guardar o personalizar`);
+        
         // Scroll al primer elemento
         const firstSection = document.querySelector('.section-header');
         if (firstSection) {
@@ -655,14 +716,55 @@ function toggleSection(sectionId) {
     const icon = document.getElementById('icon-' + sectionId);
     
     if (section && icon) {
-        if (section.classList.contains('hidden')) {
-            section.classList.remove('hidden');
+        // Usar display en lugar de hidden para que los campos se envíen en el form
+        if (section.style.display === 'none') {
+            section.style.display = 'block';
             icon.classList.add('rotate-90');
         } else {
-            section.classList.add('hidden');
+            section.style.display = 'none';
             icon.classList.remove('rotate-90');
         }
     }
+}
+
+/**
+ * Función helper: Llenar todas las fechas de término vacías con una fecha por defecto
+ */
+function autoFillEndDates() {
+    const dateInputs = document.querySelectorAll('input[name*="[end_date]"]');
+    let emptyCount = 0;
+    
+    // Contar campos vacíos
+    dateInputs.forEach(input => {
+        if (!input.value) emptyCount++;
+    });
+    
+    if (emptyCount === 0) {
+        alert('✅ Todas las fechas de término ya están completadas.');
+        return;
+    }
+    
+    // Pedir fecha por defecto
+    const defaultDate = prompt(`📅 Hay ${emptyCount} fechas de término vacías.\n\n¿Qué fecha desea usar por defecto?\n\nFormato: AAAA-MM-DD (Ejemplo: 2025-12-31)`, '2025-12-31');
+    
+    if (!defaultDate) return;
+    
+    // Validar formato de fecha
+    if (!/^\d{4}-\d{2}-\d{2}$/.test(defaultDate)) {
+        alert('❌ Formato de fecha inválido. Use AAAA-MM-DD');
+        return;
+    }
+    
+    // Llenar campos vacíos
+    let filledCount = 0;
+    dateInputs.forEach(input => {
+        if (!input.value) {
+            input.value = defaultDate;
+            filledCount++;
+        }
+    });
+    
+    alert(`✅ Se han llenado ${filledCount} fechas de término con la fecha ${defaultDate}.\n\n💡 Puede ajustar las fechas individualmente si es necesario.`);
 }
 </script>
 @endsection
