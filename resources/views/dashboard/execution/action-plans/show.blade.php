@@ -106,6 +106,20 @@
                         </svg>
                         Vista Tipo Lista (JIRA)
                     </button>
+                    <button onclick="switchTab('kanban')" id="tab-kanban" 
+                            class="tab-button border-b-2 border-transparent text-gray-500 py-4 px-6 text-sm font-medium hover:text-gray-700 hover:border-gray-300 focus:outline-none">
+                        <svg class="w-5 h-5 inline-block mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17V7m0 10a2 2 0 01-2 2H5a2 2 0 01-2-2V7a2 2 0 012-2h2a2 2 0 012 2m0 10a2 2 0 002 2h2a2 2 0 002-2M9 7a2 2 0 012-2h2a2 2 0 012 2m0 10V7m0 10a2 2 0 002 2h2a2 2 0 002-2V7a2 2 0 00-2-2h-2a2 2 0 00-2 2"/>
+                        </svg>
+                        Vista Kanban
+                    </button>
+                    <button onclick="switchTab('calendar')" id="tab-calendar" 
+                            class="tab-button border-b-2 border-transparent text-gray-500 py-4 px-6 text-sm font-medium hover:text-gray-700 hover:border-gray-300 focus:outline-none">
+                        <svg class="w-5 h-5 inline-block mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+                        </svg>
+                        Calendario
+                    </button>
                 </nav>
             </div>
 
@@ -531,6 +545,192 @@
                     </div>
                 </div>
             </div> <!-- Cierre de content-list tab -->
+
+            <!-- Tab Content: Vista Kanban -->
+            <div id="content-kanban" class="tab-content hidden">
+                <!-- Header del Kanban -->
+                <div class="bg-gradient-to-r from-purple-600 to-purple-700 text-white px-6 py-4">
+                    <div class="flex justify-between items-center">
+                        <div>
+                            <h2 class="text-xl font-bold flex items-center">
+                                <svg class="w-6 h-6 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17V7m0 10a2 2 0 01-2 2H5a2 2 0 01-2-2V7a2 2 0 012-2h2a2 2 0 012 2m0 10a2 2 0 002 2h2a2 2 0 002-2M9 7a2 2 0 012-2h2a2 2 0 012 2m0 10V7m0 10a2 2 0 002 2h2a2 2 0 002-2V7a2 2 0 00-2-2h-2a2 2 0 00-2 2"/>
+                                </svg>
+                                Vista Kanban - Organización por Estado
+                            </h2>
+                            <p class="text-purple-100 text-sm mt-1">Visualiza y organiza las acciones por su estado actual</p>
+                        </div>
+                        <!-- Filtro por Sección -->
+                        <div class="flex items-center space-x-3">
+                            <label class="text-sm text-purple-100">Filtrar por sección:</label>
+                            <select id="kanbanSectionFilter" onchange="filterKanbanBySection(this.value)" class="px-3 py-2 border border-purple-400 bg-purple-500 text-white rounded-lg focus:ring-2 focus:ring-purple-300 text-sm">
+                                <option value="">Todas las secciones ({{ $actionPlan->items->count() }})</option>
+                                @foreach($groupedItems as $sectionKey => $sectionItems)
+                                    <option value="{{ $sectionKey }}">{{ $sectionKey }} ({{ count($sectionItems) }} items)</option>
+                                @endforeach
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Tablero Kanban -->
+                <div class="p-6 bg-gray-50 min-h-[600px]">
+                    <div class="grid grid-cols-3 gap-6 h-full">
+                        <!-- Columna: Pendiente -->
+                        <div class="bg-gray-100 rounded-lg flex flex-col">
+                            <div class="bg-gray-600 text-white px-4 py-3 rounded-t-lg flex justify-between items-center">
+                                <h3 class="font-semibold flex items-center">
+                                    <span class="w-3 h-3 bg-gray-300 rounded-full mr-2"></span>
+                                    Pendiente
+                                </h3>
+                                <span id="kanban-count-pendiente" class="bg-gray-500 px-2 py-1 rounded-full text-sm font-bold">
+                                    {{ $actionPlan->items->where('status', 'pendiente')->count() }}
+                                </span>
+                            </div>
+                            <div id="kanban-column-pendiente" class="flex-1 p-3 space-y-3 overflow-y-auto max-h-[500px] min-h-[400px]">
+                                @foreach($actionPlan->items->where('status', 'pendiente') as $item)
+                                    @include('dashboard.execution.action-plans._kanban-card', ['item' => $item])
+                                @endforeach
+                            </div>
+                        </div>
+
+                        <!-- Columna: En Proceso -->
+                        <div class="bg-yellow-50 rounded-lg flex flex-col">
+                            <div class="bg-yellow-500 text-white px-4 py-3 rounded-t-lg flex justify-between items-center">
+                                <h3 class="font-semibold flex items-center">
+                                    <span class="w-3 h-3 bg-yellow-300 rounded-full mr-2"></span>
+                                    En Proceso
+                                </h3>
+                                <span id="kanban-count-proceso" class="bg-yellow-400 px-2 py-1 rounded-full text-sm font-bold">
+                                    {{ $actionPlan->items->whereIn('status', ['en_proceso', 'proceso'])->count() }}
+                                </span>
+                            </div>
+                            <div id="kanban-column-proceso" class="flex-1 p-3 space-y-3 overflow-y-auto max-h-[500px] min-h-[400px]">
+                                @foreach($actionPlan->items->whereIn('status', ['en_proceso', 'proceso']) as $item)
+                                    @include('dashboard.execution.action-plans._kanban-card', ['item' => $item])
+                                @endforeach
+                            </div>
+                        </div>
+
+                        <!-- Columna: Completado -->
+                        <div class="bg-green-50 rounded-lg flex flex-col">
+                            <div class="bg-green-600 text-white px-4 py-3 rounded-t-lg flex justify-between items-center">
+                                <h3 class="font-semibold flex items-center">
+                                    <span class="w-3 h-3 bg-green-300 rounded-full mr-2"></span>
+                                    Completado
+                                </h3>
+                                <span id="kanban-count-completado" class="bg-green-500 px-2 py-1 rounded-full text-sm font-bold">
+                                    {{ $actionPlan->items->where('status', 'completado')->count() }}
+                                </span>
+                            </div>
+                            <div id="kanban-column-completado" class="flex-1 p-3 space-y-3 overflow-y-auto max-h-[500px] min-h-[400px]">
+                                @foreach($actionPlan->items->where('status', 'completado') as $item)
+                                    @include('dashboard.execution.action-plans._kanban-card', ['item' => $item])
+                                @endforeach
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Leyenda -->
+                    <div class="mt-6 flex justify-center space-x-6 text-sm text-gray-600">
+                        <div class="flex items-center">
+                            <span class="w-4 h-4 bg-gray-400 rounded mr-2"></span>
+                            Pendiente: Acciones sin iniciar
+                        </div>
+                        <div class="flex items-center">
+                            <span class="w-4 h-4 bg-yellow-400 rounded mr-2"></span>
+                            En Proceso: Acciones en ejecución
+                        </div>
+                        <div class="flex items-center">
+                            <span class="w-4 h-4 bg-green-500 rounded mr-2"></span>
+                            Completado: Acciones finalizadas
+                        </div>
+                    </div>
+                </div>
+            </div> <!-- Cierre de content-kanban tab -->
+
+            <!-- Tab Content: Vista Calendario -->
+            <div id="content-calendar" class="tab-content hidden">
+                <!-- Header del Calendario -->
+                <div class="bg-gradient-to-r from-indigo-600 to-indigo-700 text-white px-6 py-4">
+                    <div class="flex justify-between items-center">
+                        <div>
+                            <h2 class="text-xl font-bold flex items-center">
+                                <svg class="w-6 h-6 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+                                </svg>
+                                Vista Calendario - Organización por Fechas
+                            </h2>
+                            <p class="text-indigo-100 text-sm mt-1">Visualiza las acciones organizadas por fecha de vencimiento</p>
+                        </div>
+                        <div class="flex items-center space-x-3">
+                            <button onclick="changeCalendarMonth(-1)" class="px-3 py-2 bg-indigo-500 hover:bg-indigo-400 rounded-lg transition-colors">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
+                                </svg>
+                            </button>
+                            <span id="currentMonthYear" class="text-lg font-semibold min-w-[150px] text-center"></span>
+                            <button onclick="changeCalendarMonth(1)" class="px-3 py-2 bg-indigo-500 hover:bg-indigo-400 rounded-lg transition-colors">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+                                </svg>
+                            </button>
+                            <button onclick="goToToday()" class="px-4 py-2 bg-white text-indigo-600 font-medium rounded-lg hover:bg-indigo-50 transition-colors ml-2">
+                                Hoy
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="p-6 bg-gray-50">
+                    <!-- Días de la semana -->
+                    <div class="grid grid-cols-7 gap-1 mb-2">
+                        <div class="text-center text-sm font-semibold text-gray-600 py-2">Dom</div>
+                        <div class="text-center text-sm font-semibold text-gray-600 py-2">Lun</div>
+                        <div class="text-center text-sm font-semibold text-gray-600 py-2">Mar</div>
+                        <div class="text-center text-sm font-semibold text-gray-600 py-2">Mié</div>
+                        <div class="text-center text-sm font-semibold text-gray-600 py-2">Jue</div>
+                        <div class="text-center text-sm font-semibold text-gray-600 py-2">Vie</div>
+                        <div class="text-center text-sm font-semibold text-gray-600 py-2">Sáb</div>
+                    </div>
+
+                    <!-- Grid del calendario -->
+                    <div id="calendarGrid" class="grid grid-cols-7 gap-1">
+                        <!-- Los días se generarán con JavaScript -->
+                    </div>
+
+                    <!-- Leyenda del calendario -->
+                    <div class="mt-6 flex justify-center space-x-6 text-sm text-gray-600">
+                        <div class="flex items-center">
+                            <span class="w-4 h-4 bg-gray-300 rounded mr-2"></span>
+                            Pendiente
+                        </div>
+                        <div class="flex items-center">
+                            <span class="w-4 h-4 bg-yellow-400 rounded mr-2"></span>
+                            En Proceso
+                        </div>
+                        <div class="flex items-center">
+                            <span class="w-4 h-4 bg-green-500 rounded mr-2"></span>
+                            Completado
+                        </div>
+                        <div class="flex items-center">
+                            <span class="w-4 h-4 bg-red-500 rounded mr-2"></span>
+                            Vencido
+                        </div>
+                    </div>
+
+                    <!-- Lista de acciones del día seleccionado -->
+                    <div id="selectedDayActions" class="mt-6 hidden">
+                        <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-4">
+                            <h3 id="selectedDayTitle" class="text-lg font-semibold text-gray-800 mb-4"></h3>
+                            <div id="selectedDayList" class="space-y-2">
+                                <!-- Las acciones del día se mostrarán aquí -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div> <!-- Cierre de content-calendar tab -->
+
         </div> <!-- Cierre del contenedor de tabs -->
 
         <!-- Botones de acción -->
@@ -1451,5 +1651,339 @@ document.addEventListener('DOMContentLoaded', function() {
         opacity: 1;
     }
 }
+
+/* Kanban Cards */
+.kanban-card {
+    transition: all 0.2s ease;
+}
+
+.kanban-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.kanban-card.hidden-by-filter {
+    display: none;
+}
+
+/* Line clamp for truncating text */
+.line-clamp-2 {
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+/* Kanban columns scrollbar */
+#kanban-column-pendiente::-webkit-scrollbar,
+#kanban-column-proceso::-webkit-scrollbar,
+#kanban-column-completado::-webkit-scrollbar {
+    width: 6px;
+}
+
+#kanban-column-pendiente::-webkit-scrollbar-thumb,
+#kanban-column-proceso::-webkit-scrollbar-thumb,
+#kanban-column-completado::-webkit-scrollbar-thumb {
+    background-color: rgba(0, 0, 0, 0.2);
+    border-radius: 3px;
+}
+
+#kanban-column-pendiente::-webkit-scrollbar-track,
+#kanban-column-proceso::-webkit-scrollbar-track,
+#kanban-column-completado::-webkit-scrollbar-track {
+    background-color: rgba(0, 0, 0, 0.05);
+}
 </style>
+
+<script>
+// ==================== KANBAN FILTER ====================
+function filterKanbanBySection(section) {
+    const allCards = document.querySelectorAll('.kanban-card');
+    let countPendiente = 0;
+    let countProceso = 0;
+    let countCompletado = 0;
+    
+    console.log('Filtering by section:', section);
+    console.log('Total cards found:', allCards.length);
+    
+    allCards.forEach(card => {
+        const cardSection = card.getAttribute('data-section') || '';
+        const cardStatus = card.getAttribute('data-status') || '';
+        
+        // Comparación más flexible - verificar si contiene la sección
+        const matches = section === '' || 
+                       cardSection === section || 
+                       cardSection.includes(section) ||
+                       section.includes(cardSection);
+        
+        if (matches) {
+            card.classList.remove('hidden-by-filter');
+            card.style.display = 'block';
+            
+            // Contar por estado
+            if (cardStatus === 'pendiente') countPendiente++;
+            else if (cardStatus === 'en_proceso' || cardStatus === 'proceso') countProceso++;
+            else if (cardStatus === 'completado') countCompletado++;
+        } else {
+            card.classList.add('hidden-by-filter');
+            card.style.display = 'none';
+        }
+    });
+    
+    console.log('Counts:', { pendiente: countPendiente, proceso: countProceso, completado: countCompletado });
+    
+    // Actualizar contadores
+    document.getElementById('kanban-count-pendiente').textContent = countPendiente;
+    document.getElementById('kanban-count-proceso').textContent = countProceso;
+    document.getElementById('kanban-count-completado').textContent = countCompletado;
+}
+
+// Actualizar Kanban cuando se cambia un item desde el modal
+function updateKanbanCard(itemId, newStatus) {
+    const card = document.querySelector(`.kanban-card[data-item-id="${itemId}"]`);
+    if (!card) return;
+    
+    // Determinar columna destino
+    let targetColumnId;
+    if (newStatus === 'pendiente') {
+        targetColumnId = 'kanban-column-pendiente';
+    } else if (newStatus === 'en_proceso' || newStatus === 'proceso') {
+        targetColumnId = 'kanban-column-proceso';
+    } else {
+        targetColumnId = 'kanban-column-completado';
+    }
+    
+    const targetColumn = document.getElementById(targetColumnId);
+    if (targetColumn && card.parentElement.id !== targetColumnId) {
+        // Mover la tarjeta a la nueva columna
+        targetColumn.appendChild(card);
+        card.setAttribute('data-status', newStatus);
+        
+        // Actualizar contadores
+        updateKanbanCounters();
+    }
+}
+
+function updateKanbanCounters() {
+    const pendienteCount = document.querySelectorAll('#kanban-column-pendiente .kanban-card:not(.hidden-by-filter)').length;
+    const procesoCount = document.querySelectorAll('#kanban-column-proceso .kanban-card:not(.hidden-by-filter)').length;
+    const completadoCount = document.querySelectorAll('#kanban-column-completado .kanban-card:not(.hidden-by-filter)').length;
+    
+    document.getElementById('kanban-count-pendiente').textContent = pendienteCount;
+    document.getElementById('kanban-count-proceso').textContent = procesoCount;
+    document.getElementById('kanban-count-completado').textContent = completadoCount;
+}
+
+// ==================== CALENDAR ====================
+let currentCalendarDate = new Date();
+@php
+$calendarItemsData = $actionPlan->items->map(function($item) {
+    return [
+        'id' => $item->id,
+        'action_name' => $item->action_name,
+        'description' => $item->description,
+        'status' => $item->status,
+        'start_date' => $item->start_date ? $item->start_date->format('Y-m-d') : null,
+        'end_date' => $item->end_date ? $item->end_date->format('Y-m-d') : null,
+        'responsible' => $item->responsible,
+        'comments' => $item->comments ?? '',
+        'predecessor_action' => $item->predecessor_action ?? '',
+        'business_days' => $item->business_days,
+        'problems' => $item->problems ?? '',
+        'corrective_measures' => $item->corrective_measures ?? '',
+    ];
+})->values()->toArray();
+@endphp
+const calendarItems = @json($calendarItemsData);
+
+const monthNames = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 
+                   'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'];
+
+function renderCalendar() {
+    const grid = document.getElementById('calendarGrid');
+    const monthYearLabel = document.getElementById('currentMonthYear');
+    
+    if (!grid || !monthYearLabel) return;
+    
+    const year = currentCalendarDate.getFullYear();
+    const month = currentCalendarDate.getMonth();
+    
+    monthYearLabel.textContent = `${monthNames[month]} ${year}`;
+    
+    // Primer día del mes
+    const firstDay = new Date(year, month, 1);
+    const lastDay = new Date(year, month + 1, 0);
+    const startingDayOfWeek = firstDay.getDay();
+    const daysInMonth = lastDay.getDate();
+    
+    // Limpiar grid
+    grid.innerHTML = '';
+    
+    // Agregar días vacíos antes del primer día
+    for (let i = 0; i < startingDayOfWeek; i++) {
+        const emptyDay = document.createElement('div');
+        emptyDay.className = 'min-h-[100px] bg-gray-100 rounded';
+        grid.appendChild(emptyDay);
+    }
+    
+    // Agregar días del mes
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    
+    for (let day = 1; day <= daysInMonth; day++) {
+        const dateStr = `${year}-${String(month + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
+        const currentDate = new Date(year, month, day);
+        
+        // Buscar items para este día
+        const dayItems = calendarItems.filter(item => item.end_date === dateStr);
+        
+        const dayElement = document.createElement('div');
+        dayElement.className = 'min-h-[100px] bg-white border border-gray-200 rounded p-2 cursor-pointer hover:bg-gray-50 transition-colors';
+        
+        // Marcar día actual
+        if (currentDate.getTime() === today.getTime()) {
+            dayElement.classList.add('ring-2', 'ring-indigo-500', 'bg-indigo-50');
+        }
+        
+        // Número del día
+        const dayNumber = document.createElement('div');
+        dayNumber.className = 'text-sm font-semibold text-gray-700 mb-1';
+        dayNumber.textContent = day;
+        dayElement.appendChild(dayNumber);
+        
+        // Items del día (máximo 3 visibles)
+        if (dayItems.length > 0) {
+            const itemsContainer = document.createElement('div');
+            itemsContainer.className = 'space-y-1';
+            
+            dayItems.slice(0, 3).forEach(item => {
+                const itemBadge = document.createElement('div');
+                
+                // Determinar color según estado y si está vencida
+                let bgColor = 'bg-gray-300';
+                if (item.status === 'completado') {
+                    bgColor = 'bg-green-500';
+                } else if (item.status === 'en_proceso' || item.status === 'proceso') {
+                    bgColor = 'bg-yellow-400';
+                } else if (currentDate < today) {
+                    bgColor = 'bg-red-500'; // Vencida
+                }
+                
+                itemBadge.className = `${bgColor} text-white text-xs px-1 py-0.5 rounded truncate`;
+                itemBadge.textContent = item.action_name;
+                itemBadge.title = item.description;
+                itemsContainer.appendChild(itemBadge);
+            });
+            
+            if (dayItems.length > 3) {
+                const moreLabel = document.createElement('div');
+                moreLabel.className = 'text-xs text-gray-500 font-medium';
+                moreLabel.textContent = `+${dayItems.length - 3} más`;
+                itemsContainer.appendChild(moreLabel);
+            }
+            
+            dayElement.appendChild(itemsContainer);
+        }
+        
+        // Evento click para mostrar detalles del día
+        dayElement.onclick = () => showDayDetails(dateStr, dayItems);
+        
+        grid.appendChild(dayElement);
+    }
+}
+
+function changeCalendarMonth(delta) {
+    currentCalendarDate.setMonth(currentCalendarDate.getMonth() + delta);
+    renderCalendar();
+}
+
+function goToToday() {
+    currentCalendarDate = new Date();
+    renderCalendar();
+}
+
+function showDayDetails(dateStr, items) {
+    const container = document.getElementById('selectedDayActions');
+    const title = document.getElementById('selectedDayTitle');
+    const list = document.getElementById('selectedDayList');
+    
+    if (!container || !title || !list) return;
+    
+    // Formatear fecha
+    const date = new Date(dateStr + 'T00:00:00');
+    const formattedDate = date.toLocaleDateString('es-PE', { 
+        weekday: 'long', 
+        year: 'numeric', 
+        month: 'long', 
+        day: 'numeric' 
+    });
+    
+    title.textContent = `Acciones para ${formattedDate}`;
+    
+    if (items.length === 0) {
+        list.innerHTML = '<p class="text-gray-500 text-sm">No hay acciones programadas para este día</p>';
+    } else {
+        list.innerHTML = items.map(item => {
+            let statusBadge = '';
+            let statusColor = 'bg-gray-100 text-gray-700';
+            
+            if (item.status === 'completado') {
+                statusBadge = '✓ Completado';
+                statusColor = 'bg-green-100 text-green-700';
+            } else if (item.status === 'en_proceso' || item.status === 'proceso') {
+                statusBadge = '⏳ En Proceso';
+                statusColor = 'bg-yellow-100 text-yellow-700';
+            } else {
+                const today = new Date();
+                today.setHours(0, 0, 0, 0);
+                const itemDate = new Date(item.end_date + 'T00:00:00');
+                if (itemDate < today) {
+                    statusBadge = '⚠️ Vencida';
+                    statusColor = 'bg-red-100 text-red-700';
+                } else {
+                    statusBadge = '○ Pendiente';
+                }
+            }
+            
+            return `
+                <div class="flex items-center justify-between p-3 bg-gray-50 rounded-lg hover:bg-gray-100 cursor-pointer transition-colors"
+                     onclick="openEditModal(${item.id}, '${item.status}', \`${(item.comments || '').replace(/`/g, "'")}\`, '${item.predecessor_action || ''}', '${item.start_date || ''}', '${item.end_date || ''}', '${item.business_days || ''}', \`${(item.problems || '').replace(/`/g, "'")}\`, \`${(item.corrective_measures || '').replace(/`/g, "'")}\`)">
+                    <div class="flex-1">
+                        <div class="flex items-center space-x-2">
+                            <span class="text-sm font-mono font-bold text-blue-600">${item.action_name}</span>
+                            <span class="px-2 py-0.5 rounded-full text-xs font-medium ${statusColor}">${statusBadge}</span>
+                        </div>
+                        <p class="text-sm text-gray-600 mt-1">${item.description || ''}</p>
+                        <p class="text-xs text-gray-500 mt-1">Responsable: ${item.responsible || 'Sin asignar'}</p>
+                    </div>
+                    <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+                    </svg>
+                </div>
+            `;
+        }).join('');
+    }
+    
+    container.classList.remove('hidden');
+    container.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+}
+
+// Inicializar calendario cuando se muestre el tab
+document.addEventListener('DOMContentLoaded', function() {
+    // Observar cambios en el tab de calendario
+    const calendarTab = document.getElementById('content-calendar');
+    if (calendarTab) {
+        const observer = new MutationObserver((mutations) => {
+            mutations.forEach((mutation) => {
+                if (mutation.attributeName === 'style' || mutation.attributeName === 'class') {
+                    if (!calendarTab.classList.contains('hidden') && calendarTab.style.display !== 'none') {
+                        renderCalendar();
+                    }
+                }
+            });
+        });
+        observer.observe(calendarTab, { attributes: true });
+    }
+});
+</script>
 @endsection
