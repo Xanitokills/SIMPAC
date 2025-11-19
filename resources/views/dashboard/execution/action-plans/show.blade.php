@@ -118,7 +118,7 @@
                 <div class="p-6">
                     <div class="space-y-4">
                     @if(!empty($groupedItems))
-                        @foreach($groupedItems as $sectionKey => $items)
+                        @foreach($groupedItems as $sectionKey => $sectionItems)
                             @php $idx = $loop->index; @endphp
                             <div class="bg-white rounded-lg border mb-2 overflow-hidden">
                                 <div class="px-4 py-3 bg-gradient-to-r from-blue-600 to-blue-700 text-white cursor-pointer flex justify-between items-center" onclick="toggleShowSection('show-section-{{ $idx }}', 'show-icon-{{ $idx }}')">
@@ -126,11 +126,11 @@
                                         <svg id="show-icon-{{ $idx }}" class="w-5 h-5 mr-2 transform transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
                                         <h4 class="font-semibold">{{ $sectionKey }}</h4>
                                     </div>
-                                    <span class="bg-white text-blue-700 px-3 py-1 rounded-full text-sm font-semibold">{{ count($items) }} {{ count($items) === 1 ? 'acción' : 'acciones' }}</span>
+                                    <span class="bg-white text-blue-700 px-3 py-1 rounded-full text-sm font-semibold">{{ count($sectionItems) }} {{ count($sectionItems) === 1 ? 'acción' : 'acciones' }}</span>
                                 </div>
 
                                 <div id="show-section-{{ $idx }}" style="display: none;" class="p-4">
-                                    @foreach($items as $item)
+                                    @foreach($sectionItems as $item)
                                         <div class="border border-gray-200 rounded-lg p-4 hover:shadow-md transition-shadow mb-3">
                                             <div class="flex justify-between items-start mb-3">
                                                 <div class="flex-1">
@@ -140,10 +140,7 @@
                                                         @elseif($item->status === 'en_proceso' || $item->status === 'proceso')
                                                             <span class="px-3 py-1 bg-yellow-100 text-yellow-700 text-xs font-semibold rounded-full">En Proceso</span>
                                                         @else
-                                                            <span class="px-3 py-1 bg-green-100 text-green-700 text-xs font-semibold rounded-full">
--                                                ✓ Finalizado
-+                                                ✓ Completado
-                                            </span>
+                                                            <span class="px-3 py-1 bg-green-100 text-green-700 text-xs font-semibold rounded-full">✓ Completado</span>
                                                         @endif
                                                         @if($item->end_date)
                                                             <span class="text-sm text-gray-600">Vence: {{ $item->end_date->format('d/m/Y') }}</span>
@@ -269,7 +266,7 @@
 
                     <!-- Filtros y búsqueda -->
                     <div class="bg-white rounded-lg shadow p-4 mb-4">
-                        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                        <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
                             <div>
                                 <label for="searchListView" class="block text-sm font-medium text-gray-700 mb-2">
                                     <svg class="w-4 h-4 inline mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -313,25 +310,83 @@
                                     <option value="completado">Completado</option>
                                 </select>
                             </div>
+                            <div>
+                                <label for="itemsPerPage" class="block text-sm font-medium text-gray-700 mb-2">
+                                    <svg class="w-4 h-4 inline mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 10h16M4 14h16M4 18h16"/>
+                                    </svg>
+                                    Items por página
+                                </label>
+                                <select id="itemsPerPage" 
+                                        class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                                    <option value="10">10</option>
+                                    <option value="25" selected>25</option>
+                                    <option value="50">50</option>
+                                    <option value="100">100</option>
+                                    <option value="all">Todos</option>
+                                </select>
+                            </div>
                         </div>
                     </div>
 
-                    <!-- Items Table con edición inline -->
+                    <!-- Items Table con edición inline y ordenamiento -->
                     <div class="bg-white rounded-lg shadow overflow-hidden">
-                        <div class="overflow-x-auto overflow-y-auto" style="max-height: calc(100vh - 350px); min-height: 400px;">
+                        <div class="overflow-x-auto overflow-y-auto" style="max-height: calc(100vh - 380px); min-height: 400px;">
                             <table class="min-w-full divide-y divide-gray-200" id="itemsTableListView">
                                 <thead class="bg-gray-50 sticky top-0 z-10">
                                     <tr>
-                                        <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-12">#</th>
-                                        <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Sección</th>
-                                        <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider min-w-96">Descripción</th>
-                                        <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Responsable</th>
-                                        <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Estado</th>
-                                        <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Fecha Límite</th>
+                                        <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-16 sortable-header cursor-pointer hover:bg-gray-100" data-sort="order">
+                                            <div class="flex items-center">
+                                                #
+                                                <svg class="w-4 h-4 ml-1 sort-icon text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16V4m0 0L3 8m4-4l4 4m6 0v12m0 0l4-4m-4 4l-4-4"/>
+                                                </svg>
+                                            </div>
+                                        </th>
+                                        <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider sortable-header cursor-pointer hover:bg-gray-100" data-sort="section">
+                                            <div class="flex items-center">
+                                                Sección
+                                                <svg class="w-4 h-4 ml-1 sort-icon text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16V4m0 0L3 8m4-4l4 4m6 0v12m0 0l4-4m-4 4l-4-4"/>
+                                                </svg>
+                                            </div>
+                                        </th>
+                                        <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider min-w-96 sortable-header cursor-pointer hover:bg-gray-100" data-sort="description">
+                                            <div class="flex items-center">
+                                                Descripción
+                                                <svg class="w-4 h-4 ml-1 sort-icon text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16V4m0 0L3 8m4-4l4 4m6 0v12m0 0l4-4m-4 4l-4-4"/>
+                                                </svg>
+                                            </div>
+                                        </th>
+                                        <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider sortable-header cursor-pointer hover:bg-gray-100" data-sort="responsible">
+                                            <div class="flex items-center">
+                                                Responsable
+                                                <svg class="w-4 h-4 ml-1 sort-icon text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16V4m0 0L3 8m4-4l4 4m6 0v12m0 0l4-4m-4 4l-4-4"/>
+                                                </svg>
+                                            </div>
+                                        </th>
+                                        <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider sortable-header cursor-pointer hover:bg-gray-100" data-sort="status">
+                                            <div class="flex items-center">
+                                                Estado
+                                                <svg class="w-4 h-4 ml-1 sort-icon text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16V4m0 0L3 8m4-4l4 4m6 0v12m0 0l4-4m-4 4l-4-4"/>
+                                                </svg>
+                                            </div>
+                                        </th>
+                                        <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider sortable-header cursor-pointer hover:bg-gray-100" data-sort="date">
+                                            <div class="flex items-center">
+                                                Fecha Límite
+                                                <svg class="w-4 h-4 ml-1 sort-icon text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16V4m0 0L3 8m4-4l4 4m6 0v12m0 0l4-4m-4 4l-4-4"/>
+                                                </svg>
+                                            </div>
+                                        </th>
                                         <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Evidencia</th>
                                     </tr>
                                 </thead>
-                                <tbody class="bg-white divide-y divide-gray-200">
+                                <tbody class="bg-white divide-y divide-gray-200" id="tableBody">
                                     @if(!isset($items) || $items->isEmpty())
                                         <tr>
                                             <td colspan="7" class="px-4 py-8 text-center text-gray-500">
@@ -344,11 +399,15 @@
                                     @else
                                         @foreach($items as $item)
                                         <tr data-item-id="{{ $item->id }}" 
+                                            data-order="{{ $item->order }}"
                                             data-section="{{ $item->section_name }}" 
+                                            data-description="{{ Str::lower($item->description) }}"
+                                            data-responsible="{{ Str::lower($item->responsible ?? '') }}"
                                             data-status="{{ $item->status }}"
+                                            data-date="{{ $item->end_date ? \Carbon\Carbon::parse($item->end_date)->format('Y-m-d') : '9999-99-99' }}"
                                             class="hover:bg-blue-50 transition-colors list-view-row">
                                             <!-- Order -->
-                                            <td class="px-4 py-3 whitespace-nowrap text-sm text-gray-500 font-medium">
+                                            <td class="px-4 py-3 whitespace-nowrap text-sm text-gray-500 font-medium order-cell">
                                                 {{ $item->order }}
                                             </td>
                                             
@@ -505,6 +564,25 @@
                                     @endif
                                 </tbody>
                             </table>
+                        </div>
+                        
+                        <!-- Paginación -->
+                        <div class="bg-gray-50 px-4 py-3 border-t border-gray-200 flex flex-col sm:flex-row justify-between items-center gap-3">
+                            <div class="text-sm text-gray-700">
+                                Mostrando <span id="showingFrom" class="font-medium">1</span> a <span id="showingTo" class="font-medium">25</span> de <span id="totalFiltered" class="font-medium">{{ $totalItems ?? 0 }}</span> items
+                                <span id="filteredText" class="text-gray-500"></span>
+                            </div>
+                            <div class="flex items-center gap-2">
+                                <button id="prevPageBtn" class="px-3 py-1 text-sm bg-white border border-gray-300 rounded-lg hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed">
+                                    ← Anterior
+                                </button>
+                                <span class="text-sm text-gray-600">
+                                    Página <span id="currentPage" class="font-medium">1</span> de <span id="totalPages" class="font-medium">1</span>
+                                </span>
+                                <button id="nextPageBtn" class="px-3 py-1 text-sm bg-white border border-gray-300 rounded-lg hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed">
+                                    Siguiente →
+                                </button>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -818,24 +896,40 @@ function switchTab(tabName) {
 
 // Restaurar tab activo al cargar la página
 document.addEventListener('DOMContentLoaded', function() {
-    const activeTab = localStorage.getItem('activeActionPlanTab') || 'components';
-    switchTab(activeTab);
+    // ==================== TABLA: ORDENAMIENTO, PAGINACIÓN Y FILTROS ====================
+    // Buscar filas en el tbody específico
+    const tableBody = document.getElementById('tableBody');
+    let allRows = tableBody ? Array.from(tableBody.querySelectorAll('tr[data-item-id]')) : [];
     
-    // ==================== FILTROS PARA VISTA TIPO LISTA ====================
+    console.log('Total de filas encontradas:', allRows.length);
+    
+    // Si no se encontraron filas, buscar de otra manera
+    if (allRows.length === 0) {
+        allRows = Array.from(document.querySelectorAll('#tableBody tr[data-item-id]'));
+        console.log('Segunda búsqueda - filas encontradas:', allRows.length);
+    }
+    
+    let filteredRows = [...allRows];
+    let currentPage = 1;
+    let itemsPerPage = 25;
+    let currentSort = { column: 'order', direction: 'asc' };
+    
     const searchInputListView = document.getElementById('searchListView');
     const sectionFilterListView = document.getElementById('filterSectionListView');
     const statusFilterListView = document.getElementById('filterStatusListView');
+    const itemsPerPageSelect = document.getElementById('itemsPerPage');
+    const prevPageBtn = document.getElementById('prevPageBtn');
+    const nextPageBtn = document.getElementById('nextPageBtn');
     
-    function applyListViewFilters() {
+    // Función para aplicar filtros
+    function applyFilters() {
         const searchTerm = searchInputListView ? searchInputListView.value.toLowerCase() : '';
         const sectionFilter = sectionFilterListView ? sectionFilterListView.value : '';
         const statusFilter = statusFilterListView ? statusFilterListView.value : '';
         
-        const rows = document.querySelectorAll('.list-view-row');
-        
-        rows.forEach(row => {
-            const description = row.querySelector('.description-text') ? row.querySelector('.description-text').textContent.toLowerCase() : '';
-            const responsible = row.querySelector('.responsible-text') ? row.querySelector('.responsible-text').textContent.toLowerCase() : '';
+        filteredRows = allRows.filter(row => {
+            const description = row.dataset.description || '';
+            const responsible = row.dataset.responsible || '';
             const section = row.dataset.section || '';
             const status = row.dataset.status || '';
             
@@ -843,23 +937,190 @@ document.addEventListener('DOMContentLoaded', function() {
             const matchesSection = !sectionFilter || section === sectionFilter;
             const matchesStatus = !statusFilter || status === statusFilter;
             
-            if (matchesSearch && matchesSection && matchesStatus) {
-                row.style.display = '';
+            return matchesSearch && matchesSection && matchesStatus;
+        });
+        
+        currentPage = 1;
+        applySorting();
+    }
+    
+    // Función para aplicar ordenamiento
+    function applySorting() {
+        const { column, direction } = currentSort;
+        
+        filteredRows.sort((a, b) => {
+            let valA, valB;
+            
+            switch(column) {
+                case 'order':
+                    valA = parseInt(a.dataset.order) || 0;
+                    valB = parseInt(b.dataset.order) || 0;
+                    break;
+                case 'section':
+                    valA = a.dataset.section || '';
+                    valB = b.dataset.section || '';
+                    break;
+                case 'description':
+                    valA = a.dataset.description || '';
+                    valB = b.dataset.description || '';
+                    break;
+                case 'responsible':
+                    valA = a.dataset.responsible || '';
+                    valB = b.dataset.responsible || '';
+                    break;
+                case 'status':
+                    const statusOrder = { 'pendiente': 1, 'en_proceso': 2, 'completado': 3 };
+                    valA = statusOrder[a.dataset.status] || 0;
+                    valB = statusOrder[b.dataset.status] || 0;
+                    break;
+                case 'date':
+                    valA = a.dataset.date || '9999-99-99';
+                    valB = b.dataset.date || '9999-99-99';
+                    break;
+                default:
+                    return 0;
+            }
+            
+            if (typeof valA === 'string') {
+                return direction === 'asc' ? valA.localeCompare(valB) : valB.localeCompare(valA);
             } else {
-                row.style.display = 'none';
+                return direction === 'asc' ? valA - valB : valB - valA;
+            }
+        });
+        
+        renderTable();
+    }
+    
+    // Función para renderizar la tabla con paginación
+    function renderTable() {
+        const tbody = document.getElementById('tableBody');
+        const perPage = itemsPerPage === 'all' ? filteredRows.length : parseInt(itemsPerPage);
+        const totalPages = Math.ceil(filteredRows.length / perPage) || 1;
+        
+        if (currentPage > totalPages) currentPage = totalPages;
+        if (currentPage < 1) currentPage = 1;
+        
+        const startIndex = (currentPage - 1) * perPage;
+        const endIndex = Math.min(startIndex + perPage, filteredRows.length);
+        const rowsToShow = filteredRows.slice(startIndex, endIndex);
+        
+        // Ocultar todas las filas primero
+        allRows.forEach(row => row.style.display = 'none');
+        
+        // Mostrar solo las filas de la página actual
+        rowsToShow.forEach(row => row.style.display = '');
+        
+        // Reordenar en el DOM
+        const fragment = document.createDocumentFragment();
+        filteredRows.forEach(row => fragment.appendChild(row));
+        tbody.appendChild(fragment);
+        
+        // Actualizar información de paginación
+        document.getElementById('showingFrom').textContent = filteredRows.length > 0 ? startIndex + 1 : 0;
+        document.getElementById('showingTo').textContent = endIndex;
+        document.getElementById('totalFiltered').textContent = filteredRows.length;
+        document.getElementById('currentPage').textContent = currentPage;
+        document.getElementById('totalPages').textContent = totalPages;
+        
+        // Mostrar texto de filtrado si hay filtros activos
+        const totalAll = allRows.length;
+        const filteredText = document.getElementById('filteredText');
+        if (filteredRows.length < totalAll) {
+            filteredText.textContent = ` (filtrados de ${totalAll} total)`;
+        } else {
+            filteredText.textContent = '';
+        }
+        
+        // Habilitar/deshabilitar botones de paginación
+        prevPageBtn.disabled = currentPage <= 1;
+        nextPageBtn.disabled = currentPage >= totalPages;
+    }
+    
+    // Función para actualizar iconos de ordenamiento
+    function updateSortIcons() {
+        document.querySelectorAll('.sortable-header').forEach(header => {
+            const icon = header.querySelector('.sort-icon');
+            const column = header.dataset.sort;
+            
+            if (column === currentSort.column) {
+                header.classList.add('bg-blue-50');
+                icon.classList.remove('text-gray-400');
+                icon.classList.add('text-blue-600');
+                
+                // Cambiar icono según dirección
+                if (currentSort.direction === 'asc') {
+                    icon.innerHTML = '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7"/>';
+                } else {
+                    icon.innerHTML = '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>';
+                }
+            } else {
+                header.classList.remove('bg-blue-50');
+                icon.classList.add('text-gray-400');
+                icon.classList.remove('text-blue-600');
+                icon.innerHTML = '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16V4m0 0L3 8m4-4l4 4m6 0v12m0 0l4-4m-4 4l-4-4"/>';
             }
         });
     }
     
+    // Event listeners para ordenamiento
+    document.querySelectorAll('.sortable-header').forEach(header => {
+        header.addEventListener('click', function() {
+            const column = this.dataset.sort;
+            
+            if (currentSort.column === column) {
+                // Toggle dirección
+                currentSort.direction = currentSort.direction === 'asc' ? 'desc' : 'asc';
+            } else {
+                currentSort.column = column;
+                currentSort.direction = 'asc';
+            }
+            
+            updateSortIcons();
+            applySorting();
+        });
+    });
+    
+    // Event listeners para filtros
     if (searchInputListView) {
-        searchInputListView.addEventListener('input', applyListViewFilters);
+        searchInputListView.addEventListener('input', applyFilters);
     }
     if (sectionFilterListView) {
-        sectionFilterListView.addEventListener('change', applyListViewFilters);
+        sectionFilterListView.addEventListener('change', applyFilters);
     }
     if (statusFilterListView) {
-        statusFilterListView.addEventListener('change', applyListViewFilters);
+        statusFilterListView.addEventListener('change', applyFilters);
     }
+    if (itemsPerPageSelect) {
+        itemsPerPageSelect.addEventListener('change', function() {
+            itemsPerPage = this.value === 'all' ? 'all' : parseInt(this.value);
+            currentPage = 1;
+            renderTable();
+        });
+    }
+    
+    // Event listeners para paginación
+    if (prevPageBtn) {
+        prevPageBtn.addEventListener('click', function() {
+            if (currentPage > 1) {
+                currentPage--;
+                renderTable();
+            }
+        });
+    }
+    if (nextPageBtn) {
+        nextPageBtn.addEventListener('click', function() {
+            const perPage = itemsPerPage === 'all' ? filteredRows.length : parseInt(itemsPerPage);
+            const totalPages = Math.ceil(filteredRows.length / perPage);
+            if (currentPage < totalPages) {
+                currentPage++;
+                renderTable();
+            }
+        });
+    }
+    
+    // Inicializar tabla
+    updateSortIcons();
+    renderTable();
     
     // ==================== INLINE EDITING PARA VISTA TIPO LISTA ====================
     const changedItems = new Map();
@@ -1192,6 +1453,10 @@ document.addEventListener('DOMContentLoaded', function() {
             setTimeout(() => toast.remove(), 300);
         }, 3500);
     }
+    
+    // Restaurar tab activo al final, después de inicializar todo
+    const activeTab = localStorage.getItem('activeActionPlanTab') || 'components';
+    switchTab(activeTab);
 });
 </script>
 

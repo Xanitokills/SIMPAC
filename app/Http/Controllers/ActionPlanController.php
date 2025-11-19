@@ -221,14 +221,6 @@ class ActionPlanController extends Controller
         // Obtener responsables únicos para el filtro
         $responsibles = $items->pluck('responsible')->filter()->unique()->sort()->values();
 
-        // Debug temporal
-        \Log::info('ActionPlan Show Debug', [
-            'action_plan_id' => $id,
-            'items_count' => $items->count(),
-            'totalItems' => $totalItems,
-            'sections_count' => $sections->count(),
-        ]);
-
         return view('dashboard.execution.action-plans.show', compact(
             'actionPlan',
             'groupedItems',
