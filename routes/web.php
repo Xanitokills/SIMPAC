@@ -187,4 +187,11 @@ Route::middleware('simple.auth')->prefix('dashboard')->group(function () {
         Route::get('items/{item}/download', [\App\Http\Controllers\ActionPlanController::class, 'downloadFile'])
             ->name('items.download-file');
     });
+    
+    // Módulo de Actas de Reunión (HU6)
+    Route::prefix('execution/minutes')->name('execution.minutes.')->group(function () {
+        Route::get('create/{assignment}', [\App\Http\Controllers\MeetingMinuteController::class, 'create'])->name('create');
+        Route::post('{assignment}', [\App\Http\Controllers\MeetingMinuteController::class, 'store'])->name('store');
+        Route::get('{minute}/download', [\App\Http\Controllers\MeetingMinuteController::class, 'download'])->name('download');
+    });
 });

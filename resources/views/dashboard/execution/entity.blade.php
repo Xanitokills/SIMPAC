@@ -414,5 +414,75 @@
             @endif
         </div>
     </div>
+
+    <!-- Módulo 4: Actas de Reunión (HU6) -->
+    <div class="bg-white rounded-lg shadow-sm border border-gray-200">
+        <div class="p-6">
+            <div class="flex items-center justify-between mb-6">
+                <div>
+                    <h3 class="text-lg font-semibold text-gray-900">Actas de Reunión</h3>
+                    <p class="text-sm text-gray-500 mt-1">Registrar y gestionar actas de reunión por componente</p>
+                </div>
+                <a href="{{ route('execution.minutes.create', ['assignment' => $assignment->id]) }}" 
+                   class="bg-purple-600 hover:bg-purple-700 text-white font-medium py-2 px-4 rounded-lg transition-colors flex items-center space-x-2">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
+                    </svg>
+                    <span>Registrar Acta</span>
+                </a>
+            </div>
+
+            @php
+                $minutes = \App\Models\MeetingMinute::where('entity_assignment_id', $assignment->id)->orderBy('date', 'desc')->get();
+            @endphp
+
+            @if($minutes->count() > 0)
+                <div class="overflow-x-auto">
+                    <table class="min-w-full divide-y divide-gray-200">
+                        <thead class="bg-gray-50">
+                            <tr>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">N° Acta</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Fecha</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Asunto</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Componente</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Estado</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody class="bg-white divide-y divide-gray-200">
+                            @foreach($minutes as $m)
+                            <tr class="hover:bg-gray-50">
+                                <td class="px-6 py-4 text-sm text-gray-900">{{ $m->minute_number }}</td>
+                                <td class="px-6 py-4 text-sm text-gray-900">{{ \Carbon\Carbon::parse($m->date)->format('d/m/Y') }}</td>
+                                <td class="px-6 py-4 text-sm text-gray-900">{{ $m->subject }}</td>
+                                <td class="px-6 py-4 text-sm text-gray-900">{{ $m->component }}</td>
+                                <td class="px-6 py-4 text-sm">
+                                    @if($m->status === 'firmado')
+                                        <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">Firmado</span>
+                                    @elseif($m->status === 'falta_de_firma')
+                                        <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-800">Falta de firma</span>
+                                    @elseif($m->status === 'proceso_de_firmas')
+                                        <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800">Proceso de firmas</span>
+                                    @elseif($m->status === 'proceso_de_firmas_pge')
+                                        <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">Proceso de firmas PGE</span>
+                                    @endif
+                                </td>
+                                <td class="px-6 py-4 text-sm font-medium space-x-2">
+                                    @if($m->pdf_path)
+                                        <a href="{{ route('execution.minutes.download', $m->id) }}" class="text-blue-600 hover:text-blue-900">Descargar PDF</a>
+                                    @endif
+                                </td>
+                            </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
+                </div>
+            @else
+                <div class="text-center py-8 text-gray-500">
+                    <p>No hay actas registradas</p>
+                </div>
+            @endif
+        </div>
+    </div>
 </div>
 @endsection
