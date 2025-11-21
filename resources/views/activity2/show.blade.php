@@ -160,8 +160,8 @@
                     </svg>
                 </div>
                 <div>
-                    <h3 class="font-semibold text-gray-900">Cargar documento enviado</h3>
-                    <p class="text-sm text-gray-600">Solicitar conformación</p>
+                    <h3 class="font-semibold text-gray-900">Generar Oficio</h3>
+                    <p class="text-sm text-gray-600">Cargar documento enviado</p>
                 </div>
             </div>
         </a>
