@@ -1,6 +1,6 @@
 @extends('layouts.dashboard')
 
-@section('page-title', 'Ejecución por Componentes')
+@section('page-title', 'Ejecución Plan de Acción')
 @section('page-description', 'Fase 2: Ejecución paralela de los 5 componentes del proceso de transferencia')
 
 @section('content')
@@ -310,23 +310,6 @@
     El usuario debe seleccionar una entidad antes de acceder a reuniones y seguimiento
     ====================================================================
     -->
-    
-    {{-- Header con gradiente informativo --}}
-    <div class="bg-gradient-to-r from-indigo-500 to-purple-600 rounded-lg shadow-lg text-white">
-        <div class="p-8">
-            <div class="text-center">
-                <div class="inline-flex items-center justify-center w-20 h-20 bg-white bg-opacity-20 rounded-full mb-4">
-                    <svg class="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/>
-                    </svg>
-                </div>
-                <h3 class="text-2xl font-bold mb-2">Coordinación y Seguimiento de Ejecución</h3>
-                <p class="text-indigo-100 max-w-2xl mx-auto">
-                    Seleccione una entidad de las tarjetas de abajo para gestionar reuniones de coordinación, notificaciones y realizar el seguimiento de la ejecución.
-                </p>
-            </div>
-        </div>
-    </div>
 
     {{-- ========================================
          RESUMEN DE ALERTAS Y ESTADÍSTICAS (PRIMERO)
