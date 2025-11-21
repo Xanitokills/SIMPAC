@@ -23,27 +23,11 @@ class Activity2Controller extends Controller
                 ->with('error', 'Debes iniciar sesión para acceder a esta sección.');
         }
 
-        // Si es Secretario CTPPGE, mostrar todas las asignaciones
+        // Si es Secretario CTPPGE, redirigir con mensaje de restricción
+        // El Secretario debe ver la gestión desde el Panel Principal, no desde el Seguimiento de Entidades
         if ($user->isSecretarioCTPPGE()) {
-            // Vista global para el Secretario
-            $sectoristas = Sectorista::withCount('assignments')->get();
-            
-            $assignments = EntityAssignment::with([
-                'entity',
-                'sectorista',
-                'meetings' => function($query) {
-                    $query->latest()->limit(3);
-                },
-                'oficios' => function($query) {
-                    $query->latest()->limit(3);
-                },
-                'inductionSessions' => function($query) {
-                    $query->latest()->limit(3);
-                }
-            ])
-            ->paginate(12);
-
-            return view('activity2.index-secretario', compact('sectoristas', 'assignments'));
+            return redirect()->route('dashboard.planning')
+                ->with('warning', 'El Seguimiento de Entidades es una funcionalidad exclusiva para Sectoristas. Como Secretario CTPPGE, puedes supervisar el avance general desde el Panel Principal.');
         }
 
         // Para sectoristas

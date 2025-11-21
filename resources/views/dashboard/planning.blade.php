@@ -119,7 +119,7 @@
                             </div>
                             <div class="flex items-start">
                                 <span class="text-indigo-600 mr-2">5.</span>
-                                <span>Registrar acto resolutivo (PDF, fecha, número)</span>
+                                <span>Documento (correo, oficio u otro) enviado para la conformación del órgano colegiado</span>
                             </div>
                             <div class="flex items-start">
                                 <span class="text-indigo-600 mr-2">6.</span>
@@ -129,6 +129,36 @@
                                 <span class="text-indigo-600 mr-2">7.</span>
                                 <span>Programar sesión de inducción post-aprobación</span>
                             </div>
+                        </div>
+                        
+                        <!-- Botón de Acceso al Flujo -->
+                        <div class="mt-4 pt-4 border-t border-gray-100">
+                            @if(auth()->check() && auth()->user()->isSectorista())
+                                {{-- Sectorista: Acceso directo al seguimiento --}}
+                                <a href="{{ route('activity2.index') }}" 
+                                   class="w-full flex items-center justify-center gap-3 px-6 py-4 bg-gradient-to-r from-indigo-600 to-purple-600 text-white font-semibold rounded-xl hover:from-indigo-700 hover:to-purple-700 transition-all duration-300 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5">
+                                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"/>
+                                    </svg>
+                                    <span>Ingresar al Seguimiento de Entidades</span>
+                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6"/>
+                                    </svg>
+                                </a>
+                            @else
+                                {{-- Secretario/Otros: Mostrar modal de restricción --}}
+                                <button type="button" 
+                                        onclick="document.getElementById('modalAccesoRestringido').classList.remove('hidden')"
+                                        class="w-full flex items-center justify-center gap-3 px-6 py-4 bg-gradient-to-r from-gray-400 to-gray-500 text-white font-semibold rounded-xl hover:from-gray-500 hover:to-gray-600 transition-all duration-300 shadow-lg cursor-pointer">
+                                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/>
+                                    </svg>
+                                    <span>Ingresar al Seguimiento de Entidades</span>
+                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6"/>
+                                    </svg>
+                                </button>
+                            @endif
                         </div>
                     </div>
                 </div>
@@ -304,6 +334,72 @@
                         </div>
                     </div>
                 </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal de Acceso Restringido -->
+<div id="modalAccesoRestringido" class="hidden fixed inset-0 z-50 overflow-y-auto" aria-labelledby="modal-title" role="dialog" aria-modal="true">
+    <div class="flex items-center justify-center min-h-screen px-4 pt-4 pb-20 text-center sm:block sm:p-0">
+        <!-- Overlay de fondo -->
+        <div class="fixed inset-0 transition-opacity bg-gray-500 bg-opacity-75" aria-hidden="true" onclick="document.getElementById('modalAccesoRestringido').classList.add('hidden')"></div>
+
+        <!-- Centrado del modal -->
+        <span class="hidden sm:inline-block sm:align-middle sm:h-screen" aria-hidden="true">&#8203;</span>
+
+        <!-- Contenido del modal -->
+        <div class="inline-block overflow-hidden text-left align-bottom transition-all transform bg-white rounded-xl shadow-xl sm:my-8 sm:align-middle sm:max-w-lg sm:w-full">
+            <!-- Header con icono -->
+            <div class="bg-gradient-to-r from-amber-500 to-orange-500 px-6 py-4">
+                <div class="flex items-center justify-center">
+                    <div class="flex-shrink-0 flex items-center justify-center h-16 w-16 rounded-full bg-white/20 mx-auto">
+                        <svg class="h-10 w-10 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/>
+                        </svg>
+                    </div>
+                </div>
+                <h3 class="text-xl font-bold text-white text-center mt-3" id="modal-title">
+                    Acceso Restringido
+                </h3>
+            </div>
+            
+            <!-- Cuerpo del modal -->
+            <div class="px-6 py-5">
+                <div class="text-center">
+                    <p class="text-gray-700 text-base mb-4">
+                        El <strong>Seguimiento de Entidades</strong> es una funcionalidad exclusiva para los <strong class="text-indigo-600">Sectoristas</strong>.
+                    </p>
+                    <div class="bg-blue-50 rounded-lg p-4 mb-4">
+                        <div class="flex items-start">
+                            <svg class="w-5 h-5 text-blue-600 mt-0.5 mr-3 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                            </svg>
+                            <div class="text-left text-sm text-blue-800">
+                                <p class="font-semibold mb-1">¿Por qué está restringido?</p>
+                                <p>Los Sectoristas son los responsables de gestionar y dar seguimiento a las entidades asignadas en su sector. Esta vista les permite:</p>
+                                <ul class="list-disc list-inside mt-2 space-y-1">
+                                    <li>Ver entidades asignadas a su sector</li>
+                                    <li>Coordinar reuniones de conformación</li>
+                                    <li>Gestionar oficios y documentos</li>
+                                    <li>Dar seguimiento a acuerdos</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    <p class="text-sm text-gray-500">
+                        Como <strong>{{ auth()->check() ? auth()->user()->role_name : 'Usuario' }}</strong>, puedes supervisar el avance general desde el Panel Principal.
+                    </p>
+                </div>
+            </div>
+            
+            <!-- Footer con botón -->
+            <div class="bg-gray-50 px-6 py-4">
+                <button type="button" 
+                        onclick="document.getElementById('modalAccesoRestringido').classList.add('hidden')"
+                        class="w-full px-4 py-3 bg-gradient-to-r from-indigo-600 to-purple-600 text-white text-sm font-semibold rounded-lg hover:from-indigo-700 hover:to-purple-700 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
+                    Entendido
+                </button>
             </div>
         </div>
     </div>

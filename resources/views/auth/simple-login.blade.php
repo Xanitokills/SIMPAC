@@ -110,16 +110,6 @@
             <p class="text-xs text-gray-500 font-semibold mb-3 text-center">USUARIOS DE PRUEBA - ROLES DEL SISTEMA:</p>
             <p class="text-[10px] text-gray-400 text-center mb-2">👆 Haz clic en cualquier usuario para auto-rellenar</p>
             <div class="space-y-2 text-xs max-h-96 overflow-y-auto pr-2">
-                <!-- Admin -->
-                <div class="test-account cursor-pointer bg-red-50 p-3 rounded-lg border border-red-200 hover:border-red-400 hover:shadow-md transition-all duration-200" 
-                     data-email="admin@simpac.com" 
-                     data-password="admin123"
-                     title="Clic para auto-rellenar">
-                    <p class="font-semibold text-red-800">👑 Administrador</p>
-                    <p class="text-red-600 text-[10px] mb-1">Acceso total al sistema - Puede ver y editar todo</p>
-                    <p class="text-gray-700">Email: <span class="font-mono">admin@simpac.com</span></p>
-                    <p class="text-gray-700">Contraseña: <span class="font-mono">admin123</span></p>
-                </div>
 
                 <!-- Secretario CTPPGE -->
                 <div class="test-account cursor-pointer bg-blue-50 p-3 rounded-lg border border-blue-200 hover:border-blue-400 hover:shadow-md transition-all duration-200" 
@@ -132,18 +122,7 @@
                     <p class="text-gray-700">Contraseña: <span class="font-mono">secretario123</span></p>
                 </div>
 
-                <!-- Procurador PGE -->
-                <div class="test-account cursor-pointer bg-purple-50 p-3 rounded-lg border border-purple-200 hover:border-purple-400 hover:shadow-md transition-all duration-200" 
-                     data-email="procurador@simpac.com" 
-                     data-password="procurador123"
-                     title="Clic para auto-rellenar">
-                    <p class="font-semibold text-purple-800">⚖️ Procurador(a) PGE</p>
-                    <p class="text-purple-600 text-[10px] mb-1">Validación legal - Ve todos los módulos</p>
-                    <p class="text-gray-700">Email: <span class="font-mono">procurador@simpac.com</span></p>
-                    <p class="text-gray-700">Contraseña: <span class="font-mono">procurador123</span></p>
-                </div>
-
-                <!-- Sectoristas -->
+                <!-- Sectorista Juan -->
                 <div class="test-account cursor-pointer bg-indigo-50 p-3 rounded-lg border border-indigo-200 hover:border-indigo-400 hover:shadow-md transition-all duration-200" 
                      data-email="juan.perez@simpac.com" 
                      data-password="sectorista123"
@@ -152,48 +131,6 @@
                     <p class="text-indigo-600 text-[10px] mb-1">4 entidades asignadas (MEF, SUNAT, Arequipa, etc.)</p>
                     <p class="text-gray-700">Email: <span class="font-mono">juan.perez@simpac.com</span></p>
                     <p class="text-gray-700">Contraseña: <span class="font-mono">sectorista123</span></p>
-                </div>
-
-                <div class="test-account cursor-pointer bg-indigo-50 p-3 rounded-lg border border-indigo-200 hover:border-indigo-400 hover:shadow-md transition-all duration-200" 
-                     data-email="maria.rodriguez@simpac.com" 
-                     data-password="sectorista123"
-                     title="Clic para auto-rellenar">
-                    <p class="font-semibold text-indigo-800">👥 Sectorista 2 - María Rodríguez</p>
-                    <p class="text-indigo-600 text-[10px] mb-1">4 entidades asignadas (MINEDU, RENIEC, Cusco, etc.)</p>
-                    <p class="text-gray-700">Email: <span class="font-mono">maria.rodriguez@simpac.com</span></p>
-                    <p class="text-gray-700">Contraseña: <span class="font-mono">sectorista123</span></p>
-                </div>
-
-                <div class="test-account cursor-pointer bg-indigo-50 p-3 rounded-lg border border-indigo-200 hover:border-indigo-400 hover:shadow-md transition-all duration-200" 
-                     data-email="carlos.mendoza@simpac.com" 
-                     data-password="sectorista123"
-                     title="Clic para auto-rellenar">
-                    <p class="font-semibold text-indigo-800">👥 Sectorista 3 - Carlos Mendoza</p>
-                    <p class="text-indigo-600 text-[10px] mb-1">4 entidades asignadas (MINSA, INDECOPI, Piura, etc.)</p>
-                    <p class="text-gray-700">Email: <span class="font-mono">carlos.mendoza@simpac.com</span></p>
-                    <p class="text-gray-700">Contraseña: <span class="font-mono">sectorista123</span></p>
-                </div>
-
-                <!-- Responsable de Componente -->
-                <div class="test-account cursor-pointer bg-green-50 p-3 rounded-lg border border-green-200 hover:border-green-400 hover:shadow-md transition-all duration-200" 
-                     data-email="responsable@simpac.com" 
-                     data-password="responsable123"
-                     title="Clic para auto-rellenar">
-                    <p class="font-semibold text-green-800">◆ Responsable de Componente</p>
-                    <p class="text-green-600 text-[10px] mb-1">Ejecutor de componentes específicos</p>
-                    <p class="text-gray-700">Email: <span class="font-mono">responsable@simpac.com</span></p>
-                    <p class="text-gray-700">Contraseña: <span class="font-mono">responsable123</span></p>
-                </div>
-
-                <!-- Órgano Colegiado -->
-                <div class="test-account cursor-pointer bg-orange-50 p-3 rounded-lg border border-orange-200 hover:border-orange-400 hover:shadow-md transition-all duration-200" 
-                     data-email="colegiado@simpac.com" 
-                     data-password="colegiado123"
-                     title="Clic para auto-rellenar">
-                    <p class="font-semibold text-orange-800">◆ Órgano Colegiado</p>
-                    <p class="text-orange-600 text-[10px] mb-1">Aprobación de planes y validación</p>
-                    <p class="text-gray-700">Email: <span class="font-mono">colegiado@simpac.com</span></p>
-                    <p class="text-gray-700">Contraseña: <span class="font-mono">colegiado123</span></p>
                 </div>
             </div>
         </div>

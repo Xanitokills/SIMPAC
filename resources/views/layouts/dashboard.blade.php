@@ -199,11 +199,11 @@
                         <span class="sidebar-badge text-[10px] bg-green-500/20 text-green-300 px-2 py-0.5 rounded-full font-medium">5d</span>
                     </a>
 
-                    <a href="{{ route('dashboard.validation') }}" class="nav-item {{ request()->routeIs('dashboard.validation') ? 'active' : '' }}" title="Validación y Cierre">
+                    <a href="{{ route('dashboard.validation') }}" class="nav-item {{ request()->routeIs('dashboard.validation') ? 'active' : '' }}" title="Reportes">
                         <svg class="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
                         </svg>
-                        <span class="sidebar-text flex-1">Validación y Cierre</span>
+                        <span class="sidebar-text flex-1">Reportes</span>
                         <span class="sidebar-badge text-[10px] bg-purple-500/20 text-purple-300 px-2 py-0.5 rounded-full font-medium">6d</span>
                     </a>
                 </div>
@@ -282,6 +282,71 @@
 
             <!-- Page Content -->
             <main class="flex-1 overflow-auto bg-gray-50 p-6">
+                <!-- Notificaciones Flash -->
+                @if(session('success'))
+                <div class="mb-4 p-4 bg-green-50 border border-green-200 text-green-800 rounded-lg flex items-center justify-between" role="alert">
+                    <div class="flex items-center">
+                        <svg class="w-5 h-5 mr-3 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                        </svg>
+                        <span>{{ session('success') }}</span>
+                    </div>
+                    <button type="button" onclick="this.parentElement.remove()" class="text-green-500 hover:text-green-700">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                        </svg>
+                    </button>
+                </div>
+                @endif
+
+                @if(session('error'))
+                <div class="mb-4 p-4 bg-red-50 border border-red-200 text-red-800 rounded-lg flex items-center justify-between" role="alert">
+                    <div class="flex items-center">
+                        <svg class="w-5 h-5 mr-3 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                        </svg>
+                        <span>{{ session('error') }}</span>
+                    </div>
+                    <button type="button" onclick="this.parentElement.remove()" class="text-red-500 hover:text-red-700">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                        </svg>
+                    </button>
+                </div>
+                @endif
+
+                @if(session('warning'))
+                <div class="mb-4 p-4 bg-amber-50 border border-amber-200 text-amber-800 rounded-lg flex items-center justify-between" role="alert">
+                    <div class="flex items-center">
+                        <svg class="w-5 h-5 mr-3 text-amber-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/>
+                        </svg>
+                        <span>{{ session('warning') }}</span>
+                    </div>
+                    <button type="button" onclick="this.parentElement.remove()" class="text-amber-500 hover:text-amber-700">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                        </svg>
+                    </button>
+                </div>
+                @endif
+
+                @if(session('info'))
+                <div class="mb-4 p-4 bg-blue-50 border border-blue-200 text-blue-800 rounded-lg flex items-center justify-between" role="alert">
+                    <div class="flex items-center">
+                        <svg class="w-5 h-5 mr-3 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                        </svg>
+                        <span>{{ session('info') }}</span>
+                    </div>
+                    <button type="button" onclick="this.parentElement.remove()" class="text-blue-500 hover:text-blue-700">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                        </svg>
+                    </button>
+                </div>
+                @endif
+
                 @yield('content')
             </main>
         </div>
