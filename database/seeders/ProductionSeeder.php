@@ -8,7 +8,9 @@ use App\Models\Sectorista;
 use App\Models\Entity;
 use App\Models\ImplementationPlan;
 use App\Models\EntityAssignment;
+use App\Models\ActionPlanTemplate;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
 
 class ProductionSeeder extends Seeder
@@ -25,24 +27,28 @@ class ProductionSeeder extends Seeder
         $this->command->newLine();
 
         // 1. Crear entidades primero (antes que sectoristas para las asignaciones)
-        $this->command->info('🏢 Paso 1/5: Creando entidades...');
+        $this->command->info('🏢 Paso 1/6: Creando entidades...');
         $this->seedEntities();
         
         // 2. Crear sectoristas
-        $this->command->info('👔 Paso 2/5: Creando sectoristas...');
+        $this->command->info('👔 Paso 2/6: Creando sectoristas...');
         $this->seedSectoristas();
         
         // 3. Crear usuarios del sistema
-        $this->command->info('👥 Paso 3/5: Creando usuarios...');
+        $this->command->info('👥 Paso 3/6: Creando usuarios...');
         $this->seedUsers();
         
         // 4. Crear plan de implementación
-        $this->command->info('📋 Paso 4/5: Creando plan de implementación...');
+        $this->command->info('📋 Paso 4/6: Creando plan de implementación...');
         $this->seedImplementationPlan();
         
         // 5. Crear asignaciones de entidades
-        $this->command->info('🔗 Paso 5/5: Creando asignaciones...');
+        $this->command->info('🔗 Paso 5/6: Creando asignaciones...');
         $this->seedEntityAssignments();
+        
+        // 6. Crear plantillas de acciones estándar (CRÍTICO para la funcionalidad)
+        $this->command->info('📝 Paso 6/6: Creando plantillas de acciones estándar...');
+        $this->seedActionPlanTemplates();
 
         $this->command->newLine();
         $this->command->info('═══════════════════════════════════════════════════════');
@@ -52,6 +58,7 @@ class ProductionSeeder extends Seeder
         $this->command->info('   Total entidades: ' . Entity::count());
         $this->command->info('   Total planes: ' . ImplementationPlan::count());
         $this->command->info('   Total asignaciones: ' . EntityAssignment::count());
+        $this->command->info('   Total plantillas acciones: ' . ActionPlanTemplate::count());
         $this->command->info('═══════════════════════════════════════════════════════');
     }
     
@@ -313,5 +320,24 @@ class ProductionSeeder extends Seeder
         }
         
         $this->command->info("   ✅ {$created} asignaciones creadas");
+    }
+    
+    /**
+     * Seed action plan templates - Llamar al seeder de plantillas existente
+     */
+    private function seedActionPlanTemplates(): void
+    {
+        // Verificar si ya existen plantillas
+        $existingCount = ActionPlanTemplate::count();
+        
+        if ($existingCount > 0) {
+            $this->command->info("   ⚠️  Ya existen plantillas (Total: {$existingCount})");
+            return;
+        }
+        
+        // Llamar al seeder existente
+        $this->call(ActionPlanTemplateSeeder::class);
+        
+        $this->command->info("   ✅ Plantillas de acciones estándar creadas (Total: " . ActionPlanTemplate::count() . ")");
     }
 }
