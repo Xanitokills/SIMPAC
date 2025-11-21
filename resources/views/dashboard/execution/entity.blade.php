@@ -134,7 +134,7 @@
         <div class="p-6">
             <div class="flex items-center justify-between mb-6">
                 <div>
-                    <h3 class="text-lg font-semibold text-gray-900">Notificaciones y Seguimiento de Respuestas</h3>
+                    <h3 class="text-lg font-semibold text-gray-900">Seguimiento a Doc Enviados</h3>
                     <p class="text-sm text-gray-500 mt-1">Gestión de notificaciones y evidencias de seguimiento</p>
                 </div>
                 <a href="{{ route('execution.notifications.create', ['assignment' => $assignment->id]) }}" 
@@ -203,6 +203,7 @@
                         <thead class="bg-gray-50">
                             <tr>
                                 <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Oficio</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Fecha de Emisión</th>
                                 <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Fecha Límite</th>
                                 <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Notificaciones</th>
                                 <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Estado</th>
@@ -213,8 +214,15 @@
                             @foreach($oficios as $oficio)
                             <tr class="hover:bg-gray-50">
                                 <td class="px-6 py-4 text-sm text-gray-900">
-                                    <div class="font-medium">{{ $oficio->numero_oficio }}</div>
-                                    <div class="text-xs text-gray-500">{{ $oficio->asunto }}</div>
+                                    <div class="font-medium">{{ $oficio->numero_oficio ?? 'Oficio N° ' . str_pad($loop->iteration, 3, '0', STR_PAD_LEFT) . '-2025-PGE/CTPPGE' }}</div>
+                                    <div class="text-xs text-gray-500">{{ $oficio->asunto ?? 'Solicitud de conformación del órgano colegiado' }}</div>
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                                    @if($oficio->fecha_emision ?? $oficio->created_at)
+                                        <div class="font-medium">{{ \Carbon\Carbon::parse($oficio->fecha_emision ?? $oficio->created_at)->format('d M Y') }}</div>
+                                    @else
+                                        <span class="text-gray-400">-</span>
+                                    @endif
                                 </td>
                                 <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
                                     @if($oficio->deadline_date)
@@ -482,6 +490,135 @@
                     <p>No hay actas registradas</p>
                 </div>
             @endif
+        </div>
+    </div>
+
+    <!-- Módulo 5: Seguimiento por Componentes -->
+    <div class="bg-white rounded-lg shadow-sm border border-gray-200">
+        <div class="p-6">
+            <div class="flex items-center justify-between mb-6">
+                <div>
+                    <h3 class="text-lg font-semibold text-gray-900">Seguimiento por Componentes</h3>
+                    <p class="text-sm text-gray-500 mt-1">Seguimiento del avance por cada componente del proceso de transferencia</p>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                {{-- 1. Recursos Presupuestarios --}}
+                <div class="bg-white rounded-lg border border-gray-200 p-5 hover:shadow-md hover:border-gray-300 transition-all">
+                    <div class="flex items-center justify-between mb-3">
+                        <div class="w-12 h-12 bg-slate-100 rounded-lg flex items-center justify-center">
+                            <svg class="w-6 h-6 text-slate-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                            </svg>
+                        </div>
+                        <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-amber-100 text-amber-800">
+                            En Proceso
+                        </span>
+                    </div>
+                    <h4 class="font-semibold text-gray-900 mb-1">1. Recursos Presupuestarios</h4>
+                    <p class="text-sm text-gray-500 mb-3">Seguimiento de recursos financieros y presupuesto asignado</p>
+                    <div class="flex items-center justify-between text-sm">
+                        <span class="text-gray-500">Avance:</span>
+                        <span class="font-semibold text-gray-700">0%</span>
+                    </div>
+                    <div class="w-full bg-gray-200 rounded-full h-2 mt-2">
+                        <div class="bg-slate-600 h-2 rounded-full" style="width: 0%"></div>
+                    </div>
+                </div>
+
+                {{-- 2. Recursos Humanos --}}
+                <div class="bg-white rounded-lg border border-gray-200 p-5 hover:shadow-md hover:border-gray-300 transition-all">
+                    <div class="flex items-center justify-between mb-3">
+                        <div class="w-12 h-12 bg-slate-100 rounded-lg flex items-center justify-center">
+                            <svg class="w-6 h-6 text-slate-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/>
+                            </svg>
+                        </div>
+                        <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-700">
+                            Pendiente
+                        </span>
+                    </div>
+                    <h4 class="font-semibold text-gray-900 mb-1">2. Recursos Humanos</h4>
+                    <p class="text-sm text-gray-500 mb-3">Gestión del personal y asignaciones de responsables</p>
+                    <div class="flex items-center justify-between text-sm">
+                        <span class="text-gray-500">Avance:</span>
+                        <span class="font-semibold text-gray-700">0%</span>
+                    </div>
+                    <div class="w-full bg-gray-200 rounded-full h-2 mt-2">
+                        <div class="bg-slate-600 h-2 rounded-full" style="width: 0%"></div>
+                    </div>
+                </div>
+
+                {{-- 3. Bienes y Servicios --}}
+                <div class="bg-white rounded-lg border border-gray-200 p-5 hover:shadow-md hover:border-gray-300 transition-all">
+                    <div class="flex items-center justify-between mb-3">
+                        <div class="w-12 h-12 bg-slate-100 rounded-lg flex items-center justify-center">
+                            <svg class="w-6 h-6 text-slate-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"/>
+                            </svg>
+                        </div>
+                        <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-700">
+                            Pendiente
+                        </span>
+                    </div>
+                    <h4 class="font-semibold text-gray-900 mb-1">3. Bienes y Servicios</h4>
+                    <p class="text-sm text-gray-500 mb-3">Inventario y gestión de bienes patrimoniales</p>
+                    <div class="flex items-center justify-between text-sm">
+                        <span class="text-gray-500">Avance:</span>
+                        <span class="font-semibold text-gray-700">0%</span>
+                    </div>
+                    <div class="w-full bg-gray-200 rounded-full h-2 mt-2">
+                        <div class="bg-slate-600 h-2 rounded-full" style="width: 0%"></div>
+                    </div>
+                </div>
+
+                {{-- 4. Acervo Documentario --}}
+                <div class="bg-white rounded-lg border border-gray-200 p-5 hover:shadow-md hover:border-gray-300 transition-all">
+                    <div class="flex items-center justify-between mb-3">
+                        <div class="w-12 h-12 bg-slate-100 rounded-lg flex items-center justify-center">
+                            <svg class="w-6 h-6 text-slate-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"/>
+                            </svg>
+                        </div>
+                        <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-700">
+                            Pendiente
+                        </span>
+                    </div>
+                    <h4 class="font-semibold text-gray-900 mb-1">4. Acervo Documentario</h4>
+                    <p class="text-sm text-gray-500 mb-3">Gestión documental y archivo institucional</p>
+                    <div class="flex items-center justify-between text-sm">
+                        <span class="text-gray-500">Avance:</span>
+                        <span class="font-semibold text-gray-700">0%</span>
+                    </div>
+                    <div class="w-full bg-gray-200 rounded-full h-2 mt-2">
+                        <div class="bg-slate-600 h-2 rounded-full" style="width: 0%"></div>
+                    </div>
+                </div>
+
+                {{-- 5. Activos Informáticos --}}
+                <div class="bg-white rounded-lg border border-gray-200 p-5 hover:shadow-md hover:border-gray-300 transition-all">
+                    <div class="flex items-center justify-between mb-3">
+                        <div class="w-12 h-12 bg-slate-100 rounded-lg flex items-center justify-center">
+                            <svg class="w-6 h-6 text-slate-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 3v2m6-2v2M9 19v2m6-2v2M5 9H3m2 6H3m18-6h-2m2 6h-2M7 19h10a2 2 0 002-2V7a2 2 0 00-2-2H7a2 2 0 00-2 2v10a2 2 0 002 2zM9 9h6v6H9V9z"/>
+                            </svg>
+                        </div>
+                        <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-700">
+                            Pendiente
+                        </span>
+                    </div>
+                    <h4 class="font-semibold text-gray-900 mb-1">5. Activos Informáticos</h4>
+                    <p class="text-sm text-gray-500 mb-3">Equipos de cómputo, software y sistemas de información</p>
+                    <div class="flex items-center justify-between text-sm">
+                        <span class="text-gray-500">Avance:</span>
+                        <span class="font-semibold text-gray-700">0%</span>
+                    </div>
+                    <div class="w-full bg-gray-200 rounded-full h-2 mt-2">
+                        <div class="bg-slate-600 h-2 rounded-full" style="width: 0%"></div>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 </div>

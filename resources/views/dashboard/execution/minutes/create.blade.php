@@ -4,11 +4,17 @@
 <div class="container mx-auto px-4 py-8">
     <div class="bg-white rounded-lg shadow p-6">
         <div class="flex items-center justify-between mb-4">
-            <div>
-                <h2 class="text-xl font-semibold">Registrar Acta de Reunión</h2>
-                <p class="text-sm text-gray-500">Entidad: {{ $assignment->entity->name }}</p>
+            <div class="flex items-center">
+                <a href="{{ route('execution.entity', $assignment->id) }}" class="mr-4 p-2 text-gray-500 hover:text-gray-700 hover:bg-gray-100 rounded-full transition-colors" title="Regresar">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/>
+                    </svg>
+                </a>
+                <div>
+                    <h2 class="text-xl font-semibold">Registrar Acta de Reunión</h2>
+                    <p class="text-sm text-gray-500">Entidad: {{ $assignment->entity->name }}</p>
+                </div>
             </div>
-            <a href="{{ route('execution.entity', $assignment->id) }}" class="text-blue-600">← Volver</a>
         </div>
 
         <form action="{{ route('execution.minutes.store', $assignment->id) }}" method="POST" enctype="multipart/form-data" class="space-y-4">
@@ -27,11 +33,12 @@
                     <label class="block text-sm font-medium text-gray-700">Componente</label>
                     <select name="component" class="mt-1 block w-full border-gray-300 rounded-md">
                         <option value="">-- Seleccionar --</option>
-                        <option value="presupuesto">Presupuesto</option>
-                        <option value="bienes">Bienes</option>
-                        <option value="acervo">Acervo</option>
-                        <option value="tecnologia">Tecnología</option>
-                        <option value="rrhh">RRHH</option>
+                        <option value="recursos_presupuestarios">Recursos Presupuestarios</option>
+                        <option value="recursos_humanos">Recursos Humanos</option>
+                        <option value="bienes_servicios">Bienes y Servicios</option>
+                        <option value="acervo_documentario">Acervo Documentario</option>
+                        <option value="activos_informaticos">Activos Informáticos</option>
+                        <option value="instalacion_componentes">Instalación de Componentes</option>
                     </select>
                 </div>
             </div>
