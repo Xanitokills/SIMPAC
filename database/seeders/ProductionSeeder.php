@@ -7,6 +7,7 @@ use App\Models\User;
 use App\Models\Sectorista;
 use App\Models\Entity;
 use App\Models\ImplementationPlan;
+use App\Models\EntityAssignment;
 use Illuminate\Support\Facades\Hash;
 use Carbon\Carbon;
 
@@ -14,89 +15,34 @@ class ProductionSeeder extends Seeder
 {
     /**
      * Seed the application's database for production.
-     * Creates all users shown in the login page, plus sectoristas and entities.
+     * Crea los mismos datos que en desarrollo para que sea idéntico.
      */
     public function run(): void
     {
         $this->command->info('═══════════════════════════════════════════════════════');
-        $this->command->info('🌱 SIMPAC - Seeder de Producción');
+        $this->command->info('🌱 SIMPAC - Seeder de Producción (Datos Completos)');
         $this->command->info('═══════════════════════════════════════════════════════');
         $this->command->newLine();
 
-        // Crear entidades si no existen
+        // 1. Crear entidades primero (antes que sectoristas para las asignaciones)
+        $this->command->info('🏢 Paso 1/5: Creando entidades...');
         $this->seedEntities();
         
-        // Crear sectoristas si no existen
+        // 2. Crear sectoristas
+        $this->command->info('👔 Paso 2/5: Creando sectoristas...');
         $this->seedSectoristas();
         
-        // Crear plan de implementación si no existe
+        // 3. Crear usuarios del sistema
+        $this->command->info('👥 Paso 3/5: Creando usuarios...');
+        $this->seedUsers();
+        
+        // 4. Crear plan de implementación
+        $this->command->info('📋 Paso 4/5: Creando plan de implementación...');
         $this->seedImplementationPlan();
-
-        // Lista de usuarios a crear (deben coincidir con los del login)
-        $users = [
-            [
-                'name' => 'Administrador del Sistema',
-                'email' => 'admin@simpac.com',
-                'password' => 'admin123',
-                'role' => 'admin',
-            ],
-            [
-                'name' => 'Secretario CTPPGE',
-                'email' => 'secretario@simpac.com',
-                'password' => 'secretario123',
-                'role' => 'secretario_ctppge',
-            ],
-            [
-                'name' => 'Procurador(a) PGE',
-                'email' => 'procurador@simpac.com',
-                'password' => 'procurador123',
-                'role' => 'procurador_pge',
-            ],
-            [
-                'name' => 'Juan Carlos Pérez',
-                'email' => 'juan.perez@simpac.com',
-                'password' => 'sectorista123',
-                'role' => 'sectorista',
-            ],
-            [
-                'name' => 'María Rodríguez',
-                'email' => 'maria.rodriguez@simpac.com',
-                'password' => 'sectorista123',
-                'role' => 'sectorista',
-            ],
-            [
-                'name' => 'Carlos Mendoza',
-                'email' => 'carlos.mendoza@simpac.com',
-                'password' => 'sectorista123',
-                'role' => 'sectorista',
-            ],
-            [
-                'name' => 'Responsable de Componente',
-                'email' => 'responsable@simpac.com',
-                'password' => 'responsable123',
-                'role' => 'responsable_componente',
-            ],
-            [
-                'name' => 'Miembro Órgano Colegiado',
-                'email' => 'colegiado@simpac.com',
-                'password' => 'colegiado123',
-                'role' => 'organo_colegiado',
-            ],
-        ];
-
-        foreach ($users as $userData) {
-            if (User::where('email', $userData['email'])->exists()) {
-                $this->command->warn("⚠️  Usuario {$userData['email']} ya existe, omitiendo...");
-            } else {
-                User::create([
-                    'name' => $userData['name'],
-                    'email' => $userData['email'],
-                    'password' => Hash::make($userData['password']),
-                    'role' => $userData['role'],
-                ]);
-                $this->command->info("✅ Usuario creado: {$userData['email']}");
-            }
-        }
+        
+        // 5. Crear asignaciones de entidades
+        $this->command->info('🔗 Paso 5/5: Creando asignaciones...');
+        $this->seedEntityAssignments();
 
         $this->command->newLine();
         $this->command->info('═══════════════════════════════════════════════════════');
@@ -105,16 +51,15 @@ class ProductionSeeder extends Seeder
         $this->command->info('   Total sectoristas: ' . Sectorista::count());
         $this->command->info('   Total entidades: ' . Entity::count());
         $this->command->info('   Total planes: ' . ImplementationPlan::count());
+        $this->command->info('   Total asignaciones: ' . EntityAssignment::count());
         $this->command->info('═══════════════════════════════════════════════════════');
     }
     
     /**
-     * Seed entities for production
+     * Seed entities for production - Mismos datos que EntitySeeder
      */
     private function seedEntities(): void
     {
-        $this->command->info('🏢 Creando entidades...');
-        
         $entities = [
             // Ministerios
             ['name' => 'Ministerio de Economía y Finanzas', 'type' => 'ministerio', 'sector' => 'Economía', 'status' => 'active'],
@@ -162,16 +107,14 @@ class ProductionSeeder extends Seeder
                 $created++;
             }
         }
-        $this->command->info("   ✅ {$created} entidades creadas");
+        $this->command->info("   ✅ {$created} entidades creadas (Total: " . Entity::count() . ")");
     }
     
     /**
-     * Seed sectoristas for production
+     * Seed sectoristas for production - Mismos datos que SectoristaSeeder
      */
     private function seedSectoristas(): void
     {
-        $this->command->info('👔 Creando sectoristas...');
-        
         $sectoristas = [
             [
                 'name' => 'Juan Carlos Pérez García',
@@ -230,7 +173,52 @@ class ProductionSeeder extends Seeder
                 $created++;
             }
         }
-        $this->command->info("   ✅ {$created} sectoristas creados");
+        $this->command->info("   ✅ {$created} sectoristas creados (Total: " . Sectorista::count() . ")");
+    }
+    
+    /**
+     * Seed users for production - Mismos usuarios que en desarrollo
+     */
+    private function seedUsers(): void
+    {
+        $users = [
+            // Admin
+            ['name' => 'Administrador del Sistema', 'email' => 'admin@simpac.com', 'password' => 'admin123', 'role' => 'admin'],
+            
+            // Secretario CTPPGE
+            ['name' => 'Carlos Mendoza Rivera', 'email' => 'secretario@simpac.com', 'password' => 'secretario123', 'role' => 'secretario_ctppge'],
+            
+            // Procurador PGE
+            ['name' => 'Dra. María Elena Torres', 'email' => 'procurador@simpac.com', 'password' => 'procurador123', 'role' => 'procurador_pge'],
+            
+            // Responsable de Componente
+            ['name' => 'Ing. Roberto Sánchez', 'email' => 'responsable@simpac.com', 'password' => 'responsable123', 'role' => 'responsable_componente'],
+            
+            // Órgano Colegiado
+            ['name' => 'Comité de Validación', 'email' => 'colegiado@simpac.com', 'password' => 'colegiado123', 'role' => 'organo_colegiado'],
+            
+            // Sectoristas (usuarios con rol sectorista)
+            ['name' => 'Juan Carlos Pérez', 'email' => 'juan.perez@simpac.com', 'password' => 'sectorista123', 'role' => 'sectorista'],
+            ['name' => 'María Rodríguez', 'email' => 'maria.rodriguez@simpac.com', 'password' => 'sectorista123', 'role' => 'sectorista'],
+            ['name' => 'Carlos Mendoza', 'email' => 'carlos.mendoza@simpac.com', 'password' => 'sectorista123', 'role' => 'sectorista'],
+            
+            // Usuario sectorista genérico
+            ['name' => 'Sectorista de Prueba', 'email' => 'sectorista@simpac.com', 'password' => 'sectorista123', 'role' => 'sectorista'],
+        ];
+
+        $created = 0;
+        foreach ($users as $userData) {
+            if (!User::where('email', $userData['email'])->exists()) {
+                User::create([
+                    'name' => $userData['name'],
+                    'email' => $userData['email'],
+                    'password' => Hash::make($userData['password']),
+                    'role' => $userData['role'],
+                ]);
+                $created++;
+            }
+        }
+        $this->command->info("   ✅ {$created} usuarios creados (Total: " . User::count() . ")");
     }
     
     /**
@@ -238,20 +226,18 @@ class ProductionSeeder extends Seeder
      */
     private function seedImplementationPlan(): void
     {
-        $this->command->info('📋 Creando plan de implementación...');
-        
         // Verificar si ya existe un plan activo
         if (ImplementationPlan::where('status', 'active')->exists()) {
-            $this->command->info("   ⚠️  Ya existe un plan activo, omitiendo...");
+            $this->command->info("   ⚠️  Ya existe un plan activo (Total: " . ImplementationPlan::count() . ")");
             return;
         }
         
         $user = User::first();
         
-        $plan = ImplementationPlan::create([
+        ImplementationPlan::create([
             'resolution_type' => 'RM',
             'resolution_number' => 'RM-001-2025-PCM',
-            'name' => 'PLAN DE IMPLEMENTACION',
+            'name' => 'Plan de Transferencia PGE 2025',
             'description' => 'Plan de implementación para la transferencia de entidades a la Procuraduría General del Estado',
             'pdf_path' => null,
             'start_date' => Carbon::now(),
@@ -261,6 +247,53 @@ class ProductionSeeder extends Seeder
             'approved_at' => Carbon::now(),
         ]);
         
-        $this->command->info("   ✅ Plan creado: {$plan->name}");
+        $this->command->info("   ✅ Plan de implementación creado");
+    }
+    
+    /**
+     * Seed entity assignments - Asignar entidades a sectoristas
+     */
+    private function seedEntityAssignments(): void
+    {
+        $plan = ImplementationPlan::where('status', 'active')->first();
+        
+        if (!$plan) {
+            $this->command->warn("   ⚠️  No hay plan activo para crear asignaciones");
+            return;
+        }
+        
+        // Verificar si ya hay asignaciones
+        if (EntityAssignment::where('implementation_plan_id', $plan->id)->exists()) {
+            $this->command->info("   ⚠️  Ya existen asignaciones (Total: " . EntityAssignment::count() . ")");
+            return;
+        }
+        
+        $entities = Entity::all();
+        $sectoristas = Sectorista::all();
+        $user = User::first();
+        
+        if ($entities->isEmpty() || $sectoristas->isEmpty()) {
+            $this->command->warn("   ⚠️  No hay entidades o sectoristas para crear asignaciones");
+            return;
+        }
+        
+        $created = 0;
+        foreach ($entities as $index => $entity) {
+            // Distribuir entidades entre sectoristas de forma circular
+            $sectorista = $sectoristas[$index % $sectoristas->count()];
+            
+            EntityAssignment::create([
+                'entity_id' => $entity->id,
+                'sectorista_id' => $sectorista->id,
+                'implementation_plan_id' => $plan->id,
+                'assigned_at' => Carbon::now(),
+                'status' => 'in_progress',
+                'assigned_by' => $user ? $user->id : null,
+                'notes' => "Asignación de {$entity->name} a {$sectorista->name}",
+            ]);
+            $created++;
+        }
+        
+        $this->command->info("   ✅ {$created} asignaciones creadas");
     }
 }
