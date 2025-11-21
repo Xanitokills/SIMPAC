@@ -291,7 +291,7 @@
                         </div>
                         <div>
                             <dt class="text-sm font-medium text-gray-500">Actividades</dt>
-                            <dd class="text-sm text-gray-900">5 actividades secuenciales</dd>
+                            <dd class="text-sm text-gray-900">3 actividades secuenciales</dd>
                         </div>
                         <div>
                             <dt class="text-sm font-medium text-gray-500">Actor Principal</dt>

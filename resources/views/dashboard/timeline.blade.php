@@ -187,20 +187,6 @@
                         </div>
                     </div>
 
-                    <!-- Activities 4 & 5 - Pending -->
-                    <div class="relative flex items-start mb-6">
-                        <div class="flex-shrink-0 w-4 h-4 bg-gray-300 rounded-full mt-2 z-10 border-2 border-white"></div>
-                        <div class="ml-6 flex-1">
-                            <div class="bg-gray-50 rounded-lg p-4 border-l-4 border-gray-300">
-                                <h5 class="text-sm font-semibold text-gray-700 mb-2">Actividades 4-5: Reunión y aprobación Plan de Trabajo</h5>
-                                <p class="text-xs text-gray-600 mb-2">Secretario CTPPGE + Órgano Colegiado • 4 días estimados</p>
-                                <div class="flex items-center justify-between text-xs">
-                                    <span class="text-gray-500">📅 Días 4-7 (08-11/10/2024)</span>
-                                    <span class="text-gray-500">⏳ Pendiente</span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
                 </div>
 
                 <!-- Phase 2 -->

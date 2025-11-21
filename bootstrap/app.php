@@ -11,6 +11,9 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware): void {
+        // Forzar URL desde .env para túneles y proxies
+        $middleware->prepend(\App\Http\Middleware\ForceAppUrl::class);
+        
         // Registrar alias de middleware personalizado
         $middleware->alias([
             'simple.auth' => \App\Http\Middleware\SimpleAuth::class,
