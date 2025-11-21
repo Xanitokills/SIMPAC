@@ -17,7 +17,7 @@ Institución que recibe o entrega las funciones/activos.
 ✅ *Nota: Todas las actividades se registran y gestionan a través del SGD (Sistema de Gestión Documental), pero el actor real es el perfil humano asignado.* 
 
 🔄 FLUJO DEL PROCESO (Fases y Actividades)
-🔹 FASE 1: INICIO Y PLANIFICACIÓN
+🔹 FASE 1: Actividades Previas
 Actividad 1: Registrar Plan de Implementación de la PGE vigente
 Actor: Secretario de la CTPPGE
 Acción: Registrar oficialmente el Plan de Implementación en el SGD como insumo inicial.
@@ -142,7 +142,7 @@ Entidad receptora
 Disposición pública
 
 ⏱️ TIEMPO ESTIMADO TOTAL DEL PROCESO
-Inicio y Planificación
+Actividades Previas
 7 días
 Ejecución por componentes
 5 días (paralelos)

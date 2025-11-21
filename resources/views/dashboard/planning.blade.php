@@ -1,6 +1,6 @@
 @extends('layouts.dashboard')
 
-@section('page-title', 'Inicio y Planificación')
+@section('page-title', 'Actividades Previas')
 @section('page-description', 'Fase 1: Conformación del Órgano Colegiado y aprobación del Plan de Trabajo')
 
 @section('content')
@@ -24,7 +24,7 @@
         <div class="p-6">
             <div class="flex items-center justify-between">
                 <div>
-                    <h2 class="text-2xl font-bold">Fase 1: Inicio y Planificación</h2>
+                    <h2 class="text-2xl font-bold">Fase 1: Actividades Previas</h2>
                     <p class="text-blue-100 mt-1">Duración estimada: 7 días hábiles</p>
                 </div>
                 <div class="text-right">
