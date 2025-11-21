@@ -327,17 +327,19 @@ class ProductionSeeder extends Seeder
      */
     private function seedActionPlanTemplates(): void
     {
-        // Verificar si ya existen plantillas
         $existingCount = ActionPlanTemplate::count();
         
-        if ($existingCount > 0) {
-            $this->command->info("   ⚠️  Ya existen plantillas (Total: {$existingCount})");
-            return;
-        }
-        
-        // Llamar al seeder existente
+        // El ActionPlanTemplateSeeder usa upsert, así que siempre es seguro ejecutarlo
+        // Esto asegura que las plantillas siempre estén actualizadas
         $this->call(ActionPlanTemplateSeeder::class);
         
-        $this->command->info("   ✅ Plantillas de acciones estándar creadas (Total: " . ActionPlanTemplate::count() . ")");
+        $newCount = ActionPlanTemplate::count();
+        $created = $newCount - $existingCount;
+        
+        if ($created > 0) {
+            $this->command->info("   ✅ {$created} plantillas creadas (Total: {$newCount})");
+        } else {
+            $this->command->info("   ⚠️  Las plantillas ya existen (Total: {$newCount})");
+        }
     }
 }
