@@ -74,13 +74,13 @@
             </div>
 
             <!-- Activity 2 - Gestión del Órgano Colegiado -->
-            <div class="bg-white rounded-lg shadow-sm border border-gray-200 border-l-4 border-l-indigo-500">
+            <div class="bg-white rounded-lg shadow-sm border border-gray-200 border-l-4 border-l-slate-500">
                 <div class="p-6">
                     <div class="flex items-start justify-between">
                         <div class="flex items-start space-x-4">
                             <div class="flex-shrink-0">
-                                <div class="w-8 h-8 bg-indigo-100 rounded-full flex items-center justify-center">
-                                    <span class="text-sm font-bold text-indigo-600">2</span>
+                                <div class="w-8 h-8 bg-slate-100 rounded-full flex items-center justify-center">
+                                    <span class="text-sm font-bold text-slate-600">2</span>
                                 </div>
                             </div>
                             <div class="flex-1">
@@ -102,31 +102,31 @@
                         <h5 class="text-sm font-semibold text-gray-700 mb-3">Flujo del Proceso:</h5>
                         <div class="space-y-2 text-xs text-gray-600 mb-4">
                             <div class="flex items-start">
-                                <span class="text-indigo-600 mr-2">1.</span>
+                                <span class="text-slate-600 mr-2">1.</span>
                                 <span>Visualizar entidades asignadas al sectorista</span>
                             </div>
                             <div class="flex items-start">
-                                <span class="text-indigo-600 mr-2">2.</span>
+                                <span class="text-slate-600 mr-2">2.</span>
                                 <span>Coordinar reuniones (registro, reprogramación, historial)</span>
                             </div>
                             <div class="flex items-start">
-                                <span class="text-indigo-600 mr-2">3.</span>
+                                <span class="text-slate-600 mr-2">3.</span>
                                 <span>Generar oficio de solicitud de conformación</span>
                             </div>
                             <div class="flex items-start">
-                                <span class="text-indigo-600 mr-2">4.</span>
+                                <span class="text-slate-600 mr-2">4.</span>
                                 <span>Seguimiento visual de acuerdos y compromisos</span>
                             </div>
                             <div class="flex items-start">
-                                <span class="text-indigo-600 mr-2">5.</span>
+                                <span class="text-slate-600 mr-2">5.</span>
                                 <span>Documento (correo, oficio u otro) enviado para la conformación del órgano colegiado</span>
                             </div>
                             <div class="flex items-start">
-                                <span class="text-indigo-600 mr-2">6.</span>
+                                <span class="text-slate-600 mr-2">6.</span>
                                 <span>Control de vencimientos y oficios de reiteración</span>
                             </div>
                             <div class="flex items-start">
-                                <span class="text-indigo-600 mr-2">7.</span>
+                                <span class="text-slate-600 mr-2">7.</span>
                                 <span>Programar sesión de inducción post-aprobación</span>
                             </div>
                         </div>
@@ -136,7 +136,7 @@
                             @if(auth()->check() && auth()->user()->isSectorista())
                                 {{-- Sectorista: Acceso directo al seguimiento --}}
                                 <a href="{{ route('activity2.index') }}" 
-                                   class="w-full flex items-center justify-center gap-3 px-6 py-4 bg-gradient-to-r from-indigo-600 to-purple-600 text-white font-semibold rounded-xl hover:from-indigo-700 hover:to-purple-700 transition-all duration-300 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5">
+                                   class="w-full flex items-center justify-center gap-3 px-6 py-4 bg-gradient-to-r from-slate-600 to-slate-700 text-white font-semibold rounded-xl hover:from-slate-700 hover:to-slate-800 transition-all duration-300 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5">
                                     <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"/>
                                     </svg>
@@ -351,7 +351,7 @@
         <!-- Contenido del modal -->
         <div class="inline-block overflow-hidden text-left align-bottom transition-all transform bg-white rounded-xl shadow-xl sm:my-8 sm:align-middle sm:max-w-lg sm:w-full">
             <!-- Header con icono -->
-            <div class="bg-gradient-to-r from-amber-500 to-orange-500 px-6 py-4">
+            <div class="bg-gradient-to-r from-amber-600 to-amber-700 px-6 py-4">
                 <div class="flex items-center justify-center">
                     <div class="flex-shrink-0 flex items-center justify-center h-16 w-16 rounded-full bg-white/20 mx-auto">
                         <svg class="h-10 w-10 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -368,7 +368,7 @@
             <div class="px-6 py-5">
                 <div class="text-center">
                     <p class="text-gray-700 text-base mb-4">
-                        El <strong>Seguimiento de Entidades</strong> es una funcionalidad exclusiva para los <strong class="text-indigo-600">Sectoristas</strong>.
+                        El <strong>Seguimiento de Entidades</strong> es una funcionalidad exclusiva para los <strong class="text-slate-600">Sectoristas</strong>.
                     </p>
                     <div class="bg-blue-50 rounded-lg p-4 mb-4">
                         <div class="flex items-start">
@@ -397,7 +397,7 @@
             <div class="bg-gray-50 px-6 py-4">
                 <button type="button" 
                         onclick="document.getElementById('modalAccesoRestringido').classList.add('hidden')"
-                        class="w-full px-4 py-3 bg-gradient-to-r from-indigo-600 to-purple-600 text-white text-sm font-semibold rounded-lg hover:from-indigo-700 hover:to-purple-700 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
+                        class="w-full px-4 py-3 bg-gradient-to-r from-slate-600 to-slate-700 text-white text-sm font-semibold rounded-lg hover:from-slate-700 hover:to-slate-800 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-slate-500 focus:ring-offset-2">
                     Entendido
                 </button>
             </div>

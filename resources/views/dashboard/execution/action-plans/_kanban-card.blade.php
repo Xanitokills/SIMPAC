@@ -36,11 +36,11 @@
             {{ $item->action_name }}
         </span>
         @if($item->end_date && $item->end_date->isPast() && $item->status !== 'completado')
-            <span class="text-xs bg-red-100 text-red-600 px-2 py-1 rounded-full font-medium">
+            <span class="text-xs bg-amber-100 text-amber-600 px-2 py-1 rounded-full font-medium">
                 ⚠️ Vencida
             </span>
         @elseif($item->end_date && $item->end_date->diffInDays(now()) <= 7 && $item->status !== 'completado')
-            <span class="text-xs bg-orange-100 text-orange-600 px-2 py-1 rounded-full font-medium">
+            <span class="text-xs bg-amber-50 text-amber-600 px-2 py-1 rounded-full font-medium">
                 ⏰ Por vencer
             </span>
         @endif

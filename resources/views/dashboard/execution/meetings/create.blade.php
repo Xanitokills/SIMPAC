@@ -164,9 +164,9 @@
                             <span class="text-sm text-gray-700">Presupuesto</span>
                         </label>
 
-                        <label class="flex items-center space-x-2 p-3 border border-gray-200 rounded-lg hover:bg-purple-50 cursor-pointer">
+                        <label class="flex items-center space-x-2 p-3 border border-gray-200 rounded-lg hover:bg-teal-50 cursor-pointer">
                             <input type="checkbox" name="components[]" value="bienes"
-                                   class="rounded border-gray-300 text-purple-600 focus:ring-purple-500">
+                                   class="rounded border-gray-300 text-teal-600 focus:ring-teal-500">
                             <span class="text-sm text-gray-700">Bienes</span>
                         </label>
 
@@ -176,15 +176,15 @@
                             <span class="text-sm text-gray-700">Acervo</span>
                         </label>
 
-                        <label class="flex items-center space-x-2 p-3 border border-gray-200 rounded-lg hover:bg-orange-50 cursor-pointer">
+                        <label class="flex items-center space-x-2 p-3 border border-gray-200 rounded-lg hover:bg-cyan-50 cursor-pointer">
                             <input type="checkbox" name="components[]" value="tecnologia"
-                                   class="rounded border-gray-300 text-orange-600 focus:ring-orange-500">
+                                   class="rounded border-gray-300 text-cyan-600 focus:ring-cyan-500">
                             <span class="text-sm text-gray-700">Tecnología</span>
                         </label>
 
-                        <label class="flex items-center space-x-2 p-3 border border-gray-200 rounded-lg hover:bg-red-50 cursor-pointer">
+                        <label class="flex items-center space-x-2 p-3 border border-gray-200 rounded-lg hover:bg-slate-50 cursor-pointer">
                             <input type="checkbox" name="components[]" value="rrhh"
-                                   class="rounded border-gray-300 text-red-600 focus:ring-red-500">
+                                   class="rounded border-gray-300 text-slate-600 focus:ring-slate-500">
                             <span class="text-sm text-gray-700">RR.HH.</span>
                         </label>
                     </div>

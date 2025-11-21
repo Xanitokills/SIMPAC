@@ -31,7 +31,7 @@
                 <form action="{{ route('execution.meetings.cancel', $meeting->id) }}" method="POST" class="inline">
                     @csrf
                     <button type="submit" 
-                            class="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-lg font-semibold"
+                            class="bg-amber-600 hover:bg-amber-700 text-white px-4 py-2 rounded-lg font-semibold"
                             onclick="return confirm('¿Cancelar esta reunión?')">
                         Cancelar
                     </button>
@@ -65,7 +65,7 @@
                     <h3 class="text-sm font-semibold text-gray-600 mb-1">Tipo de Reunión</h3>
                     <span class="inline-block px-3 py-1 rounded-full text-sm font-semibold
                         @if($meeting->meeting_type === 'coordination') bg-blue-100 text-blue-800
-                        @elseif($meeting->meeting_type === 'presentation') bg-purple-100 text-purple-800
+                        @elseif($meeting->meeting_type === 'presentation') bg-teal-100 text-teal-800
                         @elseif($meeting->meeting_type === 'follow_up') bg-green-100 text-green-800
                         @else bg-gray-100 text-gray-800
                         @endif">
@@ -97,7 +97,7 @@
                     <span class="inline-block px-3 py-1 rounded-full text-sm font-semibold
                         @if($meeting->status === 'pending') bg-yellow-100 text-yellow-800
                         @elseif($meeting->status === 'completed') bg-green-100 text-green-800
-                        @elseif($meeting->status === 'cancelled') bg-red-100 text-red-800
+                        @elseif($meeting->status === 'cancelled') bg-slate-100 text-slate-800
                         @endif">
                         @if($meeting->status === 'pending') Pendiente
                         @elseif($meeting->status === 'completed') Completada
@@ -173,7 +173,7 @@
                                     @if($meeting->actionPlan->status === 'pending') bg-yellow-100 text-yellow-800
                                     @elseif($meeting->actionPlan->status === 'in_progress') bg-blue-100 text-blue-800
                                     @elseif($meeting->actionPlan->status === 'completed') bg-green-100 text-green-800
-                                    @elseif($meeting->actionPlan->status === 'cancelled') bg-red-100 text-red-800
+                                    @elseif($meeting->actionPlan->status === 'cancelled') bg-slate-100 text-slate-800
                                     @endif">
                                     @if($meeting->actionPlan->status === 'pending') Pendiente
                                     @elseif($meeting->actionPlan->status === 'in_progress') En Progreso

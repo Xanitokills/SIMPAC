@@ -6,7 +6,7 @@
 @section('content')
 <div class="space-y-6">
     <!-- Header con información de la entidad -->
-    <div class="bg-gradient-to-r from-indigo-500 to-purple-600 rounded-lg shadow-lg text-white">
+    <div class="bg-gradient-to-r from-slate-700 to-slate-800 rounded-lg shadow-lg text-white">
         <div class="p-6">
             <div class="flex items-center justify-between">
                 <div class="flex items-center space-x-4">
@@ -17,7 +17,7 @@
                     </div>
                     <div>
                         <h1 class="text-2xl font-bold">{{ $assignment->entity->name }}</h1>
-                        <p class="text-indigo-100 mt-1">
+                        <p class="text-slate-200 mt-1">
                             <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-white/20 text-white mr-2">
                                 {{ $assignment->entity->type }}
                             </span>
@@ -79,10 +79,10 @@
                                         @foreach($components as $component)
                                             <span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium 
                                                 @if($component === 'presupuesto') bg-blue-100 text-blue-800
-                                                @elseif($component === 'bienes') bg-purple-100 text-purple-800
-                                                @elseif($component === 'acervo') bg-green-100 text-green-800
-                                                @elseif($component === 'tecnologia') bg-orange-100 text-orange-800
-                                                @else bg-red-100 text-red-800 @endif">
+                                                @elseif($component === 'bienes') bg-slate-100 text-slate-800
+                                                @elseif($component === 'acervo') bg-emerald-100 text-emerald-800
+                                                @elseif($component === 'tecnologia') bg-cyan-100 text-cyan-800
+                                                @else bg-teal-100 text-teal-800 @endif">
                                                 {{ ucfirst($component) }}
                                             </span>
                                         @endforeach
@@ -106,7 +106,7 @@
                                 <td class="px-6 py-4 whitespace-nowrap text-sm font-medium space-x-2">
                                     <a href="{{ route('execution.meetings.show', $meeting->id) }}" class="text-blue-600 hover:text-blue-900">Ver</a>
                                     @if($meeting->status === 'scheduled')
-                                        <a href="{{ route('execution.meetings.edit', $meeting->id) }}" class="text-indigo-600 hover:text-indigo-900">Editar</a>
+                                        <a href="{{ route('execution.meetings.edit', $meeting->id) }}" class="text-slate-600 hover:text-slate-900">Editar</a>
                                     @endif
                                 </td>
                             </tr>
@@ -138,7 +138,7 @@
                     <p class="text-sm text-gray-500 mt-1">Gestión de notificaciones y evidencias de seguimiento</p>
                 </div>
                 <a href="{{ route('execution.notifications.create', ['assignment' => $assignment->id]) }}" 
-                   class="bg-red-600 hover:bg-red-700 text-white font-medium py-2 px-4 rounded-lg transition-colors flex items-center space-x-2">
+                   class="bg-slate-600 hover:bg-slate-700 text-white font-medium py-2 px-4 rounded-lg transition-colors flex items-center space-x-2">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"/>
                     </svg>
@@ -148,25 +148,25 @@
 
             <!-- Resumen de estadísticas -->
             <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
-                <div class="bg-red-50 rounded-lg p-4 border border-red-200">
+                <div class="bg-slate-50 rounded-lg p-4 border border-slate-200">
                     <div class="flex items-center justify-between">
                         <div>
-                            <p class="text-sm font-medium text-red-900">Vencidos</p>
-                            <p class="text-2xl font-bold text-red-700">{{ $notificationStats['overdue'] }}</p>
+                            <p class="text-sm font-medium text-slate-900">Vencidos</p>
+                            <p class="text-2xl font-bold text-slate-700">{{ $notificationStats['overdue'] }}</p>
                         </div>
-                        <svg class="w-8 h-8 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <svg class="w-8 h-8 text-slate-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
                         </svg>
                     </div>
                 </div>
 
-                <div class="bg-yellow-50 rounded-lg p-4 border border-yellow-200">
+                <div class="bg-amber-50 rounded-lg p-4 border border-amber-200">
                     <div class="flex items-center justify-between">
                         <div>
-                            <p class="text-sm font-medium text-yellow-900">Pendientes</p>
-                            <p class="text-2xl font-bold text-yellow-700">{{ $notificationStats['pending'] }}</p>
+                            <p class="text-sm font-medium text-amber-900">Pendientes</p>
+                            <p class="text-2xl font-bold text-amber-700">{{ $notificationStats['pending'] }}</p>
                         </div>
-                        <svg class="w-8 h-8 text-yellow-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <svg class="w-8 h-8 text-amber-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
                         </svg>
                     </div>
@@ -242,7 +242,7 @@
                                 </td>
                                 <td class="px-6 py-4 whitespace-nowrap">
                                     @if($oficio->notification_status === 'overdue')
-                                        <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-800">
+                                        <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-amber-100 text-amber-800">
                                             Vencido
                                         </span>
                                     @elseif($oficio->notification_status === 'completed')
@@ -261,7 +261,7 @@
                                 </td>
                                 <td class="px-6 py-4 whitespace-nowrap text-sm font-medium space-x-2">
                                     <a href="{{ route('execution.notifications.show', $oficio->id) }}" class="text-blue-600 hover:text-blue-900">Ver</a>
-                                    <a href="{{ route('oficios.show', $oficio->id) }}" class="text-indigo-600 hover:text-indigo-900">Oficio</a>
+                                    <a href="{{ route('oficios.show', $oficio->id) }}" class="text-slate-600 hover:text-slate-900">Oficio</a>
                                 </td>
                             </tr>
                             @endforeach
@@ -432,7 +432,7 @@
                     <p class="text-sm text-gray-500 mt-1">Registrar y gestionar actas de reunión por componente</p>
                 </div>
                 <a href="{{ route('execution.minutes.create', ['assignment' => $assignment->id]) }}" 
-                   class="bg-purple-600 hover:bg-purple-700 text-white font-medium py-2 px-4 rounded-lg transition-colors flex items-center space-x-2">
+                   class="bg-slate-600 hover:bg-slate-700 text-white font-medium py-2 px-4 rounded-lg transition-colors flex items-center space-x-2">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
                     </svg>
@@ -468,7 +468,7 @@
                                     @if($m->status === 'firmado')
                                         <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">Firmado</span>
                                     @elseif($m->status === 'falta_de_firma')
-                                        <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-800">Falta de firma</span>
+                                        <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-amber-100 text-amber-800">Falta de firma</span>
                                     @elseif($m->status === 'proceso_de_firmas')
                                         <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800">Proceso de firmas</span>
                                     @elseif($m->status === 'proceso_de_firmas_pge')

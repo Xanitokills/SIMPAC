@@ -18,19 +18,19 @@
     @endif
 
     @if(session('error'))
-    <div class="bg-red-50 border-l-4 border-red-500 p-4 rounded-lg">
+    <div class="bg-slate-50 border-l-4 border-slate-500 p-4 rounded-lg">
         <div class="flex items-center">
-            <svg class="w-5 h-5 text-red-500 mr-2" fill="currentColor" viewBox="0 0 20 20">
+            <svg class="w-5 h-5 text-slate-500 mr-2" fill="currentColor" viewBox="0 0 20 20">
                 <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd"/>
             </svg>
-            <p class="text-red-700 font-medium">{{ session('error') }}</p>
+            <p class="text-slate-700 font-medium">{{ session('error') }}</p>
         </div>
     </div>
     @endif
 
     <!-- Plan Activo -->
     @if($activePlan)
-    <div class="bg-gradient-to-r from-green-500 to-green-600 rounded-lg shadow-lg text-white">
+    <div class="bg-gradient-to-r from-emerald-600 to-emerald-700 rounded-lg shadow-lg text-white">
         <div class="p-6">
             <div class="flex items-start justify-between">
                 <div class="flex-1">
@@ -78,7 +78,7 @@
                 @endif
                 <form action="{{ route('implementation-plans.close', $activePlan) }}" method="POST" onsubmit="return confirm('¿Está seguro de cerrar este plan? Esto permitirá crear un nuevo plan.')">
                     @csrf
-                    <button type="submit" class="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors">
+                    <button type="submit" class="px-4 py-2 bg-slate-600 text-white rounded-lg hover:bg-slate-700 transition-colors">
                         Cerrar Plan
                     </button>
                 </form>
@@ -108,7 +108,7 @@
     <!-- Botones de acción -->
     <div class="flex justify-end gap-3">
         @if($activePlan)
-        <a href="{{ route('entity-assignments.index', ['plan' => $activePlan->id]) }}" class="inline-flex items-center px-6 py-3 bg-indigo-600 text-white font-semibold rounded-lg hover:bg-indigo-700 transition-colors shadow-lg">
+        <a href="{{ route('entity-assignments.index', ['plan' => $activePlan->id]) }}" class="inline-flex items-center px-6 py-3 bg-slate-600 text-white font-semibold rounded-lg hover:bg-slate-700 transition-colors shadow-lg">
             <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"/>
             </svg>

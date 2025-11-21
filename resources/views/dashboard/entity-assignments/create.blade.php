@@ -19,7 +19,7 @@
     </div>
 
     @if($errors->any())
-        <div class="mb-4 bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative">
+        <div class="mb-4 bg-slate-100 border border-slate-400 text-slate-700 px-4 py-3 rounded relative">
             <strong class="font-bold">¡Error!</strong>
             <ul class="mt-2 list-disc list-inside">
                 @foreach($errors->all() as $error)

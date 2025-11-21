@@ -517,7 +517,7 @@
                                                             Ver
                                                         </a>
                                                         <button type="button" data-item-id="{{ $item->id }}" 
-                                                                class="delete-file-btn inline-flex items-center px-2 py-1 text-xs text-red-600 hover:text-red-800 transition-colors">
+                                                                class="delete-file-btn inline-flex items-center px-2 py-1 text-xs text-slate-600 hover:text-slate-800 transition-colors">
                                                             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
                                                             </svg>
@@ -570,16 +570,16 @@
                         <div>
                             <h2 class="text-xl font-bold flex items-center">
                                 <svg class="w-6 h-6 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17V7m0 10a2 2 0 01-2 2H5a2 2 0 01-2-2V7a2 2 0 012-2h2a2 2 0 012 2m0 10a2 2 0 002 2h2a2 2 0 002-2M9 7a2 2 0 012-2h2a2 2 0 012 2m0 10V7m0 10a2 2 0 002 2h2a2 2 0 002-2V7a2 2 0 00-2-2h-2a2 2 0 00-2 2"/>
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17V7m0 10a2 2 0 01-2 2H5a2 2 0 01-2-2V7a2 2 0 012-2h2a2 2 0 012 2v12a2 2 0 01-2 2zm0 0h12a2 2 0 002-2v-4a2 2 0 00-2-2h-2.343M11 7.343l1.657-1.657a2 2 0 012.828 0l2.829 2.829a2 2 0 010 2.828l-8.486 8.485M7 17h.01"/>
                                 </svg>
                                 Vista Kanban - Organización por Estado
                             </h2>
-                            <p class="text-purple-100 text-sm mt-1">Visualiza y organiza las acciones por su estado actual</p>
+                            <p class="text-slate-200 text-sm mt-1">Visualiza y organiza las acciones por su estado actual</p>
                         </div>
                         <!-- Filtro por Sección -->
                         <div class="flex items-center space-x-3">
-                            <label class="text-sm text-purple-100">Filtrar por sección:</label>
-                            <select id="kanbanSectionFilter" onchange="filterKanbanBySection(this.value)" class="px-3 py-2 border border-purple-400 bg-purple-500 text-white rounded-lg focus:ring-2 focus:ring-purple-300 text-sm">
+                            <label class="text-sm text-slate-200">Filtrar por sección:</label>
+                            <select id="kanbanSectionFilter" onchange="filterKanbanBySection(this.value)" class="px-3 py-2 border border-slate-400 bg-slate-600 text-white rounded-lg focus:ring-2 focus:ring-slate-300 text-sm">
                                 <option value="">Todas las secciones ({{ $actionPlan->items->count() }})</option>
                                 @foreach($groupedItems as $sectionKey => $sectionItems)
                                     <option value="{{ $sectionKey }}">{{ $sectionKey }} ({{ count($sectionItems) }} items)</option>
@@ -680,18 +680,18 @@
                             <p class="text-indigo-100 text-sm mt-1">Visualiza las acciones organizadas por fecha de vencimiento</p>
                         </div>
                         <div class="flex items-center space-x-3">
-                            <button onclick="changeCalendarMonth(-1)" class="px-3 py-2 bg-indigo-500 hover:bg-indigo-400 rounded-lg transition-colors">
+                            <button onclick="changeCalendarMonth(-1)" class="px-3 py-2 bg-slate-600 hover:bg-slate-500 rounded-lg transition-colors">
                                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
                                 </svg>
                             </button>
                             <span id="currentMonthYear" class="text-lg font-semibold min-w-[150px] text-center"></span>
-                            <button onclick="changeCalendarMonth(1)" class="px-3 py-2 bg-indigo-500 hover:bg-indigo-400 rounded-lg transition-colors">
+                            <button onclick="changeCalendarMonth(1)" class="px-3 py-2 bg-slate-600 hover:bg-slate-500 rounded-lg transition-colors">
                                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
                                 </svg>
                             </button>
-                            <button onclick="goToToday()" class="px-4 py-2 bg-white text-indigo-600 font-medium rounded-lg hover:bg-indigo-50 transition-colors ml-2">
+                            <button onclick="goToToday()" class="px-4 py-2 bg-white text-slate-700 font-medium rounded-lg hover:bg-slate-50 transition-colors ml-2">
                                 Hoy
                             </button>
                         </div>
@@ -730,7 +730,7 @@
                             Completado
                         </div>
                         <div class="flex items-center">
-                            <span class="w-4 h-4 bg-red-500 rounded mr-2"></span>
+                            <span class="w-4 h-4 bg-amber-500 rounded mr-2"></span>
                             Vencido
                         </div>
                     </div>
@@ -758,7 +758,7 @@
             
             <button type="button" 
                     onclick="confirmDelete()" 
-                    class="inline-block bg-red-600 hover:bg-red-700 text-white font-medium py-2 px-6 rounded-lg transition-colors">
+                    class="inline-block bg-amber-600 hover:bg-amber-700 text-white font-medium py-2 px-6 rounded-lg transition-colors">
                 🗑️ Eliminar Plan de Acción
             </button>
         </div>
@@ -1581,7 +1581,7 @@ document.addEventListener('DOMContentLoaded', function() {
     function showNotification(message, type = 'info') {
         const colors = {
             'success': 'bg-green-500',
-            'error': 'bg-red-500',
+            'error': 'bg-slate-500',
             'warning': 'bg-yellow-500',
             'info': 'bg-blue-500'
         };
@@ -1858,7 +1858,7 @@ function renderCalendar() {
         
         // Marcar día actual
         if (currentDate.getTime() === today.getTime()) {
-            dayElement.classList.add('ring-2', 'ring-indigo-500', 'bg-indigo-50');
+            dayElement.classList.add('ring-2', 'ring-slate-500', 'bg-slate-50');
         }
         
         // Número del día
@@ -1882,7 +1882,7 @@ function renderCalendar() {
                 } else if (item.status === 'en_proceso' || item.status === 'proceso') {
                     bgColor = 'bg-yellow-400';
                 } else if (currentDate < today) {
-                    bgColor = 'bg-red-500'; // Vencida
+                    bgColor = 'bg-amber-500'; // Vencida
                 }
                 
                 itemBadge.className = `${bgColor} text-white text-xs px-1 py-0.5 rounded truncate`;
@@ -1955,7 +1955,7 @@ function showDayDetails(dateStr, items) {
                 const itemDate = new Date(item.end_date + 'T00:00:00');
                 if (itemDate < today) {
                     statusBadge = '⚠️ Vencida';
-                    statusColor = 'bg-red-100 text-red-700';
+                    statusColor = 'bg-amber-100 text-amber-700';
                 } else {
                     statusBadge = '○ Pendiente';
                 }

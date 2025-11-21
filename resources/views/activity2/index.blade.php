@@ -35,7 +35,7 @@
                         <div class="mb-4">
                             <h3 class="text-lg font-bold text-gray-900">{{ $assignment->entity->name }}</h3>
                             <div class="mt-1 flex items-center space-x-2">
-                                <span class="inline-flex items-center px-2 py-1 rounded text-xs font-medium bg-purple-100 text-purple-800">
+                                <span class="inline-flex items-center px-2 py-1 rounded text-xs font-medium bg-slate-100 text-slate-800">
                                     {{ $assignment->entity->type }}
                                 </span>
                                 <span class="inline-flex items-center px-2 py-1 rounded text-xs font-medium bg-gray-100 text-gray-800">
@@ -74,8 +74,8 @@
                                     'active' => 'bg-green-100 text-green-800',
                                     'pending' => 'bg-yellow-100 text-yellow-800',
                                     'in_progress' => 'bg-blue-100 text-blue-800',
-                                    'completed' => 'bg-purple-100 text-purple-800',
-                                    'cancelled' => 'bg-red-100 text-red-800',
+                                    'completed' => 'bg-emerald-100 text-emerald-800',
+                                    'cancelled' => 'bg-slate-100 text-slate-800',
                                 ];
                                 $currentStatus = strtolower($assignment->status);
                                 $statusLabel = $statusLabels[$currentStatus] ?? ucfirst($assignment->status);

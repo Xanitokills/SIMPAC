@@ -11,10 +11,10 @@
             <div class="flex items-center justify-between">
                 <div>
                     <p class="text-sm font-medium text-gray-600">Vencidas</p>
-                    <p class="text-2xl font-bold text-red-600">{{ $stats['overdue'] ?? 0 }}</p>
+                    <p class="text-2xl font-bold text-amber-600">{{ $stats['overdue'] ?? 0 }}</p>
                 </div>
-                <div class="bg-red-100 rounded-full p-3">
-                    <svg class="w-6 h-6 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <div class="bg-amber-100 rounded-full p-3">
+                    <svg class="w-6 h-6 text-amber-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
                     </svg>
                 </div>
@@ -67,10 +67,10 @@
             <div class="flex items-center justify-between">
                 <div>
                     <p class="text-sm font-medium text-gray-600">Por vencer (3 días)</p>
-                    <p class="text-2xl font-bold text-orange-600">{{ $stats['near_deadline'] ?? 0 }}</p>
+                    <p class="text-2xl font-bold text-amber-600">{{ $stats['near_deadline'] ?? 0 }}</p>
                 </div>
-                <div class="bg-orange-100 rounded-full p-3">
-                    <svg class="w-6 h-6 text-orange-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <div class="bg-amber-100 rounded-full p-3">
+                    <svg class="w-6 h-6 text-amber-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/>
                     </svg>
                 </div>
@@ -86,10 +86,10 @@
                        name="search" 
                        placeholder="Buscar por entidad o sectorista..."
                        value="{{ request('search') }}"
-                       class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent">
+                       class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-slate-500 focus:border-transparent">
             </div>
             <div>
-                <select name="status" class="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent">
+                <select name="status" class="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-slate-500 focus:border-transparent">
                     <option value="">Todos los estados</option>
                     <option value="pending" {{ request('status') == 'pending' ? 'selected' : '' }}>Pendiente</option>
                     <option value="notified" {{ request('status') == 'notified' ? 'selected' : '' }}>Notificada</option>
@@ -97,7 +97,7 @@
                     <option value="completed" {{ request('status') == 'completed' ? 'selected' : '' }}>Completada</option>
                 </select>
             </div>
-            <button type="submit" class="px-6 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors">
+            <button type="submit" class="px-6 py-2 bg-slate-600 text-white rounded-lg hover:bg-slate-700 transition-colors">
                 Filtrar
             </button>
         </form>
@@ -160,9 +160,9 @@
                                 <td class="px-6 py-4 whitespace-nowrap">
                                     <div class="text-sm text-gray-900">{{ $notification->deadline_date->format('d/m/Y') }}</div>
                                     @if($notification->deadline_date->isPast())
-                                        <span class="text-xs text-red-600 font-medium">Vencida</span>
+                                        <span class="text-xs text-amber-600 font-medium">Vencida</span>
                                     @elseif($notification->deadline_date->diffInDays(now()) <= 3)
-                                        <span class="text-xs text-orange-600 font-medium">Por vencer</span>
+                                        <span class="text-xs text-amber-600 font-medium">Por vencer</span>
                                     @endif
                                 </td>
                                 <td class="px-6 py-4 whitespace-nowrap">
@@ -170,7 +170,7 @@
                                         $statusColors = [
                                             'pendiente' => 'bg-yellow-100 text-yellow-800',
                                             'cumplido' => 'bg-green-100 text-green-800',
-                                            'vencido' => 'bg-red-100 text-red-800',
+                                            'vencido' => 'bg-amber-100 text-amber-800',
                                         ];
                                         $statusLabels = [
                                             'pendiente' => 'Pendiente',

@@ -20,7 +20,7 @@
             <div class="flex-1">
                 <h1 class="text-3xl font-bold text-gray-900">{{ $assignment->entity->name }}</h1>
                 <div class="mt-2 flex items-center space-x-3">
-                    <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-purple-100 text-purple-800">
+                    <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-slate-100 text-slate-800">
                         {{ $assignment->entity->type }}
                     </span>
                     <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-gray-100 text-gray-800">
@@ -42,8 +42,8 @@
                         'active' => 'bg-green-100 text-green-800',
                         'pending' => 'bg-yellow-100 text-yellow-800',
                         'in_progress' => 'bg-blue-100 text-blue-800',
-                        'completed' => 'bg-purple-100 text-purple-800',
-                        'cancelled' => 'bg-red-100 text-red-800',
+                        'completed' => 'bg-emerald-100 text-emerald-800',
+                        'cancelled' => 'bg-slate-100 text-slate-800',
                     ];
                     $currentStatus = strtolower($assignment->status);
                     $statusLabel = $statusLabels[$currentStatus] ?? ucfirst($assignment->status);
@@ -106,11 +106,11 @@
             <div class="flex items-center justify-between">
                 <div>
                     <p class="text-sm text-gray-600">Vencidos</p>
-                    <p class="text-2xl font-bold text-red-600">{{ $stats['oficios_overdue'] }}</p>
+                    <p class="text-2xl font-bold text-amber-600">{{ $stats['oficios_overdue'] }}</p>
                     <p class="text-xs text-gray-500 mt-1">Requieren acción</p>
                 </div>
-                <div class="p-3 bg-red-100 rounded-lg">
-                    <svg class="w-6 h-6 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <div class="p-3 bg-amber-100 rounded-lg">
+                    <svg class="w-6 h-6 text-amber-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
                     </svg>
                 </div>

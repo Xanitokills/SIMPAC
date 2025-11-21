@@ -17,16 +17,16 @@
             <div class="space-y-6">
                 @if(isset($assignment) && $assignment)
                     <!-- Asignación Pre-seleccionada (desde entity panel) -->
-                    <div class="bg-red-50 border border-red-200 rounded-lg p-4 mb-4">
+                    <div class="bg-slate-50 border border-slate-200 rounded-lg p-4 mb-4">
                         <div class="flex items-start">
                             <div class="flex-shrink-0">
-                                <svg class="w-6 h-6 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <svg class="w-6 h-6 text-slate-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
                                 </svg>
                             </div>
                             <div class="ml-3 flex-1">
-                                <h3 class="text-sm font-medium text-red-900">Notificación para:</h3>
-                                <div class="mt-2 text-sm text-red-700">
+                                <h3 class="text-sm font-medium text-slate-900">Notificación para:</h3>
+                                <div class="mt-2 text-sm text-slate-700">
                                     <p class="font-semibold">{{ $assignment->entity->name }}</p>
                                     <p class="text-xs mt-1">Sectorista: {{ $assignment->sectorista->name }}</p>
                                 </div>
@@ -38,10 +38,10 @@
                 <!-- Seleccionar Oficio/Solicitud Original -->
                 <div>
                     <label class="block text-sm font-medium text-gray-700 mb-2">
-                        Oficio o Solicitud Original <span class="text-red-500">*</span>
+                        Oficio o Solicitud Original <span class="text-amber-500">*</span>
                     </label>
                     <select name="oficio_id" required 
-                            class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent"
+                            class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-slate-500 focus:border-transparent"
                             id="oficioSelect">
                         <option value="">Seleccione el oficio o solicitud...</option>
                         @foreach($oficios as $oficio)
@@ -88,34 +88,34 @@
                             <div class="absolute inset-0 border-2 border-yellow-500 rounded-lg opacity-0 peer-checked:opacity-100"></div>
                         </label>
 
-                        <label class="relative flex items-center p-4 border-2 border-gray-200 rounded-lg cursor-pointer hover:border-orange-500 transition-colors">
+                        <label class="relative flex items-center p-4 border-2 border-gray-200 rounded-lg cursor-pointer hover:border-amber-500 transition-colors">
                             <input type="radio" name="notification_type" value="escalation" required
                                    class="sr-only peer">
-                            <div class="flex-1 peer-checked:text-orange-700">
+                            <div class="flex-1 peer-checked:text-amber-700">
                                 <div class="flex items-center space-x-2 mb-2">
-                                    <svg class="w-5 h-5 text-orange-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <svg class="w-5 h-5 text-amber-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/>
                                     </svg>
                                     <span class="font-semibold">Escalamiento</span>
                                 </div>
                                 <p class="text-xs text-gray-500">Notificación más formal</p>
                             </div>
-                            <div class="absolute inset-0 border-2 border-orange-500 rounded-lg opacity-0 peer-checked:opacity-100"></div>
+                            <div class="absolute inset-0 border-2 border-amber-500 rounded-lg opacity-0 peer-checked:opacity-100"></div>
                         </label>
 
-                        <label class="relative flex items-center p-4 border-2 border-gray-200 rounded-lg cursor-pointer hover:border-red-500 transition-colors">
+                        <label class="relative flex items-center p-4 border-2 border-gray-200 rounded-lg cursor-pointer hover:border-slate-600 transition-colors">
                             <input type="radio" name="notification_type" value="final_notice" required
                                    class="sr-only peer">
-                            <div class="flex-1 peer-checked:text-red-700">
+                            <div class="flex-1 peer-checked:text-slate-700">
                                 <div class="flex items-center space-x-2 mb-2">
-                                    <svg class="w-5 h-5 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <svg class="w-5 h-5 text-slate-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
                                     </svg>
                                     <span class="font-semibold">Aviso Final</span>
                                 </div>
                                 <p class="text-xs text-gray-500">Última notificación oficial</p>
                             </div>
-                            <div class="absolute inset-0 border-2 border-red-500 rounded-lg opacity-0 peer-checked:opacity-100"></div>
+                            <div class="absolute inset-0 border-2 border-slate-600 rounded-lg opacity-0 peer-checked:opacity-100"></div>
                         </label>
                     </div>
                     @error('notification_type')
@@ -126,12 +126,12 @@
                 <!-- Fecha de Notificación -->
                 <div>
                     <label class="block text-sm font-medium text-gray-700 mb-2">
-                        Fecha de Envío de la Notificación <span class="text-red-500">*</span>
+                        Fecha de Envío de la Notificación <span class="text-amber-500">*</span>
                     </label>
                     <input type="date" name="notification_date" required
                            value="{{ old('notification_date', now()->format('Y-m-d')) }}"
                            max="{{ now()->format('Y-m-d') }}"
-                           class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent">
+                           class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-slate-500 focus:border-transparent">
                     @error('notification_date')
                         <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
                     @enderror
@@ -144,7 +144,7 @@
                     </label>
                     <textarea name="message" rows="6" required
                               placeholder="Describa el contenido de la notificación enviada a la entidad..."
-                              class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent">{{ old('message') }}</textarea>
+                              class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-slate-500 focus:border-transparent">{{ old('message') }}</textarea>
                     @error('message')
                         <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
                     @enderror
@@ -197,7 +197,7 @@
                     <div class="mt-4">
                         <label class="flex items-center space-x-2">
                             <input type="checkbox" name="evidence_required" value="1"
-                                   class="rounded border-gray-300 text-red-600 focus:ring-red-500">
+                                   class="rounded border-gray-300 text-slate-600 focus:ring-slate-500">
                             <span class="text-sm text-gray-700">Marcar como notificación con evidencia requerida obligatoriamente</span>
                         </label>
                     </div>
@@ -211,7 +211,7 @@
                     Cancelar
                 </a>
                 <button type="submit"
-                        class="px-6 py-2 bg-red-600 hover:bg-red-700 text-white font-medium rounded-lg transition-colors flex items-center space-x-2">
+                        class="px-6 py-2 bg-slate-600 hover:bg-slate-700 text-white font-medium rounded-lg transition-colors flex items-center space-x-2">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"/>
                     </svg>
@@ -244,7 +244,7 @@ document.addEventListener('DOMContentLoaded', function() {
                             <p class="text-xs text-gray-500">${(file.size / 1024).toFixed(2)} KB</p>
                         </div>
                     </div>
-                    <button type="button" onclick="removeFile(${index})" class="text-red-600 hover:text-red-800">
+                    <button type="button" onclick="removeFile(${index})" class="text-slate-600 hover:text-slate-800">
                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
                         </svg>

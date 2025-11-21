@@ -6,20 +6,20 @@
 @section('content')
 <div class="space-y-6">
     <!-- Phase Overview -->
-    <div class="bg-gradient-to-r from-indigo-500 to-indigo-600 rounded-lg shadow-sm text-white">
+    <div class="bg-gradient-to-r from-slate-600 to-slate-700 rounded-lg shadow-sm text-white">
         <div class="p-6">
             <div class="flex items-center justify-between">
                 <div>
                     <h2 class="text-2xl font-bold">Fase 3: Validación y Cierre</h2>
-                    <p class="text-indigo-100 mt-1">Validación legal y cierre formal • 6 días estimados</p>
+                    <p class="text-slate-200 mt-1">Validación legal y cierre formal • 6 días estimados</p>
                 </div>
                 <div class="text-right">
                     <div class="text-3xl font-bold">0%</div>
-                    <div class="text-sm text-indigo-100">Progreso de validación</div>
+                    <div class="text-sm text-slate-200">Progreso de validación</div>
                 </div>
             </div>
             <div class="mt-4">
-                <div class="w-full bg-indigo-400 rounded-full h-2">
+                <div class="w-full bg-slate-400 rounded-full h-2">
                     <div class="bg-white h-2 rounded-full transition-all duration-300" style="width: 0%"></div>
                 </div>
             </div>
@@ -264,21 +264,21 @@
             <div class="p-6">
                 <h3 class="text-lg font-semibold text-gray-900 mb-4">Revisión Legal</h3>
                 <div class="space-y-4">
-                    <div class="p-4 bg-purple-50 rounded-lg">
+                    <div class="p-4 bg-slate-50 rounded-lg">
                         <div class="flex items-center space-x-3">
-                            <svg class="w-5 h-5 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <svg class="w-5 h-5 text-slate-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/>
                             </svg>
                             <div>
-                                <p class="text-sm font-medium text-purple-900">Procuraduría</p>
-                                <p class="text-xs text-purple-700">Validación legal requerida</p>
+                                <p class="text-sm font-medium text-slate-900">Procuraduría</p>
+                                <p class="text-xs text-slate-700">Validación legal requerida</p>
                             </div>
                         </div>
                     </div>
                     <div class="text-sm text-gray-600">
                         <p>La Procuraduría debe revisar y validar legalmente todos los documentos antes del cierre final.</p>
                     </div>
-                    <button class="w-full bg-purple-600 hover:bg-purple-700 text-white text-sm font-medium py-2 px-4 rounded-lg transition-colors" disabled>
+                    <button class="w-full bg-slate-600 hover:bg-slate-700 text-white text-sm font-medium py-2 px-4 rounded-lg transition-colors" disabled>
                         Solicitar Revisión Legal
                     </button>
                 </div>

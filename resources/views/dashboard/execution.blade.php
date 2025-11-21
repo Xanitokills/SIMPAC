@@ -11,15 +11,15 @@
             <div class="flex items-center justify-between">
                 <div>
                     <h2 class="text-2xl font-bold">Fase 2: Ejecución por Componentes</h2>
-                    <p class="text-purple-100 mt-1">Ejecución en paralelo • 5 días estimados</p>
+                    <p class="text-slate-100 mt-1">Ejecución en paralelo • 5 días estimados</p>
                 </div>
                 <div class="text-right">
                     <div class="text-3xl font-bold">0%</div>
-                    <div class="text-sm text-purple-100">Progreso general</div>
+                    <div class="text-sm text-slate-100">Progreso general</div>
                 </div>
             </div>
             <div class="mt-4">
-                <div class="w-full bg-purple-400 rounded-full h-2">
+                <div class="w-full bg-slate-400 rounded-full h-2">
                     <div class="bg-white h-2 rounded-full transition-all duration-300" style="width: 0%"></div>
                 </div>
             </div>
@@ -47,15 +47,15 @@
 
         <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-4">
             <div class="text-center">
-                <div class="w-16 h-16 bg-purple-100 rounded-full flex items-center justify-center mx-auto mb-3">
-                    <svg class="w-8 h-8 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <div class="w-16 h-16 bg-teal-100 rounded-full flex items-center justify-center mx-auto mb-3">
+                    <svg class="w-8 h-8 text-teal-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"/>
                     </svg>
                 </div>
                 <h3 class="text-sm font-semibold text-gray-900">Bienes y Servicios</h3>
                 <div class="mt-2">
                     <div class="w-full bg-gray-200 rounded-full h-2">
-                        <div class="bg-purple-600 h-2 rounded-full" style="width: 0%"></div>
+                        <div class="bg-teal-600 h-2 rounded-full" style="width: 0%"></div>
                     </div>
                     <p class="text-xs text-gray-500 mt-1">0% completado</p>
                 </div>
@@ -81,15 +81,15 @@
 
         <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-4">
             <div class="text-center">
-                <div class="w-16 h-16 bg-orange-100 rounded-full flex items-center justify-center mx-auto mb-3">
-                    <svg class="w-8 h-8 text-orange-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <div class="w-16 h-16 bg-cyan-100 rounded-full flex items-center justify-center mx-auto mb-3">
+                    <svg class="w-8 h-8 text-cyan-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 3v2m6-2v2M9 19v2m6-2v2M5 9H3m2 6H3m18-6h-2m2 6h-2M7 19h10a2 2 0 002-2V7a2 2 0 00-2-2H7a2 2 0 00-2 2v10a2 2 0 002 2zM9 9h6v6H9V9z"/>
                     </svg>
                 </div>
                 <h3 class="text-sm font-semibold text-gray-900">Tecnología TI</h3>
                 <div class="mt-2">
                     <div class="w-full bg-gray-200 rounded-full h-2">
-                        <div class="bg-orange-600 h-2 rounded-full" style="width: 0%"></div>
+                        <div class="bg-cyan-600 h-2 rounded-full" style="width: 0%"></div>
                     </div>
                     <p class="text-xs text-gray-500 mt-1">0% completado</p>
                 </div>
@@ -98,15 +98,15 @@
 
         <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-4">
             <div class="text-center">
-                <div class="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-3">
-                    <svg class="w-8 h-8 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <div class="w-16 h-16 bg-slate-100 rounded-full flex items-center justify-center mx-auto mb-3">
+                    <svg class="w-8 h-8 text-slate-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/>
                     </svg>
                 </div>
                 <h3 class="text-sm font-semibold text-gray-900">Recursos Humanos</h3>
                 <div class="mt-2">
                     <div class="w-full bg-gray-200 rounded-full h-2">
-                        <div class="bg-red-600 h-2 rounded-full" style="width: 0%"></div>
+                        <div class="bg-slate-600 h-2 rounded-full" style="width: 0%"></div>
                     </div>
                     <p class="text-xs text-gray-500 mt-1">0% completado</p>
                 </div>
@@ -268,8 +268,8 @@
                         <tr>
                             <td class="px-6 py-4 whitespace-nowrap">
                                 <div class="flex items-center">
-                                    <div class="w-8 h-8 bg-purple-100 rounded-lg flex items-center justify-center mr-3">
-                                        <svg class="w-4 h-4 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <div class="w-8 h-8 bg-teal-100 rounded-lg flex items-center justify-center mr-3">
+                                        <svg class="w-4 h-4 text-teal-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4"/>
                                         </svg>
                                     </div>
@@ -319,7 +319,7 @@
         <div class="p-6">
             <div class="flex items-center justify-between mb-4">
                 <h3 class="text-lg font-semibold text-gray-900 flex items-center">
-                    <svg class="w-5 h-5 mr-2 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <svg class="w-5 h-5 mr-2 text-slate-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/>
                     </svg>
                     Resumen de Estado General
@@ -329,15 +329,15 @@
             
             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
                 {{-- Vencidos --}}
-                <div class="bg-gradient-to-br from-red-50 to-red-100 rounded-xl p-5 border border-red-200 hover:shadow-md transition-shadow cursor-pointer group">
+                <div class="bg-gradient-to-br from-slate-50 to-slate-100 rounded-xl p-5 border border-slate-200 hover:shadow-md transition-shadow cursor-pointer group">
                     <div class="flex items-center justify-between">
                         <div>
-                            <p class="text-sm font-medium text-red-800">Vencidos</p>
-                            <p class="text-3xl font-bold text-red-700 mt-1">3</p>
-                            <p class="text-xs text-red-600 mt-1">Requieren atención inmediata</p>
+                            <p class="text-sm font-medium text-slate-800">Vencidos</p>
+                            <p class="text-3xl font-bold text-slate-700 mt-1">3</p>
+                            <p class="text-xs text-slate-600 mt-1">Requieren atención inmediata</p>
                         </div>
-                        <div class="w-14 h-14 bg-red-200 rounded-full flex items-center justify-center group-hover:bg-red-300 transition-colors">
-                            <svg class="w-7 h-7 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <div class="w-14 h-14 bg-slate-200 rounded-full flex items-center justify-center group-hover:bg-slate-300 transition-colors">
+                            <svg class="w-7 h-7 text-slate-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
                             </svg>
                         </div>
@@ -345,15 +345,15 @@
                 </div>
 
                 {{-- Próximos a vencer --}}
-                <div class="bg-gradient-to-br from-yellow-50 to-amber-100 rounded-xl p-5 border border-yellow-200 hover:shadow-md transition-shadow cursor-pointer group">
+                <div class="bg-gradient-to-br from-amber-50 to-amber-100 rounded-xl p-5 border border-amber-200 hover:shadow-md transition-shadow cursor-pointer group">
                     <div class="flex items-center justify-between">
                         <div>
-                            <p class="text-sm font-medium text-yellow-800">Próximos a vencer</p>
-                            <p class="text-3xl font-bold text-yellow-700 mt-1">5</p>
-                            <p class="text-xs text-yellow-600 mt-1">En los próximos 7 días</p>
+                            <p class="text-sm font-medium text-amber-800">Próximos a vencer</p>
+                            <p class="text-3xl font-bold text-amber-700 mt-1">5</p>
+                            <p class="text-xs text-amber-600 mt-1">En los próximos 7 días</p>
                         </div>
-                        <div class="w-14 h-14 bg-yellow-200 rounded-full flex items-center justify-center group-hover:bg-yellow-300 transition-colors">
-                            <svg class="w-7 h-7 text-yellow-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <div class="w-14 h-14 bg-amber-200 rounded-full flex items-center justify-center group-hover:bg-amber-300 transition-colors">
+                            <svg class="w-7 h-7 text-amber-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
                             </svg>
                         </div>
@@ -404,7 +404,7 @@
                     <h3 class="text-lg font-semibold text-gray-900">Entidades Asignadas</h3>
                     <p class="text-sm text-gray-500">Haga clic en una entidad para acceder a su panel de seguimiento</p>
                 </div>
-                <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-indigo-100 text-indigo-800">
+                <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-slate-100 text-slate-800">
                     {{ $assignedEntities->count() }} Entidades Asignadas
                 </span>
             </div>
@@ -435,16 +435,16 @@
                     
                     @if($assignment)
                     <a href="{{ route('execution.entity', $assignment->id) }}" 
-                       class="block bg-white rounded-lg border border-gray-200 hover:border-indigo-300 hover:shadow-lg transition-all duration-200 overflow-hidden group">
+                       class="block bg-white rounded-lg border border-gray-200 hover:border-slate-300 hover:shadow-lg transition-all duration-200 overflow-hidden group">
                         {{-- Header de la tarjeta --}}
                         <div class="p-4">
-                            <h4 class="font-semibold text-gray-900 group-hover:text-indigo-600 transition-colors mb-2">
+                            <h4 class="font-semibold text-gray-900 group-hover:text-slate-600 transition-colors mb-2">
                                 {{ $entity->name }}
                             </h4>
                             
                             {{-- Badges de tipo y ámbito --}}
                             <div class="flex flex-wrap gap-1 mb-3">
-                                <span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-indigo-100 text-indigo-700">
+                                <span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-slate-100 text-slate-700">
                                     {{ $entityTypeLabel }}
                                 </span>
                                 <span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-gray-100 text-gray-600">
@@ -477,7 +477,7 @@
                         </div>
                         
                         {{-- Botón de acción --}}
-                        <div class="bg-gradient-to-r from-indigo-500 to-purple-600 px-4 py-3 text-center group-hover:from-indigo-600 group-hover:to-purple-700 transition-all">
+                        <div class="bg-gradient-to-r from-slate-600 to-slate-700 px-4 py-3 text-center group-hover:from-slate-700 group-hover:to-slate-800 transition-all">
                             <span class="text-white font-medium text-sm">Ver Detalles</span>
                         </div>
                         
@@ -548,9 +548,9 @@
                     </div>
                     
                     <!-- Preview Notificaciones -->
-                    <div class="bg-red-50 border-2 border-red-200 rounded-lg p-6 opacity-60">
-                        <div class="w-12 h-12 bg-red-100 rounded-lg flex items-center justify-center mx-auto mb-4">
-                            <svg class="w-6 h-6 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <div class="bg-slate-50 border-2 border-slate-200 rounded-lg p-6 opacity-60">
+                        <div class="w-12 h-12 bg-slate-100 rounded-lg flex items-center justify-center mx-auto mb-4">
+                            <svg class="w-6 h-6 text-slate-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"/>
                             </svg>
                         </div>
@@ -610,7 +610,7 @@
                             <td class="px-6 py-4 text-sm text-gray-900">
                                 <div class="flex flex-wrap gap-1">
                                     <span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-blue-100 text-blue-800">Presupuesto</span>
-                                    <span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-purple-100 text-purple-800">Bienes</span>
+                                    <span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-teal-100 text-teal-800">Bienes</span>
                                 </div>
                             </td>
                             <td class="px-6 py-4 whitespace-nowrap">
@@ -620,7 +620,7 @@
                             </td>
                             <td class="px-6 py-4 whitespace-nowrap text-sm font-medium space-x-2">
                                 <a href="{{ route('execution.meetings.show', 1) }}" class="text-blue-600 hover:text-blue-900">Ver</a>
-                                <a href="{{ route('execution.meetings.edit', 1) }}" class="text-indigo-600 hover:text-indigo-900">Editar</a>
+                                <a href="{{ route('execution.meetings.edit', 1) }}" class="text-slate-600 hover:text-slate-900">Editar</a>
                             </td>
                         </tr>
                         
@@ -652,7 +652,7 @@
                     <h3 class="text-lg font-semibold text-gray-900">Notificaciones y Seguimiento de Respuestas</h3>
                     <p class="text-sm text-gray-500 mt-1">Gestión de notificaciones por falta de respuesta y seguimiento de evidencias</p>
                 </div>
-                <a href="{{ route('execution.notifications.create') }}" class="bg-red-600 hover:bg-red-700 text-white font-medium py-2 px-4 rounded-lg transition-colors flex items-center space-x-2">
+                <a href="{{ route('execution.notifications.create') }}" class="bg-slate-600 hover:bg-slate-700 text-white font-medium py-2 px-4 rounded-lg transition-colors flex items-center space-x-2">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"/>
                     </svg>
@@ -663,10 +663,10 @@
             <!-- Filtros y búsqueda -->
             <div class="mb-4 flex flex-col sm:flex-row gap-3">
                 <div class="flex-1">
-                    <input type="text" placeholder="Buscar por entidad o sectorista..." class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent">
+                    <input type="text" placeholder="Buscar por entidad o sectorista..." class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-slate-500 focus:border-transparent">
                 </div>
                 <div class="flex gap-2">
-                    <select class="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent">
+                    <select class="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-slate-500 focus:border-transparent">
                         <option value="">Todos los estados</option>
                         <option value="pending">Pendiente de respuesta</option>
                         <option value="notified">Notificado</option>
@@ -697,7 +697,7 @@
                     </thead>
                     <tbody class="bg-white divide-y divide-gray-200">
                         <!-- Ejemplo: Caso vencido sin respuesta -->
-                        <tr class="hover:bg-red-50">
+                        <tr class="hover:bg-amber-50">
                             <td class="px-6 py-4">
                                 <div class="text-sm font-medium text-gray-900">SUNAT</div>
                                 <div class="text-xs text-gray-500">Sectorista: Juan Pérez</div>
@@ -707,17 +707,17 @@
                                 <div class="text-xs text-gray-500">Solicitud de información</div>
                             </td>
                             <td class="px-6 py-4 whitespace-nowrap">
-                                <div class="text-sm font-medium text-red-600">15 Nov 2025</div>
-                                <div class="text-xs text-red-500">Vencido hace 3 días</div>
+                                <div class="text-sm font-medium text-amber-600">15 Nov 2025</div>
+                                <div class="text-xs text-amber-500">Vencido hace 3 días</div>
                             </td>
                             <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
                                 <div class="flex items-center space-x-1">
-                                    <span class="inline-flex items-center justify-center w-6 h-6 rounded-full bg-red-100 text-red-800 text-xs font-bold">2</span>
+                                    <span class="inline-flex items-center justify-center w-6 h-6 rounded-full bg-amber-100 text-amber-800 text-xs font-bold">2</span>
                                     <span class="text-xs text-gray-500">enviadas</span>
                                 </div>
                             </td>
                             <td class="px-6 py-4 whitespace-nowrap">
-                                <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-800">
+                                <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-amber-100 text-amber-800">
                                     <svg class="w-3 h-3 mr-1" fill="currentColor" viewBox="0 0 20 20">
                                         <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd"/>
                                     </svg>
@@ -734,7 +734,7 @@
                             </td>
                             <td class="px-6 py-4 whitespace-nowrap text-sm font-medium space-x-2">
                                 <a href="{{ route('execution.notifications.show', 1) }}" class="text-blue-600 hover:text-blue-900">Ver</a>
-                                <button class="text-red-600 hover:text-red-900">Notificar</button>
+                                <button class="text-amber-600 hover:text-amber-900">Notificar</button>
                             </td>
                         </tr>
 

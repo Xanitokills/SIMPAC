@@ -27,7 +27,7 @@
         <div class="mb-6 p-4 bg-gray-50 rounded-lg">
             <h2 class="text-lg font-semibold text-gray-900 mb-2">{{ $assignment->entity->name }}</h2>
             <div class="flex items-center space-x-3">
-                <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-purple-100 text-purple-800">
+                <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-slate-100 text-slate-800">
                     {{ $assignment->entity->type }}
                 </span>
                 <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-800">

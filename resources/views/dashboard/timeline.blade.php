@@ -6,7 +6,7 @@
 @section('content')
 <div class="space-y-6">
     <!-- Timeline Overview -->
-    <div class="bg-gradient-to-r from-cyan-500 to-cyan-600 rounded-lg shadow-sm text-white">
+    <div class="bg-gradient-to-r from-slate-600 to-slate-700 rounded-lg shadow-sm text-white">
         <div class="p-6">
             <div class="flex items-center justify-between">
                 <div>
@@ -258,13 +258,13 @@
             <div class="p-6">
                 <h3 class="text-lg font-semibold text-gray-900 mb-4">Ruta Crítica</h3>
                 <div class="space-y-3">
-                    <div class="p-3 bg-red-50 rounded-lg border-l-4 border-red-500">
+                    <div class="p-3 bg-slate-50 rounded-lg border-l-4 border-slate-500">
                         <div class="flex items-center justify-between">
                             <div>
-                                <p class="text-sm font-medium text-red-900">Oficio de conformación</p>
-                                <p class="text-xs text-red-700">Bloquea inicio de Fase 2</p>
+                                <p class="text-sm font-medium text-slate-900">Oficio de conformación</p>
+                                <p class="text-xs text-slate-700">Bloquea inicio de Fase 2</p>
                             </div>
-                            <svg class="w-5 h-5 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <svg class="w-5 h-5 text-slate-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L3.732 16.5c-.77.833.192 2.5 1.732 2.5z"/>
                             </svg>
                         </div>
@@ -370,18 +370,18 @@
                 <div class="p-3 bg-gray-100 text-gray-600 rounded">11<br/>✅ Act.5</div>
 
                 <div class="p-3 text-gray-400">14</div>
-                <div class="p-3 bg-purple-100 text-purple-800 rounded">15<br/>🚀 Fase 2</div>
-                <div class="p-3 bg-purple-100 text-purple-800 rounded">16<br/>⚡ Comp.</div>
-                <div class="p-3 bg-purple-100 text-purple-800 rounded">17<br/>⚡ Comp.</div>
-                <div class="p-3 bg-purple-100 text-purple-800 rounded">18<br/>⚡ Comp.</div>
+                <div class="p-3 bg-slate-100 text-slate-800 rounded">15<br/>🚀 Fase 2</div>
+                <div class="p-3 bg-slate-100 text-slate-800 rounded">16<br/>⚡ Comp.</div>
+                <div class="p-3 bg-slate-100 text-slate-800 rounded">17<br/>⚡ Comp.</div>
+                <div class="p-3 bg-slate-100 text-slate-800 rounded">18<br/>⚡ Comp.</div>
                 <div class="p-3 text-gray-400">19</div>
                 <div class="p-3 text-gray-400">20</div>
 
-                <div class="p-3 bg-indigo-100 text-indigo-800 rounded">21<br/>🔍 Valid.</div>
-                <div class="p-3 bg-indigo-100 text-indigo-800 rounded">22<br/>🔍 Valid.</div>
-                <div class="p-3 bg-indigo-100 text-indigo-800 rounded">23<br/>🔍 Valid.</div>
-                <div class="p-3 bg-indigo-100 text-indigo-800 rounded">24<br/>🔍 Valid.</div>
-                <div class="p-3 bg-indigo-100 text-indigo-800 rounded">25<br/>🔍 Valid.</div>
+                <div class="p-3 bg-cyan-100 text-cyan-800 rounded">21<br/>🔍 Valid.</div>
+                <div class="p-3 bg-cyan-100 text-cyan-800 rounded">22<br/>🔍 Valid.</div>
+                <div class="p-3 bg-cyan-100 text-cyan-800 rounded">23<br/>🔍 Valid.</div>
+                <div class="p-3 bg-cyan-100 text-cyan-800 rounded">24<br/>🔍 Valid.</div>
+                <div class="p-3 bg-cyan-100 text-cyan-800 rounded">25<br/>🔍 Valid.</div>
                 <div class="p-3 bg-green-100 text-green-800 rounded">26<br/>🎉 Cierre</div>
                 <div class="p-3 text-gray-400">27</div>
             </div>

@@ -6,7 +6,7 @@
 @section('content')
 <div class="space-y-6">
     <!-- Documents Overview -->
-    <div class="bg-gradient-to-r from-emerald-500 to-emerald-600 rounded-lg shadow-sm text-white">
+    <div class="bg-gradient-to-r from-emerald-600 to-emerald-700 rounded-lg shadow-sm text-white">
         <div class="p-6">
             <div class="flex items-center justify-between">
                 <div>
@@ -63,8 +63,8 @@
         <div class="bg-white rounded-lg shadow-sm border border-gray-200">
             <div class="p-6">
                 <div class="flex items-center space-x-3 mb-4">
-                    <div class="w-10 h-10 bg-purple-100 rounded-lg flex items-center justify-center">
-                        <svg class="w-6 h-6 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <div class="w-10 h-10 bg-slate-100 rounded-lg flex items-center justify-center">
+                        <svg class="w-6 h-6 text-slate-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/>
                         </svg>
                     </div>
@@ -240,7 +240,7 @@
                             <button class="bg-blue-600 hover:bg-blue-700 text-white text-xs py-2 px-3 rounded transition-colors">
                                 Exportar Documentos
                             </button>
-                            <button class="bg-purple-600 hover:bg-purple-700 text-white text-xs py-2 px-3 rounded transition-colors">
+                            <button class="bg-slate-600 hover:bg-slate-700 text-white text-xs py-2 px-3 rounded transition-colors">
                                 Ver Historial
                             </button>
                         </div>

@@ -18,12 +18,12 @@
     @endif
 
     @if(session('error'))
-    <div class="bg-red-50 border-l-4 border-red-500 p-4 rounded-lg">
+    <div class="bg-slate-50 border-l-4 border-slate-500 p-4 rounded-lg">
         <div class="flex items-center">
-            <svg class="w-5 h-5 text-red-500 mr-2" fill="currentColor" viewBox="0 0 20 20">
+            <svg class="w-5 h-5 text-slate-500 mr-2" fill="currentColor" viewBox="0 0 20 20">
                 <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd"/>
             </svg>
-            <p class="text-red-700 font-medium">{{ session('error') }}</p>
+            <p class="text-slate-700 font-medium">{{ session('error') }}</p>
         </div>
     </div>
     @endif
@@ -198,7 +198,7 @@
                     </a>
                     <form action="{{ route('implementation-plans.close', $implementationPlan) }}" method="POST" onsubmit="return confirm('¿Está seguro de cerrar este plan? Esto permitirá crear un nuevo plan.')">
                         @csrf
-                        <button type="submit" class="px-6 py-2 bg-red-600 text-white font-medium rounded-lg hover:bg-red-700 transition-colors">
+                        <button type="submit" class="px-6 py-2 bg-slate-600 text-white font-medium rounded-lg hover:bg-slate-700 transition-colors">
                             Cerrar Plan
                         </button>
                     </form>

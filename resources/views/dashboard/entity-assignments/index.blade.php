@@ -35,7 +35,7 @@
     @endif
 
     @if(session('error'))
-        <div class="mb-4 bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative" role="alert">
+        <div class="mb-4 bg-slate-100 border border-slate-400 text-slate-700 px-4 py-3 rounded relative" role="alert">
             <span class="block sm:inline">{{ session('error') }}</span>
         </div>
     @endif
@@ -138,7 +138,7 @@
                                         'pending' => 'bg-yellow-100 text-yellow-800',
                                         'in_progress' => 'bg-blue-100 text-blue-800',
                                         'completed' => 'bg-green-100 text-green-800',
-                                        'cancelled' => 'bg-red-100 text-red-800',
+                                        'cancelled' => 'bg-slate-100 text-slate-800',
                                     ];
                                     $statusLabels = [
                                         'pending' => 'Pendiente',
@@ -168,7 +168,7 @@
                                     </a>
                                     @if(in_array($assignment->status, ['pending', 'in_progress']))
                                         <a href="{{ route('entity-assignments.edit', ['plan' => $plan->id, 'entity_assignment' => $assignment->id]) }}" 
-                                           class="text-indigo-600 hover:text-indigo-900" title="Editar">
+                                           class="text-slate-600 hover:text-slate-900" title="Editar">
                                             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/>
                                             </svg>
@@ -187,7 +187,7 @@
                                               method="POST" class="inline" onsubmit="return confirm('¿Cancelar esta asignación?');">
                                             @csrf
                                             @method('PATCH')
-                                            <button type="submit" class="text-red-600 hover:text-red-900" title="Cancelar">
+                                            <button type="submit" class="text-slate-600 hover:text-slate-900" title="Cancelar">
                                                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z"/>
                                                 </svg>

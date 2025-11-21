@@ -67,8 +67,8 @@
                     <p class="text-xs text-gray-600">Reuniones</p>
                     <p class="text-2xl font-bold text-gray-900">{{ $stats['total_meetings'] }}</p>
                 </div>
-                <div class="p-2 bg-purple-100 rounded-lg">
-                    <svg class="w-6 h-6 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <div class="p-2 bg-slate-100 rounded-lg">
+                    <svg class="w-6 h-6 text-slate-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
                     </svg>
                 </div>
@@ -97,8 +97,8 @@
                     <p class="text-xs text-gray-600">Pendientes</p>
                     <p class="text-2xl font-bold text-orange-600">{{ $stats['oficios_pending'] }}</p>
                 </div>
-                <div class="p-2 bg-orange-100 rounded-lg">
-                    <svg class="w-6 h-6 text-orange-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <div class="p-2 bg-amber-100 rounded-lg">
+                    <svg class="w-6 h-6 text-amber-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
                     </svg>
                 </div>
@@ -110,10 +110,10 @@
             <div class="flex items-center justify-between">
                 <div>
                     <p class="text-xs text-gray-600">Vencidos</p>
-                    <p class="text-2xl font-bold text-red-600">{{ $stats['oficios_overdue'] }}</p>
+                    <p class="text-2xl font-bold text-amber-600">{{ $stats['oficios_overdue'] }}</p>
                 </div>
-                <div class="p-2 bg-red-100 rounded-lg">
-                    <svg class="w-6 h-6 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <div class="p-2 bg-amber-100 rounded-lg">
+                    <svg class="w-6 h-6 text-amber-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
                     </svg>
                 </div>
@@ -133,7 +133,7 @@
                         <div class="mb-4">
                             <h3 class="text-lg font-bold text-gray-900">{{ $assignment->entity->name }}</h3>
                             <div class="mt-1 flex items-center space-x-2">
-                                <span class="inline-flex items-center px-2 py-1 rounded text-xs font-medium bg-purple-100 text-purple-800">
+                                <span class="inline-flex items-center px-2 py-1 rounded text-xs font-medium bg-slate-100 text-slate-800">
                                     {{ $assignment->entity->type }}
                                 </span>
                                 <span class="inline-flex items-center px-2 py-1 rounded text-xs font-medium bg-gray-100 text-gray-800">

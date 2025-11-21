@@ -115,10 +115,10 @@
             @apply inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium;
         }
         
-        .status-pending { @apply bg-yellow-100 text-yellow-800; }
+        .status-pending { @apply bg-amber-100 text-amber-800; }
         .status-progress { @apply bg-blue-100 text-blue-800; }
-        .status-completed { @apply bg-green-100 text-green-800; }
-        .status-delayed { @apply bg-red-100 text-red-800; }
+        .status-completed { @apply bg-emerald-100 text-emerald-800; }
+        .status-delayed { @apply bg-slate-100 text-slate-800; }
         
         /* Custom Scrollbar - Azul metálico profesional */
         .custom-scrollbar::-webkit-scrollbar {
@@ -204,7 +204,7 @@
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
                         </svg>
                         <span class="sidebar-text flex-1">Reportes</span>
-                        <span class="sidebar-badge text-[10px] bg-purple-500/20 text-purple-300 px-2 py-0.5 rounded-full font-medium">6d</span>
+                        <span class="sidebar-badge text-[10px] bg-slate-500/20 text-slate-300 px-2 py-0.5 rounded-full font-medium">6d</span>
                     </a>
                 </div>
             </nav>
@@ -226,7 +226,7 @@
                 <!-- Logout Button -->
                 <form method="POST" action="{{ route('logout') }}" class="w-full">
                     @csrf
-                    <button type="submit" class="sidebar-logout-btn w-full flex items-center justify-center space-x-2 px-4 py-3 bg-gradient-to-r from-red-600 to-red-700 hover:from-red-700 hover:to-red-800 text-white text-sm font-semibold rounded-lg transition-all duration-200 shadow-lg hover:shadow-xl">
+                    <button type="submit" class="sidebar-logout-btn w-full flex items-center justify-center space-x-2 px-4 py-3 bg-gradient-to-r from-slate-600 to-slate-700 hover:from-slate-700 hover:to-slate-800 text-white text-sm font-semibold rounded-lg transition-all duration-200 shadow-lg hover:shadow-xl">
                         <svg class="w-4 h-4 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/>
                         </svg>
@@ -266,7 +266,7 @@
                             <svg class="w-6 h-6 text-gray-500 group-hover:text-blue-600 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"/>
                             </svg>
-                            <span class="absolute top-1.5 right-1.5 block h-2.5 w-2.5 rounded-full bg-red-500 ring-2 ring-white"></span>
+                            <span class="absolute top-1.5 right-1.5 block h-2.5 w-2.5 rounded-full bg-amber-500 ring-2 ring-white"></span>
                         </button>
                         
                         <!-- Settings -->
@@ -300,14 +300,14 @@
                 @endif
 
                 @if(session('error'))
-                <div class="mb-4 p-4 bg-red-50 border border-red-200 text-red-800 rounded-lg flex items-center justify-between" role="alert">
+                <div class="mb-4 p-4 bg-slate-100 border border-slate-300 text-slate-800 rounded-lg flex items-center justify-between" role="alert">
                     <div class="flex items-center">
-                        <svg class="w-5 h-5 mr-3 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <svg class="w-5 h-5 mr-3 text-slate-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
                         </svg>
                         <span>{{ session('error') }}</span>
                     </div>
-                    <button type="button" onclick="this.parentElement.remove()" class="text-red-500 hover:text-red-700">
+                    <button type="button" onclick="this.parentElement.remove()" class="text-slate-600 hover:text-slate-800">
                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
                         </svg>

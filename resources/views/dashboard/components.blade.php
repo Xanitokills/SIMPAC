@@ -6,7 +6,7 @@
 @section('content')
 <div class="space-y-6">
     <!-- Components Overview -->
-    <div class="bg-gradient-to-r from-green-500 to-green-600 rounded-lg shadow-sm text-white">
+    <div class="bg-gradient-to-r from-emerald-600 to-emerald-700 rounded-lg shadow-sm text-white">
         <div class="p-6">
             <div class="flex items-center justify-between">
                 <div>
@@ -103,8 +103,8 @@
             <div class="p-6">
                 <div class="flex items-center justify-between mb-4">
                     <div class="flex items-center space-x-3">
-                        <div class="w-10 h-10 bg-purple-100 rounded-lg flex items-center justify-center">
-                            <svg class="w-6 h-6 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <div class="w-10 h-10 bg-slate-100 rounded-lg flex items-center justify-center">
+                            <svg class="w-6 h-6 text-slate-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"/>
                             </svg>
                         </div>
@@ -158,10 +158,10 @@
                 </div>
 
                 <div class="w-full bg-gray-200 rounded-full h-2 mb-4">
-                    <div class="bg-purple-600 h-2 rounded-full" style="width: 0%"></div>
+                    <div class="bg-slate-600 h-2 rounded-full" style="width: 0%"></div>
                 </div>
 
-                <button class="w-full bg-purple-600 hover:bg-purple-700 text-white text-sm font-medium py-2 px-4 rounded-lg transition-colors">
+                <button class="w-full bg-slate-600 hover:bg-slate-700 text-white text-sm font-medium py-2 px-4 rounded-lg transition-colors">
                     Iniciar Componente
                 </button>
             </div>
@@ -247,8 +247,8 @@
             <div class="p-6">
                 <div class="flex items-center justify-between mb-4">
                     <div class="flex items-center space-x-3">
-                        <div class="w-10 h-10 bg-orange-100 rounded-lg flex items-center justify-center">
-                            <svg class="w-6 h-6 text-orange-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <div class="w-10 h-10 bg-cyan-100 rounded-lg flex items-center justify-center">
+                            <svg class="w-6 h-6 text-cyan-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 3v2m6-2v2M9 19v2m6-2v2M5 9H3m2 6H3m18-6h-2m2 6h-2M7 19h10a2 2 0 002-2V7a2 2 0 00-2-2H7a2 2 0 00-2 2v10a2 2 0 002 2zM9 9h6v6H9V9z"/>
                             </svg>
                         </div>
@@ -302,10 +302,10 @@
                 </div>
 
                 <div class="w-full bg-gray-200 rounded-full h-2 mb-4">
-                    <div class="bg-orange-600 h-2 rounded-full" style="width: 0%"></div>
+                    <div class="bg-cyan-600 h-2 rounded-full" style="width: 0%"></div>
                 </div>
 
-                <button class="w-full bg-orange-600 hover:bg-orange-700 text-white text-sm font-medium py-2 px-4 rounded-lg transition-colors">
+                <button class="w-full bg-cyan-600 hover:bg-cyan-700 text-white text-sm font-medium py-2 px-4 rounded-lg transition-colors">
                     Iniciar Componente
                 </button>
             </div>
@@ -316,8 +316,8 @@
             <div class="p-6">
                 <div class="flex items-center justify-between mb-4">
                     <div class="flex items-center space-x-3">
-                        <div class="w-10 h-10 bg-red-100 rounded-lg flex items-center justify-center">
-                            <svg class="w-6 h-6 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <div class="w-10 h-10 bg-teal-100 rounded-lg flex items-center justify-center">
+                            <svg class="w-6 h-6 text-teal-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/>
                             </svg>
                         </div>
@@ -371,10 +371,10 @@
                 </div>
 
                 <div class="w-full bg-gray-200 rounded-full h-2 mb-4">
-                    <div class="bg-red-600 h-2 rounded-full" style="width: 0%"></div>
+                    <div class="bg-teal-600 h-2 rounded-full" style="width: 0%"></div>
                 </div>
 
-                <button class="w-full bg-red-600 hover:bg-red-700 text-white text-sm font-medium py-2 px-4 rounded-lg transition-colors">
+                <button class="w-full bg-slate-600 hover:bg-slate-700 text-white text-sm font-medium py-2 px-4 rounded-lg transition-colors">
                     Iniciar Componente
                 </button>
             </div>
@@ -425,9 +425,9 @@
                                 <p class="text-sm font-medium text-yellow-900">Seguimiento Semanal</p>
                                 <p class="text-xs text-yellow-700">Viernes 8:00 AM</p>
                             </div>
-                            <div class="p-3 bg-purple-50 rounded-lg border-l-4 border-purple-500">
-                                <p class="text-sm font-medium text-purple-900">Validación Procuraduría</p>
-                                <p class="text-xs text-purple-700">Por agendar</p>
+                            <div class="p-3 bg-slate-50 rounded-lg border-l-4 border-slate-500">
+                                <p class="text-sm font-medium text-slate-900">Validación Procuraduría</p>
+                                <p class="text-xs text-slate-700">Por agendar</p>
                             </div>
                         </div>
                     </div>

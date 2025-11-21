@@ -92,7 +92,7 @@
                         <div class="flex space-x-2">
                             <button type="button" 
                                     onclick="loadTemplate(this)"
-                                    class="bg-purple-600 hover:bg-purple-700 text-white text-sm font-medium py-2 px-4 rounded-lg transition-colors flex items-center shadow-md"
+                                    class="bg-slate-600 hover:bg-slate-700 text-white text-sm font-medium py-2 px-4 rounded-lg transition-colors flex items-center shadow-md"
                                     title="Cargar acciones estándar predefinidas automáticamente">
                                 <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/>

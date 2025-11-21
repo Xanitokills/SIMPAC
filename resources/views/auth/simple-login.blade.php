@@ -31,7 +31,7 @@
 
         <!-- Mensajes de error/éxito -->
         @if(session('error'))
-            <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded-lg mb-6 text-sm">
+            <div class="bg-slate-100 border border-slate-400 text-slate-700 px-4 py-3 rounded-lg mb-6 text-sm">
                 <strong>Error:</strong> {{ session('error') }}
             </div>
         @endif
@@ -63,7 +63,7 @@
                     name="email" 
                     id="email" 
                     required
-                    class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-purple-500 focus:border-transparent transition"
+                    class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-slate-500 focus:border-transparent transition"
                     placeholder="usuario@simpac.com"
                     value="{{ old('email') }}"
                 >
@@ -79,7 +79,7 @@
                     name="password" 
                     id="password" 
                     required
-                    class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-purple-500 focus:border-transparent transition"
+                    class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-slate-500 focus:border-transparent transition"
                     placeholder="••••••••"
                 >
             </div>
@@ -88,14 +88,14 @@
             <button 
                 type="submit"
                 id="submitBtn"
-                class="w-full bg-gradient-to-r from-purple-600 to-indigo-600 text-white font-semibold py-3 rounded-lg hover:from-purple-700 hover:to-indigo-700 transition duration-300 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5"
+                class="w-full bg-gradient-to-r from-slate-600 to-slate-700 text-white font-semibold py-3 rounded-lg hover:from-slate-700 hover:to-slate-800 transition duration-300 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5"
             >
                 Iniciar Sesión
             </button>
             
             <!-- Mostrar errores de validación -->
             @if ($errors->any())
-                <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded-lg mt-4 text-sm">
+                <div class="bg-slate-100 border border-slate-400 text-slate-700 px-4 py-3 rounded-lg mt-4 text-sm">
                     <ul class="list-disc list-inside">
                         @foreach ($errors->all() as $error)
                             <li>{{ $error }}</li>
@@ -123,12 +123,12 @@
                 </div>
 
                 <!-- Sectorista Juan -->
-                <div class="test-account cursor-pointer bg-indigo-50 p-3 rounded-lg border border-indigo-200 hover:border-indigo-400 hover:shadow-md transition-all duration-200" 
+                <div class="test-account cursor-pointer bg-slate-50 p-3 rounded-lg border border-slate-200 hover:border-slate-400 hover:shadow-md transition-all duration-200" 
                      data-email="juan.perez@simpac.com" 
                      data-password="sectorista123"
                      title="Clic para auto-rellenar">
-                    <p class="font-semibold text-indigo-800">👥 Sectorista 1 - Juan Carlos Pérez</p>
-                    <p class="text-indigo-600 text-[10px] mb-1">4 entidades asignadas (MEF, SUNAT, Arequipa, etc.)</p>
+                    <p class="font-semibold text-slate-800">👥 Sectorista 1 - Juan Carlos Pérez</p>
+                    <p class="text-slate-600 text-[10px] mb-1">4 entidades asignadas (MEF, SUNAT, Arequipa, etc.)</p>
                     <p class="text-gray-700">Email: <span class="font-mono">juan.perez@simpac.com</span></p>
                     <p class="text-gray-700">Contraseña: <span class="font-mono">sectorista123</span></p>
                 </div>
