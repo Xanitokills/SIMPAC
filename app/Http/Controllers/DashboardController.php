@@ -105,8 +105,15 @@ class DashboardController extends Controller
 
         // Verificar permisos
         if (auth()->user()->role === 'sectorista') {
-            // La relación entre User y Sectorista es por email
-            $sectorista = \App\Models\Sectorista::where('email', auth()->user()->email)->first();
+            // Buscar sectorista por sectorista_id del usuario o por email como fallback
+            $sectorista = null;
+            if (auth()->user()->sectorista_id) {
+                $sectorista = \App\Models\Sectorista::find(auth()->user()->sectorista_id);
+            }
+            if (!$sectorista) {
+                $sectorista = \App\Models\Sectorista::where('email', auth()->user()->email)->first();
+            }
+            
             if (!$sectorista || $assignment->sectorista_id !== $sectorista->id) {
                 return redirect()->route('dashboard.execution')
                     ->with('error', 'No tiene permisos para acceder a esta entidad.');
