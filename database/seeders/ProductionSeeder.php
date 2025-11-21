@@ -239,7 +239,7 @@ class ProductionSeeder extends Seeder
             'resolution_number' => 'RM-001-2025-PCM',
             'name' => 'Plan de Transferencia PGE 2025',
             'description' => 'Plan de implementación para la transferencia de entidades a la Procuraduría General del Estado',
-            'pdf_path' => null,
+            'pdf_path' => 'plans/plan-2025.pdf',
             'start_date' => Carbon::now(),
             'end_date' => Carbon::now()->addMonths(6),
             'status' => 'active',
