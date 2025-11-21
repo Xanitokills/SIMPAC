@@ -51,66 +51,75 @@ class SimpleAuthController extends Controller
 
     public function login(Request $request)
     {
-        $request->validate([
-            'email' => 'required|email',
-            'password' => 'required'
-        ]);
-
-        // Intentar autenticación con la base de datos
-        $user = \App\Models\User::where('email', $request->email)->first();
-
-        if ($user && \Illuminate\Support\Facades\Hash::check($request->password, $user->password)) {
-            // Guardar datos del usuario en la sesión existente
-            $request->session()->put('user', [
-                'id' => $user->id,
-                'name' => $user->name,
-                'email' => $user->email,
-                'role' => $user->role,
-                'sectorista_id' => $user->sectorista_id,
+        try {
+            $request->validate([
+                'email' => 'required|email',
+                'password' => 'required'
             ]);
-            
-            // Guardar también como variables individuales para facilitar el acceso
-            $request->session()->put('user_id', $user->id);
-            $request->session()->put('user_name', $user->name);
-            $request->session()->put('user_email', $user->email);
-            $request->session()->put('user_role', $user->role);
-            $request->session()->put('user_sectorista_id', $user->sectorista_id);
-            
-            // CRÍTICO: Guardar la sesión explícitamente antes de redirigir
-            $request->session()->save();
-            
-            // DEBUG: Log login exitoso
-            \Illuminate\Support\Facades\Log::info('✅ Login exitoso - Datos guardados en sesión', [
-                'user_id' => $user->id,
-                'email' => $user->email,
-                'role' => $user->role,
-                'session_id' => $request->session()->getId(),
-                'session_has_user' => $request->session()->has('user'),
-                'session_saved' => true,
-            ]);
-            
-            // Redirigir según el rol
-            return $this->redirectByRole($user);
-        }
 
-        // Fallback: buscar en usuarios hardcodeados
-        foreach ($this->users as $hardcodedUser) {
-            if ($hardcodedUser['email'] === $request->email && $hardcodedUser['password'] === $request->password) {
-                Session::put('user', [
-                    'name' => $hardcodedUser['name'],
-                    'email' => $hardcodedUser['email'],
-                    'role' => $hardcodedUser['role']
+            // Intentar autenticación con la base de datos
+            $user = \App\Models\User::where('email', $request->email)->first();
+
+            if ($user && \Illuminate\Support\Facades\Hash::check($request->password, $user->password)) {
+                // Guardar datos del usuario en la sesión existente
+                $request->session()->put('user', [
+                    'id' => $user->id,
+                    'name' => $user->name,
+                    'email' => $user->email,
+                    'role' => $user->role,
+                    'sectorista_id' => $user->sectorista_id,
                 ]);
                 
-                Session::put('user_name', $hardcodedUser['name']);
-                Session::put('user_email', $hardcodedUser['email']);
-                Session::put('user_role', $hardcodedUser['role']);
+                // Guardar también como variables individuales para facilitar el acceso
+                $request->session()->put('user_id', $user->id);
+                $request->session()->put('user_name', $user->name);
+                $request->session()->put('user_email', $user->email);
+                $request->session()->put('user_role', $user->role);
+                $request->session()->put('user_sectorista_id', $user->sectorista_id);
                 
-                return redirect()->route('dashboard')->with('success', '¡Bienvenido ' . $hardcodedUser['name'] . '!');
+                // CRÍTICO: Guardar la sesión explícitamente antes de redirigir
+                $request->session()->save();
+                
+                // DEBUG: Log login exitoso
+                \Illuminate\Support\Facades\Log::info('✅ Login exitoso - Datos guardados en sesión', [
+                    'user_id' => $user->id,
+                    'email' => $user->email,
+                    'role' => $user->role,
+                    'session_id' => $request->session()->getId(),
+                    'session_has_user' => $request->session()->has('user'),
+                    'session_saved' => true,
+                ]);
+            
+                // Redirigir según el rol
+                return $this->redirectByRole($user);
             }
-        }
 
-        return back()->withErrors(['email' => 'Credenciales incorrectas'])->withInput();
+            // Fallback: buscar en usuarios hardcodeados
+            foreach ($this->users as $hardcodedUser) {
+                if ($hardcodedUser['email'] === $request->email && $hardcodedUser['password'] === $request->password) {
+                    Session::put('user', [
+                        'name' => $hardcodedUser['name'],
+                        'email' => $hardcodedUser['email'],
+                        'role' => $hardcodedUser['role']
+                    ]);
+                    
+                    Session::put('user_name', $hardcodedUser['name']);
+                    Session::put('user_email', $hardcodedUser['email']);
+                    Session::put('user_role', $hardcodedUser['role']);
+                    
+                    return redirect()->route('dashboard')->with('success', '¡Bienvenido ' . $hardcodedUser['name'] . '!');
+                }
+            }
+
+            return back()->withErrors(['email' => 'Credenciales incorrectas'])->withInput();
+        } catch (\Exception $e) {
+            \Illuminate\Support\Facades\Log::error('❌ Error en login: ' . $e->getMessage(), [
+                'exception' => $e->getTraceAsString(),
+                'email' => $request->email ?? 'N/A',
+            ]);
+            
+            return back()->withErrors(['email' => 'Error del servidor: ' . $e->getMessage()])->withInput();
+        }
     }
 
     /**

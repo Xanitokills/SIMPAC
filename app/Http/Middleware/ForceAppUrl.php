@@ -17,6 +17,14 @@ class ForceAppUrl
      */
     public function handle(Request $request, Closure $next)
     {
+        // Forzar HTTPS cuando hay un proxy (como Railway, Heroku, etc.)
+        if ($request->header('X-Forwarded-Proto') === 'https' || 
+            $request->header('X-Forwarded-Ssl') === 'on' ||
+            config('app.env') === 'production') {
+            URL::forceScheme('https');
+            $request->server->set('HTTPS', 'on');
+        }
+        
         // Forzar la URL de la aplicación desde el .env
         if ($appUrl = config('app.url')) {
             URL::forceRootUrl($appUrl);

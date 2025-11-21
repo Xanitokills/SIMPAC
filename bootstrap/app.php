@@ -11,6 +11,9 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware): void {
+        // Confiar en todos los proxies (necesario para Railway, Heroku, etc.)
+        $middleware->trustProxies(at: '*');
+        
         // Forzar URL desde .env para túneles y proxies
         $middleware->prepend(\App\Http\Middleware\ForceAppUrl::class);
         
