@@ -19,7 +19,12 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        // Forzar HTTPS solo si la petición viene del túnel
+        // Forzar HTTPS en producción (Railway, Heroku, etc.)
+        if ($this->app->environment('production')) {
+            \Illuminate\Support\Facades\URL::forceScheme('https');
+        }
+        
+        // Forzar HTTPS solo si la petición viene del túnel en local
         if ($this->app->environment('local')) {
             $host = request()->getHost();
             if (str_contains($host, 'devtunnels.ms')) {

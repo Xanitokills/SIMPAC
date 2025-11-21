@@ -17,6 +17,19 @@ Route::get('/', function () {
     return redirect()->route('login');
 });
 
+// Ruta de debug (temporal - eliminar en producción final)
+Route::get('/debug-env', function () {
+    return response()->json([
+        'app_env' => config('app.env'),
+        'app_url' => config('app.url'),
+        'session_driver' => config('session.driver'),
+        'session_secure' => config('session.secure'),
+        'db_connection' => config('database.default'),
+        'users_count' => \App\Models\User::count(),
+        'admin_exists' => \App\Models\User::where('email', 'admin@simpac.com')->exists(),
+    ]);
+});
+
 // Rutas de autenticación
 Route::get('/login', [SimpleAuthController::class, 'showLogin'])->name('login');
 Route::post('/login', [SimpleAuthController::class, 'login'])->name('login.post');
