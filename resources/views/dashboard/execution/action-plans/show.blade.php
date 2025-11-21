@@ -993,6 +993,71 @@ document.getElementById('editModal').addEventListener('click', function(e) {
     }
 });
 
+// ==================== ENVÍO DE FORMULARIO VIA AJAX ====================
+document.getElementById('editForm').addEventListener('submit', async function(e) {
+    e.preventDefault();
+    
+    const form = this;
+    const formData = new FormData(form);
+    const itemId = form.action.split('/').pop();
+    
+    // Convertir FormData a objeto JSON (excepto archivos)
+    const jsonData = {};
+    for (let [key, value] of formData.entries()) {
+        if (key !== 'file' && key !== '_token' && key !== '_method') {
+            jsonData[key] = value;
+        }
+    }
+    
+    const submitBtn = form.querySelector('button[type="submit"]');
+    const originalBtnText = submitBtn.innerHTML;
+    submitBtn.disabled = true;
+    submitBtn.innerHTML = '<svg class="animate-spin w-5 h-5 mr-2 inline" fill="none" stroke="currentColor" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4" class="opacity-25"></circle><path fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" class="opacity-75"></path></svg> Guardando...';
+    
+    try {
+        const response = await fetch(`/dashboard/execution/action-plans/items/${itemId}`, {
+            method: 'PATCH',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
+                'Accept': 'application/json'
+            },
+            body: JSON.stringify(jsonData)
+        });
+        
+        const result = await response.json();
+        
+        if (response.ok && result.success) {
+            // Subir archivo si existe
+            const fileInput = form.querySelector('input[type="file"]');
+            if (fileInput && fileInput.files.length > 0) {
+                const fileFormData = new FormData();
+                fileFormData.append('evidence_file', fileInput.files[0]);
+                
+                await fetch(`/dashboard/execution/action-plans/items/${itemId}/upload-file`, {
+                    method: 'POST',
+                    headers: {
+                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
+                    },
+                    body: fileFormData
+                });
+            }
+            
+            showNotification('✅ ' + result.message, 'success');
+            closeEditModal();
+            setTimeout(() => location.reload(), 1000);
+        } else {
+            showNotification('❌ Error: ' + (result.message || 'No se pudo actualizar'), 'error');
+        }
+    } catch (error) {
+        console.error('Error:', error);
+        showNotification('❌ Error de conexión', 'error');
+    } finally {
+        submitBtn.disabled = false;
+        submitBtn.innerHTML = originalBtnText;
+    }
+});
+
 // Confirmar eliminación del plan de acción
 function confirmDelete() {
     if (confirm('⚠️ ¿Está seguro de que desea eliminar este plan de acción?\n\nSe eliminarán:\n- Todas las acciones del plan\n- Todos los archivos adjuntos\n- Todo el historial de cambios\n\nEsta acción NO se puede deshacer.')) {
@@ -1720,6 +1785,49 @@ document.addEventListener('DOMContentLoaded', function() {
 #kanban-column-completado::-webkit-scrollbar-track {
     background-color: rgba(0, 0, 0, 0.05);
 }
+
+/* Estilos para Drag & Drop del Kanban */
+.kanban-card {
+    transition: transform 0.2s ease, box-shadow 0.2s ease, opacity 0.2s ease;
+}
+
+.kanban-card.cursor-grab {
+    cursor: grab;
+}
+
+.kanban-card.cursor-grabbing {
+    cursor: grabbing;
+}
+
+.kanban-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.kanban-card.opacity-50 {
+    opacity: 0.5;
+}
+
+.kanban-drop-zone {
+    background-color: rgba(59, 130, 246, 0.1) !important;
+    border: 2px dashed #3b82f6 !important;
+    border-radius: 8px;
+}
+
+#kanban-column-pendiente.kanban-drop-zone {
+    background-color: rgba(107, 114, 128, 0.15) !important;
+    border-color: #6b7280 !important;
+}
+
+#kanban-column-proceso.kanban-drop-zone {
+    background-color: rgba(245, 158, 11, 0.15) !important;
+    border-color: #f59e0b !important;
+}
+
+#kanban-column-completado.kanban-drop-zone {
+    background-color: rgba(34, 197, 94, 0.15) !important;
+    border-color: #22c55e !important;
+}
 </style>
 
 <script>
@@ -1799,6 +1907,163 @@ function updateKanbanCounters() {
     document.getElementById('kanban-count-pendiente').textContent = pendienteCount;
     document.getElementById('kanban-count-proceso').textContent = procesoCount;
     document.getElementById('kanban-count-completado').textContent = completadoCount;
+}
+
+// ==================== KANBAN DRAG & DROP ====================
+document.addEventListener('DOMContentLoaded', function() {
+    initKanbanDragDrop();
+});
+
+function initKanbanDragDrop() {
+    const columns = ['kanban-column-pendiente', 'kanban-column-proceso', 'kanban-column-completado'];
+    
+    // Hacer las tarjetas arrastrables
+    document.querySelectorAll('.kanban-card').forEach(card => {
+        card.setAttribute('draggable', 'true');
+        card.classList.add('cursor-grab');
+        
+        card.addEventListener('dragstart', handleDragStart);
+        card.addEventListener('dragend', handleDragEnd);
+    });
+    
+    // Configurar las columnas como zonas de soltar
+    columns.forEach(columnId => {
+        const column = document.getElementById(columnId);
+        if (column) {
+            column.addEventListener('dragover', handleDragOver);
+            column.addEventListener('dragenter', handleDragEnter);
+            column.addEventListener('dragleave', handleDragLeave);
+            column.addEventListener('drop', handleDrop);
+        }
+    });
+}
+
+let draggedCard = null;
+
+function handleDragStart(e) {
+    draggedCard = this;
+    this.classList.add('opacity-50', 'cursor-grabbing');
+    this.classList.remove('cursor-grab');
+    e.dataTransfer.effectAllowed = 'move';
+    e.dataTransfer.setData('text/plain', this.dataset.itemId);
+}
+
+function handleDragEnd(e) {
+    this.classList.remove('opacity-50', 'cursor-grabbing');
+    this.classList.add('cursor-grab');
+    
+    // Remover estilos de hover de todas las columnas
+    document.querySelectorAll('.kanban-drop-zone').forEach(col => {
+        col.classList.remove('kanban-drop-zone');
+    });
+    
+    draggedCard = null;
+}
+
+function handleDragOver(e) {
+    e.preventDefault();
+    e.dataTransfer.dropEffect = 'move';
+}
+
+function handleDragEnter(e) {
+    e.preventDefault();
+    this.classList.add('kanban-drop-zone');
+}
+
+function handleDragLeave(e) {
+    // Solo remover si realmente salimos de la columna
+    if (!this.contains(e.relatedTarget)) {
+        this.classList.remove('kanban-drop-zone');
+    }
+}
+
+async function handleDrop(e) {
+    e.preventDefault();
+    this.classList.remove('kanban-drop-zone');
+    
+    if (!draggedCard) return;
+    
+    const itemId = e.dataTransfer.getData('text/plain');
+    const targetColumnId = this.id;
+    const sourceColumnId = draggedCard.parentElement.id;
+    
+    // No hacer nada si se suelta en la misma columna
+    if (targetColumnId === sourceColumnId) return;
+    
+    // Determinar el nuevo estado según la columna destino
+    let newStatus;
+    if (targetColumnId === 'kanban-column-pendiente') {
+        newStatus = 'pendiente';
+    } else if (targetColumnId === 'kanban-column-proceso') {
+        newStatus = 'en_proceso';
+    } else if (targetColumnId === 'kanban-column-completado') {
+        newStatus = 'completado';
+    } else {
+        return;
+    }
+    
+    // Mover visualmente la tarjeta
+    this.appendChild(draggedCard);
+    draggedCard.setAttribute('data-status', newStatus);
+    
+    // Actualizar contadores
+    updateKanbanCounters();
+    
+    // Mostrar indicador de guardado
+    showNotification('⏳ Actualizando estado...', 'info');
+    
+    // Enviar actualización al servidor
+    try {
+        const response = await fetch(`/dashboard/execution/action-plans/items/${itemId}`, {
+            method: 'PATCH',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
+                'Accept': 'application/json'
+            },
+            body: JSON.stringify({ status: newStatus })
+        });
+        
+        const result = await response.json();
+        
+        if (response.ok && result.success) {
+            showNotification('✅ Estado actualizado correctamente', 'success');
+            
+            // Actualizar el badge de estado en la tarjeta
+            updateCardStatusBadge(draggedCard, newStatus);
+        } else {
+            // Revertir el cambio visual
+            document.getElementById(sourceColumnId).appendChild(draggedCard);
+            updateKanbanCounters();
+            showNotification('❌ Error al actualizar: ' + (result.message || 'Error desconocido'), 'error');
+        }
+    } catch (error) {
+        console.error('Error:', error);
+        // Revertir el cambio visual
+        document.getElementById(sourceColumnId).appendChild(draggedCard);
+        updateKanbanCounters();
+        showNotification('❌ Error de conexión', 'error');
+    }
+}
+
+function updateCardStatusBadge(card, newStatus) {
+    const badge = card.querySelector('.status-badge');
+    if (!badge) return;
+    
+    // Remover clases anteriores
+    badge.classList.remove('bg-gray-100', 'text-gray-700', 'bg-yellow-100', 'text-yellow-700', 'bg-green-100', 'text-green-700');
+    
+    // Agregar nuevas clases según el estado
+    if (newStatus === 'pendiente') {
+        badge.classList.add('bg-gray-100', 'text-gray-700');
+        badge.textContent = 'Pendiente';
+    } else if (newStatus === 'en_proceso') {
+        badge.classList.add('bg-yellow-100', 'text-yellow-700');
+        badge.textContent = 'En Proceso';
+    } else if (newStatus === 'completado') {
+        badge.classList.add('bg-green-100', 'text-green-700');
+        badge.textContent = 'Completado';
+    }
 }
 
 // ==================== CALENDAR ====================
