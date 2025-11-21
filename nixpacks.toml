@@ -5,7 +5,16 @@ nixPkgs = ['php82', 'php82Packages.composer']
 cmds = ['composer install --no-dev --optimize-autoloader']
 
 [phases.build]
-cmds = ['php artisan storage:link || true']
+cmds = [
+    'mkdir -p database',
+    'mkdir -p storage/framework/sessions',
+    'mkdir -p storage/framework/views', 
+    'mkdir -p storage/framework/cache',
+    'touch database/database.sqlite',
+    'php artisan storage:link || true',
+    'php artisan migrate --force',
+    'php artisan db:seed --force --class=ProductionSeeder || true'
+]
 
 [start]
 cmd = 'php artisan serve --host=0.0.0.0 --port=${PORT:-8080}'
