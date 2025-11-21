@@ -43,8 +43,15 @@
         @endif
 
         <!-- Formulario de Login -->
-        <form method="POST" action="{{ route('login.post') }}" class="space-y-6">
+        <form method="POST" action="{{ url('/login') }}" class="space-y-6" id="loginForm">
             @csrf
+            
+            <!-- Debug: mostrar la URL del action -->
+            @if(config('app.debug'))
+            <div class="text-xs text-gray-400 mb-2">
+                Action URL: {{ url('/login') }}
+            </div>
+            @endif
 
             <!-- Email -->
             <div>
@@ -80,10 +87,22 @@
             <!-- Botón de Login -->
             <button 
                 type="submit"
+                id="submitBtn"
                 class="w-full bg-gradient-to-r from-purple-600 to-indigo-600 text-white font-semibold py-3 rounded-lg hover:from-purple-700 hover:to-indigo-700 transition duration-300 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5"
             >
                 Iniciar Sesión
             </button>
+            
+            <!-- Mostrar errores de validación -->
+            @if ($errors->any())
+                <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded-lg mt-4 text-sm">
+                    <ul class="list-disc list-inside">
+                        @foreach ($errors->all() as $error)
+                            <li>{{ $error }}</li>
+                        @endforeach
+                    </ul>
+                </div>
+            @endif
         </form>
 
         <!-- Usuarios de Prueba - Roles del Sistema -->
@@ -203,6 +222,20 @@
     <!-- Script para auto-rellenar credenciales al hacer clic en las tarjetas -->
     <script>
         document.addEventListener('DOMContentLoaded', function() {
+            // Debug del formulario
+            const loginForm = document.getElementById('loginForm');
+            if (loginForm) {
+                console.log('Form action:', loginForm.action);
+                console.log('Form method:', loginForm.method);
+                
+                loginForm.addEventListener('submit', function(e) {
+                    const btn = document.getElementById('submitBtn');
+                    btn.textContent = 'Enviando...';
+                    btn.disabled = true;
+                    console.log('Form submitting to:', this.action);
+                });
+            }
+            
             const testAccounts = document.querySelectorAll('.test-account');
             const emailInput = document.getElementById('email');
             const passwordInput = document.getElementById('password');
