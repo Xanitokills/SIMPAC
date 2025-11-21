@@ -4,19 +4,6 @@
 @section('page-description', 'Fase 1: Conformación del Órgano Colegiado y aprobación del Plan de Trabajo')
 
 @section('content')
-<!-- 🔍 DEBUG: Este es el archivo dashboard/planning.blade.php -->
-<div class="mb-4 p-4 bg-red-100 border-2 border-red-500 rounded-lg">
-    <p class="text-red-900 font-bold text-lg">🔍 ARCHIVO: dashboard/planning.blade.php</p>
-    <p class="text-red-700 text-sm">Si ves este mensaje, estás en el archivo CORRECTO</p>
-    @if(auth()->check())
-        <p class="text-red-700 text-xs mt-2">
-            Usuario: {{ auth()->user()->email }} | 
-            Rol: {{ auth()->user()->role }} | 
-            Es Sectorista: {{ auth()->user()->isSectorista() ? 'SÍ' : 'NO' }}
-        </p>
-    @endif
-</div>
-<!-- FIN DEBUG -->
 
 <div class="space-y-6">
     <!-- Phase Overview -->
@@ -143,58 +130,6 @@
                                 <span>Programar sesión de inducción post-aprobación</span>
                             </div>
                         </div>
-                        
-                        <!-- DEBUG TEMPORAL - ELIMINAR DESPUÉS -->
-                        @if(auth()->check())
-                            <div class="mt-2 p-2 bg-yellow-100 border border-yellow-300 rounded text-xs">
-                                <strong>DEBUG:</strong> 
-                                Usuario: {{ auth()->user()->email }} | 
-                                Rol: {{ auth()->user()->role }} | 
-                                Es Sectorista: {{ auth()->user()->isSectorista() ? 'SÍ' : 'NO' }}
-                            </div>
-                        @endif
-                        <!-- FIN DEBUG -->
-                        
-                        <!-- Acciones Disponibles -->
-                        @if(auth()->check() && auth()->user()->isSectorista())
-                            <!-- SECTORISTAS: Vista completa de gestión -->
-                            <div class="space-y-3">
-                                <div class="grid grid-cols-2 gap-3">
-                                    <a href="{{ route('activity2.index', auth()->user()->sectorista_id ?? '') }}" 
-                                       class="px-4 py-3 bg-indigo-600 text-white text-sm font-medium rounded-lg hover:bg-indigo-700 transition-colors flex flex-col items-center gap-2 text-center shadow-sm">
-                                        <span class="text-2xl">📋</span>
-                                        <span>Mis Entidades</span>
-                                    </a>
-                                    
-                                    <a href="{{ route('activity2.index', auth()->user()->sectorista_id ?? '') }}" 
-                                       class="px-4 py-3 bg-blue-600 text-white text-sm font-medium rounded-lg hover:bg-blue-700 transition-colors flex flex-col items-center gap-2 text-center shadow-sm">
-                                        <span class="text-2xl">📊</span>
-                                        <span>Seguimiento</span>
-                                    </a>
-                                </div>
-                            </div>
-                        @elseif(auth()->check() && (auth()->user()->isSecretarioCTPPGE() || auth()->user()->isAdmin()))
-                            <!-- SECRETARIO/ADMIN: Vista de supervisión -->
-                            <div class="flex justify-center">
-                                <a href="{{ route('activity2.index') }}" 
-                                   class="px-6 py-3 bg-indigo-600 text-white text-sm font-medium rounded-lg hover:bg-indigo-700 transition-colors inline-flex items-center gap-2 shadow-sm">
-                                    📊 Seguimiento General de Entidades
-                                </a>
-                            </div>
-                            <div class="mt-3 pt-3 border-t border-gray-100">
-                                <p class="text-xs text-gray-500 text-center mb-2">
-                                    💡 Para asignar entidades a sectoristas, usa el módulo de administración
-                                </p>
-                            </div>
-                        @else
-                            <!-- OTROS ROLES: Vista básica -->
-                            <div class="flex justify-center">
-                                <a href="{{ route('activity2.index') }}" 
-                                   class="px-6 py-3 bg-gray-500 text-white text-sm font-medium rounded-lg hover:bg-gray-600 transition-colors inline-flex items-center gap-2">
-                                    👁️ Ver Actividad 2
-                                </a>
-                            </div>
-                        @endif
                     </div>
                 </div>
             </div>
@@ -280,7 +215,7 @@
 
         <!-- Sidebar Info -->
         <div class="space-y-6">
-            <!-- Phase Info -->
+            {{-- Card de Información de la Fase - Oculto temporalmente
             <div class="bg-white rounded-lg shadow-sm border border-gray-200">
                 <div class="p-6">
                     <h3 class="text-lg font-semibold text-gray-900 mb-4">Información de la Fase</h3>
@@ -304,6 +239,7 @@
                     </div>
                 </div>
             </div>
+            --}}
 
             <!-- Key Documents -->
             <div class="bg-white rounded-lg shadow-sm border border-gray-200">
