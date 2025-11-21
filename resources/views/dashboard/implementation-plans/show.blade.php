@@ -5,6 +5,17 @@
 
 @section('content')
 <div class="max-w-5xl mx-auto space-y-6">
+    <!-- Botón Regresar -->
+    <div class="mb-2">
+        <a href="{{ route('implementation-plans.index') }}" 
+           class="inline-flex items-center text-gray-600 hover:text-gray-900 transition-colors">
+            <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/>
+            </svg>
+            <span class="font-medium">Regresar</span>
+        </a>
+    </div>
+
     <!-- Mensajes -->
     @if(session('success'))
     <div class="bg-green-50 border-l-4 border-green-500 p-4 rounded-lg">

@@ -21,6 +21,17 @@
 
 @section('content')
 <div class="space-y-6">
+    <!-- Botón Regresar -->
+    <div class="mb-2">
+        <a href="{{ route('execution.entity', $actionPlan->entityAssignment->id) }}" 
+           class="inline-flex items-center text-gray-600 hover:text-gray-900 transition-colors">
+            <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/>
+            </svg>
+            <span class="font-medium">Regresar</span>
+        </a>
+    </div>
+
     <div id="mainContainer" class="w-full px-4 transition-all duration-300">
         <!-- Header -->
         <div class="bg-gradient-to-r from-blue-600 to-blue-700 rounded-lg shadow-lg text-white p-6 mb-6">

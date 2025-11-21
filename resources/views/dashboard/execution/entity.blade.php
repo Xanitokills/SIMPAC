@@ -5,6 +5,17 @@
 
 @section('content')
 <div class="space-y-6">
+    <!-- Botón Regresar -->
+    <div class="mb-2">
+        <a href="{{ route('dashboard.execution') }}" 
+           class="inline-flex items-center text-gray-600 hover:text-gray-900 transition-colors">
+            <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/>
+            </svg>
+            <span class="font-medium">Regresar</span>
+        </a>
+    </div>
+
     <!-- Header con información de la entidad -->
     <div class="bg-gradient-to-r from-slate-700 to-slate-800 rounded-lg shadow-lg text-white">
         <div class="p-6">
@@ -25,13 +36,6 @@
                         </p>
                     </div>
                 </div>
-                <a href="{{ route('dashboard.execution') }}" 
-                   class="px-4 py-2 bg-white/20 hover:bg-white/30 text-white rounded-lg transition-colors flex items-center space-x-2">
-                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/>
-                    </svg>
-                    <span>Cambiar Entidad</span>
-                </a>
             </div>
         </div>
     </div>
