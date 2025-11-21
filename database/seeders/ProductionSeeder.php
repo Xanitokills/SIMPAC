@@ -181,44 +181,62 @@ class ProductionSeeder extends Seeder
      */
     private function seedUsers(): void
     {
+        // Obtener sectoristas para vincularlos
+        $sectoristas = Sectorista::all()->keyBy('email');
+        
         $users = [
             // Admin
-            ['name' => 'Administrador del Sistema', 'email' => 'admin@simpac.com', 'password' => 'admin123', 'role' => 'admin'],
+            ['name' => 'Administrador del Sistema', 'email' => 'admin@simpac.com', 'password' => 'admin123', 'role' => 'admin', 'sectorista_email' => null],
             
             // Secretario CTPPGE
-            ['name' => 'Carlos Mendoza Rivera', 'email' => 'secretario@simpac.com', 'password' => 'secretario123', 'role' => 'secretario_ctppge'],
+            ['name' => 'Carlos Mendoza Rivera', 'email' => 'secretario@simpac.com', 'password' => 'secretario123', 'role' => 'secretario_ctppge', 'sectorista_email' => null],
             
             // Procurador PGE
-            ['name' => 'Dra. María Elena Torres', 'email' => 'procurador@simpac.com', 'password' => 'procurador123', 'role' => 'procurador_pge'],
+            ['name' => 'Dra. María Elena Torres', 'email' => 'procurador@simpac.com', 'password' => 'procurador123', 'role' => 'procurador_pge', 'sectorista_email' => null],
             
             // Responsable de Componente
-            ['name' => 'Ing. Roberto Sánchez', 'email' => 'responsable@simpac.com', 'password' => 'responsable123', 'role' => 'responsable_componente'],
+            ['name' => 'Ing. Roberto Sánchez', 'email' => 'responsable@simpac.com', 'password' => 'responsable123', 'role' => 'responsable_componente', 'sectorista_email' => null],
             
             // Órgano Colegiado
-            ['name' => 'Comité de Validación', 'email' => 'colegiado@simpac.com', 'password' => 'colegiado123', 'role' => 'organo_colegiado'],
+            ['name' => 'Comité de Validación', 'email' => 'colegiado@simpac.com', 'password' => 'colegiado123', 'role' => 'organo_colegiado', 'sectorista_email' => null],
             
-            // Sectoristas (usuarios con rol sectorista)
-            ['name' => 'Juan Carlos Pérez', 'email' => 'juan.perez@simpac.com', 'password' => 'sectorista123', 'role' => 'sectorista'],
-            ['name' => 'María Rodríguez', 'email' => 'maria.rodriguez@simpac.com', 'password' => 'sectorista123', 'role' => 'sectorista'],
-            ['name' => 'Carlos Mendoza', 'email' => 'carlos.mendoza@simpac.com', 'password' => 'sectorista123', 'role' => 'sectorista'],
+            // Sectoristas (usuarios con rol sectorista) - VINCULADOS con tabla sectoristas
+            ['name' => 'Juan Carlos Pérez', 'email' => 'juan.perez@simpac.com', 'password' => 'sectorista123', 'role' => 'sectorista', 'sectorista_email' => 'jperez@pge.gob.pe'],
+            ['name' => 'María Rodríguez', 'email' => 'maria.rodriguez@simpac.com', 'password' => 'sectorista123', 'role' => 'sectorista', 'sectorista_email' => 'mrodriguez@pge.gob.pe'],
+            ['name' => 'Carlos Mendoza', 'email' => 'carlos.mendoza@simpac.com', 'password' => 'sectorista123', 'role' => 'sectorista', 'sectorista_email' => 'cmendoza@pge.gob.pe'],
             
             // Usuario sectorista genérico
-            ['name' => 'Sectorista de Prueba', 'email' => 'sectorista@simpac.com', 'password' => 'sectorista123', 'role' => 'sectorista'],
+            ['name' => 'Sectorista de Prueba', 'email' => 'sectorista@simpac.com', 'password' => 'sectorista123', 'role' => 'sectorista', 'sectorista_email' => 'atorres@pge.gob.pe'],
         ];
 
         $created = 0;
+        $updated = 0;
         foreach ($users as $userData) {
-            if (!User::where('email', $userData['email'])->exists()) {
+            $sectoristaId = null;
+            if (!empty($userData['sectorista_email']) && isset($sectoristas[$userData['sectorista_email']])) {
+                $sectoristaId = $sectoristas[$userData['sectorista_email']]->id;
+            }
+            
+            $existingUser = User::where('email', $userData['email'])->first();
+            
+            if ($existingUser) {
+                // Actualizar el sectorista_id si el usuario ya existe
+                if ($sectoristaId && $existingUser->sectorista_id !== $sectoristaId) {
+                    $existingUser->update(['sectorista_id' => $sectoristaId]);
+                    $updated++;
+                }
+            } else {
                 User::create([
                     'name' => $userData['name'],
                     'email' => $userData['email'],
                     'password' => Hash::make($userData['password']),
                     'role' => $userData['role'],
+                    'sectorista_id' => $sectoristaId,
                 ]);
                 $created++;
             }
         }
-        $this->command->info("   ✅ {$created} usuarios creados (Total: " . User::count() . ")");
+        $this->command->info("   ✅ {$created} usuarios creados, {$updated} actualizados (Total: " . User::count() . ")");
     }
     
     /**

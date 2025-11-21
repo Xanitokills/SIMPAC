@@ -34,8 +34,18 @@ class DashboardController extends Controller
         
         if (auth()->user()->role === 'sectorista') {
             // Si es sectorista, solo mostrar sus entidades asignadas
-            // La relación entre User y Sectorista es por email
-            $sectorista = \App\Models\Sectorista::where('email', auth()->user()->email)->first();
+            // Primero buscar por sectorista_id vinculado al usuario, luego por email
+            $sectorista = null;
+            
+            if (auth()->user()->sectorista_id) {
+                $sectorista = \App\Models\Sectorista::find(auth()->user()->sectorista_id);
+            }
+            
+            // Fallback: buscar por email
+            if (!$sectorista) {
+                $sectorista = \App\Models\Sectorista::where('email', auth()->user()->email)->first();
+            }
+            
             if ($sectorista) {
                 $assignedEntities = \App\Models\EntityAssignment::where('sectorista_id', $sectorista->id)
                     ->with('entity')
