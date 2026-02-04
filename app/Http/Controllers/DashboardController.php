@@ -65,6 +65,11 @@ class DashboardController extends Controller
         return view('dashboard.validation');
     }
 
+    public function closure()
+    {
+        return view('dashboard.closure');
+    }
+
     public function components()
     {
         return view('dashboard.components');

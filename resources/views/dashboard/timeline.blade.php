@@ -38,7 +38,7 @@
                 <div class="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center">
                     <span class="text-sm font-semibold text-blue-600">1</span>
                 </div>
-                <h3 class="text-lg font-semibold text-gray-900">Actividades Previas</h3>
+                <h3 class="text-lg font-semibold text-gray-900">Etapa Previa</h3>
             </div>
             <div class="space-y-2">
                 <div class="flex justify-between text-sm">
@@ -127,7 +127,7 @@
                         <div class="w-16 h-8 bg-blue-600 rounded-lg flex items-center justify-center text-white text-sm font-semibold mr-4">
                             FASE 1
                         </div>
-                        <h4 class="text-lg font-semibold text-gray-900">Actividades Previas (7 días)</h4>
+                        <h4 class="text-lg font-semibold text-gray-900">Etapa Previa (7 días)</h4>
                     </div>
 
                     <!-- Activity 1 - Completed -->

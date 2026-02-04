@@ -46,6 +46,7 @@ Route::middleware('simple.auth')->prefix('dashboard')->group(function () {
     Route::get('/planning', [DashboardController::class, 'planning'])->name('dashboard.planning');
     Route::get('/execution', [DashboardController::class, 'execution'])->name('dashboard.execution');
     Route::get('/validation', [DashboardController::class, 'validation'])->name('dashboard.validation');
+    Route::get('/closure', [DashboardController::class, 'closure'])->name('dashboard.closure');
     Route::get('/components', [DashboardController::class, 'components'])->name('dashboard.components');
     Route::get('/documents', [DashboardController::class, 'documents'])->name('dashboard.documents');
     Route::get('/timeline', [DashboardController::class, 'timeline'])->name('dashboard.timeline');

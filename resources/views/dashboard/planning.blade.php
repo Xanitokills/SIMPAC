@@ -1,6 +1,6 @@
 @extends('layouts.dashboard')
 
-@section('page-title', 'Actividades Previas')
+@section('page-title', 'Etapa Previa')
 @section('page-description', 'Fase 1: Conformación del Órgano Colegiado y aprobación del Plan de Trabajo')
 
 @section('content')
@@ -11,7 +11,7 @@
         <div class="p-6">
             <div class="flex items-center justify-between">
                 <div>
-                    <h2 class="text-2xl font-bold">Fase 1: Actividades Previas</h2>
+                    <h2 class="text-2xl font-bold">Fase 1: Etapa Previa</h2>
                     <p class="text-blue-100 mt-1">Duración estimada: 7 días hábiles</p>
                 </div>
                 <div class="text-right">
@@ -314,23 +314,6 @@
                                 <span class="text-sm font-medium text-gray-500">Acta Plan de Trabajo</span>
                             </div>
                             <span class="text-xs text-gray-500">Pendiente</span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Next Steps -->
-            <div class="bg-white rounded-lg shadow-sm border border-gray-200">
-                <div class="p-6">
-                    <h3 class="text-lg font-semibold text-gray-900 mb-4">Próximos Pasos</h3>
-                    <div class="space-y-3">
-                        <div class="p-3 bg-blue-50 rounded-lg border-l-4 border-blue-500">
-                            <p class="text-sm font-medium text-blue-900">Completar oficio de conformación</p>
-                            <p class="text-xs text-blue-700 mt-1">Revisar plantilla y enviar para aprobación</p>
-                        </div>
-                        <div class="p-3 bg-yellow-50 rounded-lg border-l-4 border-yellow-500">
-                            <p class="text-sm font-medium text-yellow-900">Preparar documentación</p>
-                            <p class="text-xs text-yellow-700 mt-1">Reunir anexos necesarios para la resolución</p>
                         </div>
                     </div>
                 </div>

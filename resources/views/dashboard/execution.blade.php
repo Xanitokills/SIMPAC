@@ -1,6 +1,6 @@
 @extends('layouts.dashboard')
 
-@section('page-title', 'Ejecución Plan de Acción')
+@section('page-title', 'Etapa de Ejecución')
 @section('page-description', 'Fase 2: Ejecución paralela de los 5 componentes del proceso de transferencia')
 
 @section('content')
@@ -399,17 +399,35 @@
     @if(isset($assignedEntities) && $assignedEntities->count() > 0)
     <div class="bg-white rounded-lg shadow-sm border border-gray-200">
         <div class="p-6">
-            <div class="flex items-center justify-between mb-6">
+            <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-6">
                 <div>
                     <h3 class="text-lg font-semibold text-gray-900">Entidades Asignadas</h3>
                     <p class="text-sm text-gray-500">Haga clic en una entidad para acceder a su panel de seguimiento</p>
                 </div>
                 <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-slate-100 text-slate-800">
-                    {{ $assignedEntities->count() }} Entidades Asignadas
+                    <span id="entitiesCount">{{ $assignedEntities->count() }}</span> Entidades Asignadas
                 </span>
             </div>
 
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+            {{-- Cuadro de búsqueda/filtro --}}
+            <div class="mb-6">
+                <div class="relative">
+                    <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                        <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+                        </svg>
+                    </div>
+                    <input type="text" 
+                           id="searchEntities" 
+                           placeholder="Buscar por nombre de entidad, tipo o ámbito..." 
+                           class="block w-full pl-10 pr-3 py-3 border border-gray-300 rounded-lg leading-5 bg-white placeholder-gray-500 focus:outline-none focus:placeholder-gray-400 focus:ring-2 focus:ring-slate-500 focus:border-slate-500 sm:text-sm transition-colors">
+                </div>
+                <p class="mt-2 text-xs text-gray-500">
+                    <span id="filteredCount">{{ $assignedEntities->count() }}</span> de {{ $assignedEntities->count() }} entidades mostradas
+                </p>
+            </div>
+
+            <div id="entitiesGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
                 @foreach($assignedEntities as $entity)
                     @php
                         $assignment = \App\Models\EntityAssignment::where('entity_id', $entity->id)
@@ -435,10 +453,13 @@
                     
                     @if($assignment)
                     <a href="{{ route('execution.entity', $assignment->id) }}" 
-                       class="block bg-white rounded-lg border border-gray-200 hover:border-slate-300 hover:shadow-lg transition-all duration-200 overflow-hidden group">
+                       data-entity-name="{{ strtolower($entity->name) }}"
+                       data-entity-type="{{ strtolower($entityTypeLabel) }}"
+                       data-entity-scope="{{ strtolower($entityScope) }}"
+                       class="entity-card flex flex-col bg-white rounded-lg border border-gray-200 hover:border-slate-300 hover:shadow-lg transition-all duration-200 overflow-hidden group h-full">
                         {{-- Header de la tarjeta --}}
-                        <div class="p-4">
-                            <h4 class="font-semibold text-gray-900 group-hover:text-slate-600 transition-colors mb-2">
+                        <div class="p-4 flex-1 flex flex-col">
+                            <h4 class="font-semibold text-gray-900 group-hover:text-slate-600 transition-colors mb-2 line-clamp-2 min-h-[3rem]">
                                 {{ $entity->name }}
                             </h4>
                             
@@ -453,23 +474,23 @@
                             </div>
                             
                             {{-- Estadísticas --}}
-                            <div class="space-y-1 text-sm text-gray-600">
-                                <div class="flex justify-between">
-                                    <span>Plan de Acción:</span>
+                            <div class="space-y-1.5 text-sm text-gray-600 flex-1">
+                                <div class="flex justify-between items-center">
+                                    <span class="text-xs">Plan de Acción:</span>
                                     <span class="font-medium text-gray-900">{{ $hasActionPlan ? 'Sí' : 'No' }}</span>
                                 </div>
-                                <div class="flex justify-between">
-                                    <span>Reuniones:</span>
+                                <div class="flex justify-between items-center">
+                                    <span class="text-xs">Reuniones:</span>
                                     <span class="font-medium text-gray-900">{{ $reunionesCount }}</span>
                                 </div>
-                                <div class="flex justify-between">
-                                    <span>Oficios:</span>
+                                <div class="flex justify-between items-center">
+                                    <span class="text-xs">Oficios:</span>
                                     <span class="font-medium text-gray-900">{{ $oficiosCount }}</span>
                                 </div>
                             </div>
                             
                             {{-- Estado --}}
-                            <div class="mt-3">
+                            <div class="mt-3 pt-3 border-t border-gray-100">
                                 <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
                                     En Progreso
                                 </span>
@@ -485,10 +506,10 @@
                         @if(Auth::user()->role !== 'sectorista' && $assignment->sectorista)
                         <div class="px-4 py-2 bg-gray-50 border-t border-gray-100">
                             <div class="flex items-center text-xs text-gray-500">
-                                <svg class="w-3 h-3 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <svg class="w-3 h-3 mr-1 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/>
                                 </svg>
-                                Sectorista: {{ $assignment->sectorista->name }}
+                                <span class="truncate">Sectorista: {{ $assignment->sectorista->name }}</span>
                             </div>
                         </div>
                         @endif
@@ -811,4 +832,84 @@
         </div>
     </div> 
 </div>
+
+{{-- JavaScript para el filtro de búsqueda --}}
+@push('scripts')
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const searchInput = document.getElementById('searchEntities');
+    const entitiesGrid = document.getElementById('entitiesGrid');
+    const filteredCount = document.getElementById('filteredCount');
+    const entitiesCount = document.getElementById('entitiesCount');
+    
+    if (searchInput && entitiesGrid) {
+        const entityCards = Array.from(entitiesGrid.querySelectorAll('.entity-card'));
+        const totalCount = entityCards.length;
+        
+        searchInput.addEventListener('input', function(e) {
+            const searchTerm = e.target.value.toLowerCase().trim();
+            let visibleCount = 0;
+            
+            entityCards.forEach(card => {
+                const entityName = card.getAttribute('data-entity-name') || '';
+                const entityType = card.getAttribute('data-entity-type') || '';
+                const entityScope = card.getAttribute('data-entity-scope') || '';
+                
+                // Buscar en nombre, tipo y ámbito
+                const matches = entityName.includes(searchTerm) || 
+                               entityType.includes(searchTerm) || 
+                               entityScope.includes(searchTerm);
+                
+                if (matches || searchTerm === '') {
+                    card.style.display = '';
+                    visibleCount++;
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+            
+            // Actualizar contador
+            if (filteredCount) {
+                filteredCount.textContent = visibleCount;
+            }
+            
+            // Mostrar mensaje si no hay resultados
+            let noResultsMsg = entitiesGrid.querySelector('.no-results-message');
+            if (visibleCount === 0 && searchTerm !== '') {
+                if (!noResultsMsg) {
+                    noResultsMsg = document.createElement('div');
+                    noResultsMsg.className = 'no-results-message col-span-full text-center py-12';
+                    noResultsMsg.innerHTML = `
+                        <div class="flex flex-col items-center justify-center">
+                            <svg class="w-16 h-16 text-gray-300 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                            </svg>
+                            <h3 class="text-lg font-semibold text-gray-900 mb-2">No se encontraron resultados</h3>
+                            <p class="text-gray-500">No hay entidades que coincidan con "${e.target.value}"</p>
+                            <p class="text-sm text-gray-400 mt-2">Intenta con otro término de búsqueda</p>
+                        </div>
+                    `;
+                    entitiesGrid.appendChild(noResultsMsg);
+                } else {
+                    noResultsMsg.querySelector('p:first-of-type').textContent = 
+                        `No hay entidades que coincidan con "${e.target.value}"`;
+                }
+            } else if (noResultsMsg) {
+                noResultsMsg.remove();
+            }
+        });
+        
+        // Limpiar búsqueda con Escape
+        searchInput.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                searchInput.value = '';
+                searchInput.dispatchEvent(new Event('input'));
+                searchInput.blur();
+            }
+        });
+    }
+});
+</script>
+@endpush
+
 @endsection

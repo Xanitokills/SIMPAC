@@ -183,20 +183,28 @@
                 <div class="pt-6">
                     <h3 class="sidebar-section-title px-3 mb-3 text-[10px] font-bold text-blue-300/80 uppercase tracking-widest">Fases del Proceso</h3>
                     
-                    <a href="{{ route('dashboard.planning') }}" class="nav-item {{ request()->routeIs('dashboard.planning') ? 'active' : '' }}" title="Actividades previas">
+                    <a href="{{ route('dashboard.planning') }}" class="nav-item {{ request()->routeIs('dashboard.planning') ? 'active' : '' }}" title="Etapa Previa">
                         <svg class="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/>
                         </svg>
-                        <span class="sidebar-text flex-1">Actividades previas</span>
+                        <span class="sidebar-text flex-1">Etapa Previa</span>
                         <span class="sidebar-badge text-[10px] bg-blue-500/20 text-blue-300 px-2 py-0.5 rounded-full font-medium">7d</span>
                     </a>
 
-                    <a href="{{ route('dashboard.execution') }}" class="nav-item {{ request()->routeIs('dashboard.execution') ? 'active' : '' }}" title="Ejecución del Plan de Acción">
+                    <a href="{{ route('dashboard.execution') }}" class="nav-item {{ request()->routeIs('dashboard.execution') ? 'active' : '' }}" title="Etapa de Ejecución">
                         <svg class="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/>
                         </svg>
-                        <span class="sidebar-text flex-1">Ejecución del Plan de Acción</span>
+                        <span class="sidebar-text flex-1">Etapa de Ejecución</span>
                         <span class="sidebar-badge text-[10px] bg-green-500/20 text-green-300 px-2 py-0.5 rounded-full font-medium">5d</span>
+                    </a>
+
+                    <a href="{{ route('dashboard.closure') }}" class="nav-item {{ request()->routeIs('dashboard.closure') ? 'active' : '' }}" title="Etapa de Cierre">
+                        <svg class="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"/>
+                        </svg>
+                        <span class="sidebar-text flex-1">Etapa de Cierre</span>
+                        <span class="sidebar-badge text-[10px] bg-purple-500/20 text-purple-300 px-2 py-0.5 rounded-full font-medium">3d</span>
                     </a>
 
                     <a href="{{ route('dashboard.validation') }}" class="nav-item {{ request()->routeIs('dashboard.validation') ? 'active' : '' }}" title="Reportes">
