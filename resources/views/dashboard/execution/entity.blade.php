@@ -1,6 +1,6 @@
 @extends('layouts.dashboard')
 
-@section('page-title', 'Seguimiento de Ejecución')
+@section('page-title', 'Seguimiento de Etapa de Ejecución')
 @section('page-description', 'Gestión de reuniones y notificaciones para ' . $assignment->entity->name)
 
 @section('content')
@@ -45,7 +45,7 @@
         <div class="p-6">
             <div class="flex items-center justify-between mb-6">
                 <div>
-                    <h3 class="text-lg font-semibold text-gray-900">Reuniones de Coordinación y Presentación de Propuesta</h3>
+                    <h3 class="text-lg font-semibold text-gray-900">Reunión de coordinación y presentación de propuesta del Plan de Acción</h3>
                     <p class="text-sm text-gray-500 mt-1">Gestionar reuniones para la presentación de propuestas por componente</p>
                 </div>
                 <a href="{{ route('execution.meetings.create', ['assignment' => $assignment->id]) }}" 
@@ -307,7 +307,7 @@
                 <div class="bg-gradient-to-r from-green-50 to-emerald-50 rounded-lg border border-green-200 p-6 mb-4">
                     <div class="flex items-start justify-between">
                         <div class="flex-1">
-                            <h4 class="text-lg font-semibold text-gray-900 mb-2">{{ $actionPlan->title }}</h4>
+                            <h4 class="text-lg font-semibold text-gray-900 mb-2">Plan de Acción</h4>
                             @if($actionPlan->description)
                                 <p class="text-sm text-gray-600 mb-3">{{ $actionPlan->description }}</p>
                             @endif
@@ -444,8 +444,71 @@
                 </a>
             </div>
 
+            <!-- Cuadro de búsqueda -->
+            <div class="mb-6">
+                <div class="relative">
+                    <input type="text" 
+                           id="searchActas" 
+                           placeholder="Buscar actas por número, asunto o componente..." 
+                           class="w-full px-4 py-2.5 pl-10 pr-4 border border-gray-300 rounded-lg focus:ring-2 focus:ring-slate-500 focus:border-transparent">
+                    <svg class="absolute left-3 top-3 w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+                    </svg>
+                </div>
+                <p class="text-sm text-gray-500 mt-2">
+                    Mostrando <span id="countActas" class="font-semibold">0</span> acta(s)
+                </p>
+            </div>
+
             @php
-                $minutes = \App\Models\MeetingMinute::where('entity_assignment_id', $assignment->id)->orderBy('date', 'desc')->get();
+                // Datos de ejemplo para las actas de reunión
+                $minutes = collect([
+                    (object)[
+                        'id' => 1,
+                        'minute_number' => '001',
+                        'date' => '2026-02-13',
+                        'subject' => 'Prueba de Actaa',
+                        'component' => 'recursos_presupuestarios',
+                        'status' => 'proceso_de_firmas_pge',
+                        'pdf_path' => null
+                    ],
+                    (object)[
+                        'id' => 2,
+                        'minute_number' => '002',
+                        'date' => '2026-01-28',
+                        'subject' => 'Presentación del Plan de Transferencia',
+                        'component' => 'bienes_patrimoniales',
+                        'status' => 'firmado',
+                        'pdf_path' => '/path/to/pdf'
+                    ],
+                    (object)[
+                        'id' => 3,
+                        'minute_number' => '003',
+                        'date' => '2026-01-20',
+                        'subject' => 'Coordinación de cronograma de actividades',
+                        'component' => 'acervo_documentario',
+                        'status' => 'proceso_de_firmas',
+                        'pdf_path' => null
+                    ],
+                    (object)[
+                        'id' => 4,
+                        'minute_number' => '004',
+                        'date' => '2026-01-15',
+                        'subject' => 'Revisión de inventario de bienes',
+                        'component' => 'bienes_patrimoniales',
+                        'status' => 'falta_de_firma',
+                        'pdf_path' => null
+                    ],
+                    (object)[
+                        'id' => 5,
+                        'minute_number' => '005',
+                        'date' => '2026-01-10',
+                        'subject' => 'Evaluación de recursos tecnológicos',
+                        'component' => 'tecnologia_informacion',
+                        'status' => 'firmado',
+                        'pdf_path' => '/path/to/pdf'
+                    ],
+                ]);
             @endphp
 
             @if($minutes->count() > 0)
@@ -461,13 +524,35 @@
                                 <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Acciones</th>
                             </tr>
                         </thead>
-                        <tbody class="bg-white divide-y divide-gray-200">
+                        <tbody class="bg-white divide-y divide-gray-200" id="actasTableBody">
                             @foreach($minutes as $m)
-                            <tr class="hover:bg-gray-50">
-                                <td class="px-6 py-4 text-sm text-gray-900">{{ $m->minute_number }}</td>
+                            <tr class="hover:bg-gray-50 acta-row" data-search="{{ strtolower($m->minute_number . ' ' . $m->subject . ' ' . $m->component) }}">
+                                <td class="px-6 py-4 text-sm text-gray-900 font-medium">{{ $m->minute_number }}</td>
                                 <td class="px-6 py-4 text-sm text-gray-900">{{ \Carbon\Carbon::parse($m->date)->format('d/m/Y') }}</td>
                                 <td class="px-6 py-4 text-sm text-gray-900">{{ $m->subject }}</td>
-                                <td class="px-6 py-4 text-sm text-gray-900">{{ $m->component }}</td>
+                                <td class="px-6 py-4 text-sm text-gray-900">
+                                    @if($m->component === 'recursos_presupuestarios')
+                                        <span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
+                                            Recursos Presupuestarios
+                                        </span>
+                                    @elseif($m->component === 'bienes_patrimoniales')
+                                        <span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-slate-100 text-slate-800">
+                                            Bienes Patrimoniales
+                                        </span>
+                                    @elseif($m->component === 'acervo_documentario')
+                                        <span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-emerald-100 text-emerald-800">
+                                            Acervo Documentario
+                                        </span>
+                                    @elseif($m->component === 'tecnologia_informacion')
+                                        <span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-cyan-100 text-cyan-800">
+                                            Tecnología de Información
+                                        </span>
+                                    @else
+                                        <span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-gray-100 text-gray-800">
+                                            {{ ucfirst(str_replace('_', ' ', $m->component)) }}
+                                        </span>
+                                    @endif
+                                </td>
                                 <td class="px-6 py-4 text-sm">
                                     @if($m->status === 'firmado')
                                         <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">Firmado</span>
@@ -480,14 +565,25 @@
                                     @endif
                                 </td>
                                 <td class="px-6 py-4 text-sm font-medium space-x-2">
+                                    <a href="#" class="text-blue-600 hover:text-blue-900">Ver</a>
                                     @if($m->pdf_path)
-                                        <a href="{{ route('execution.minutes.download', $m->id) }}" class="text-blue-600 hover:text-blue-900">Descargar PDF</a>
+                                        <a href="#" class="text-slate-600 hover:text-slate-900">Descargar PDF</a>
+                                    @else
+                                        <span class="text-gray-400">Sin PDF</span>
                                     @endif
                                 </td>
                             </tr>
                             @endforeach
                         </tbody>
                     </table>
+                </div>
+                
+                <!-- Mensaje cuando no hay resultados -->
+                <div id="noActasResults" class="hidden text-center py-12">
+                    <svg class="w-16 h-16 text-gray-400 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                    </svg>
+                    <p class="text-gray-500">No se encontraron actas que coincidan con tu búsqueda</p>
                 </div>
             @else
                 <div class="text-center py-8 text-gray-500">
@@ -511,15 +607,7 @@
                 {{-- 1. Recursos Presupuestarios --}}
                 <div class="bg-white rounded-lg border border-gray-200 p-5 hover:shadow-md hover:border-gray-300 transition-all">
                     <div class="flex items-center justify-between mb-3">
-                        <div class="w-12 h-12 bg-slate-100 rounded-lg flex items-center justify-center">
-                            <svg class="w-6 h-6 text-slate-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
-                            </svg>
-                        </div>
-                        <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-amber-100 text-amber-800">
-                            En Proceso
-                        </span>
-                    </div>
+                        <div class
                     <h4 class="font-semibold text-gray-900 mb-1">1. Recursos Presupuestarios</h4>
                     <p class="text-sm text-gray-500 mb-3">Seguimiento de recursos financieros y presupuesto asignado</p>
                     <div class="flex items-center justify-between text-sm">
@@ -626,4 +714,53 @@
         </div>
     </div>
 </div>
+
+@push('scripts')
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const searchInput = document.getElementById('searchActas');
+        const actasRows = document.querySelectorAll('.acta-row');
+        const countElement = document.getElementById('countActas');
+        const noResultsElement = document.getElementById('noActasResults');
+        const tableContainer = actasRows[0]?.closest('.overflow-x-auto');
+        
+        // Función para actualizar el contador
+        function updateCount() {
+            const visibleRows = Array.from(actasRows).filter(row => row.style.display !== 'none');
+            countElement.textContent = visibleRows.length;
+            
+            // Mostrar/ocultar mensaje de "no resultados"
+            if (visibleRows.length === 0) {
+                if (tableContainer) tableContainer.style.display = 'none';
+                if (noResultsElement) noResultsElement.classList.remove('hidden');
+            } else {
+                if (tableContainer) tableContainer.style.display = 'block';
+                if (noResultsElement) noResultsElement.classList.add('hidden');
+            }
+        }
+        
+        // Contador inicial
+        updateCount();
+        
+        // Filtro de búsqueda
+        if (searchInput) {
+            searchInput.addEventListener('input', function() {
+                const searchTerm = this.value.toLowerCase();
+                
+                actasRows.forEach(row => {
+                    const searchData = row.dataset.search;
+                    if (searchData && searchData.includes(searchTerm)) {
+                        row.style.display = '';
+                    } else {
+                        row.style.display = 'none';
+                    }
+                });
+                
+                updateCount();
+            });
+        }
+    });
+</script>
+@endpush
+
 @endsection
