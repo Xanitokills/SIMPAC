@@ -70,6 +70,12 @@ class DashboardController extends Controller
         return view('dashboard.closure');
     }
 
+    public function closureEntity($id)
+    {
+        // En producción, aquí se obtendrían los datos reales de la base de datos
+        return view('dashboard.closure.entity');
+    }
+
     public function components()
     {
         return view('dashboard.components');
