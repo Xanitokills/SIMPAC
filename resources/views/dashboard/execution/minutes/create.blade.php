@@ -1,5 +1,8 @@
 @extends('layouts.dashboard')
 
+@section('page-title', 'Registrar Acta de Reunión')
+@section('page-description', 'Registrar acta de reunión por componente')
+
 @section('content')
 <div class="container mx-auto px-4 py-8">
     <div class="bg-white rounded-lg shadow p-6">
