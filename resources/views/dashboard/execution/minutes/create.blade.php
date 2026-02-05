@@ -39,6 +39,7 @@
                         <option value="acervo_documentario">Acervo Documentario</option>
                         <option value="activos_informaticos">Activos Informáticos</option>
                         <option value="instalacion_componentes">Instalación de Componentes</option>
+                        <option value="cierre_transferencia">Cierre de transferencia</option>
                     </select>
                 </div>
             </div>

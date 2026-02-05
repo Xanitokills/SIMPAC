@@ -211,7 +211,8 @@
                                                     '{{ $item->end_date ? $item->end_date->format('Y-m-d') : '' }}',
                                                     '{{ $item->business_days ?? '' }}',
                                                     `{{ $item->problems ?? '' }}`,
-                                                    `{{ $item->corrective_measures ?? '' }}`
+                                                    `{{ $item->corrective_measures ?? '' }}`,
+                                                    '{{ $item->rescheduled_closure_date ? $item->rescheduled_closure_date->format('Y-m-d') : '' }}'
                                                 )" class="ml-4 bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium py-2 px-4 rounded-lg transition-colors">Actualizar</button>
                                             </div>
                                         </div>
@@ -833,6 +834,18 @@
                         </div>
                     </div>
 
+                    <!-- Fecha de Reprogramación de Cierre -->
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">
+                            Fecha de Reprogramación de Cierre
+                        </label>
+                        <input type="date" 
+                               name="rescheduled_closure_date" 
+                               id="editRescheduledClosureDate"
+                               class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500">
+                        <p class="text-xs text-gray-500 mt-1">Fecha reprogramada para el cierre de la acción (opcional)</p>
+                    </div>
+
                     <!-- Días hábiles (calculado automáticamente) -->
                     <div>
                         <label class="block text-sm font-medium text-gray-700 mb-1">
@@ -962,7 +975,7 @@ function calculateBusinessDays() {
     document.getElementById('editBusinessDays').value = businessDays;
 }
 
-function openEditModal(itemId, status, comments, predecessor = '', startDate = '', endDate = '', businessDays = '', problems = '', correctiveMeasures = '') {
+function openEditModal(itemId, status, comments, predecessor = '', startDate = '', endDate = '', businessDays = '', problems = '', correctiveMeasures = '', rescheduledClosureDate = '') {
     const modal = document.getElementById('editModal');
     const form = document.getElementById('editForm');
     
@@ -975,6 +988,7 @@ function openEditModal(itemId, status, comments, predecessor = '', startDate = '
     document.getElementById('editBusinessDays').value = businessDays || '';
     document.getElementById('editProblems').value = problems || '';
     document.getElementById('editCorrectiveMeasures').value = correctiveMeasures || '';
+    document.getElementById('editRescheduledClosureDate').value = rescheduledClosureDate || '';
     
     modal.classList.remove('hidden');
     modal.classList.add('flex');
@@ -2239,7 +2253,7 @@ function showDayDetails(dateStr, items) {
             
             return `
                 <div class="flex items-center justify-between p-3 bg-gray-50 rounded-lg hover:bg-gray-100 cursor-pointer transition-colors"
-                     onclick="openEditModal(${item.id}, '${item.status}', \`${(item.comments || '').replace(/`/g, "'")}\`, '${item.predecessor_action || ''}', '${item.start_date || ''}', '${item.end_date || ''}', '${item.business_days || ''}', \`${(item.problems || '').replace(/`/g, "'")}\`, \`${(item.corrective_measures || '').replace(/`/g, "'")}\`)">
+                     onclick="openEditModal(${item.id}, '${item.status}', \`${(item.comments || '').replace(/`/g, "'")}\`, '${item.predecessor_action || ''}', '${item.start_date || ''}', '${item.end_date || ''}', '${item.business_days || ''}', \`${(item.problems || '').replace(/`/g, "'")}\`, \`${(item.corrective_measures || '').replace(/`/g, "'")}\`, '${item.rescheduled_closure_date || ''}')">
                     <div class="flex-1">
                         <div class="flex items-center space-x-2">
                             <span class="text-sm font-mono font-bold text-blue-600">${item.action_name}</span>
