@@ -603,23 +603,33 @@
                 </div>
             </div>
 
+            <!-- Grid de componentes -->
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                {{-- 1. Recursos Presupuestarios --}}
+                
+                <!-- 1. Recursos Presupuestarios -->
                 <div class="bg-white rounded-lg border border-gray-200 p-5 hover:shadow-md hover:border-gray-300 transition-all">
                     <div class="flex items-center justify-between mb-3">
-                        <div class
+                        <div class="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center">
+                            <svg class="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                            </svg>
+                        </div>
+                        <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
+                            6 acciones
+                        </span>
+                    </div>
                     <h4 class="font-semibold text-gray-900 mb-1">1. Recursos Presupuestarios</h4>
-                    <p class="text-sm text-gray-500 mb-3">Seguimiento de recursos financieros y presupuesto asignado</p>
-                    <div class="flex items-center justify-between text-sm">
+                    <p class="text-sm text-gray-500 mb-3">Transferencia de recursos presupuestarios</p>
+                    <div class="flex items-center justify-between text-sm mb-2">
                         <span class="text-gray-500">Avance:</span>
                         <span class="font-semibold text-gray-700">0%</span>
                     </div>
-                    <div class="w-full bg-gray-200 rounded-full h-2 mt-2">
-                        <div class="bg-slate-600 h-2 rounded-full" style="width: 0%"></div>
+                    <div class="w-full bg-gray-200 rounded-full h-2">
+                        <div class="bg-blue-600 h-2 rounded-full" style="width: 0%"></div>
                     </div>
                 </div>
 
-                {{-- 2. Recursos Humanos --}}
+                <!-- 2. Recursos Humanos -->
                 <div class="bg-white rounded-lg border border-gray-200 p-5 hover:shadow-md hover:border-gray-300 transition-all">
                     <div class="flex items-center justify-between mb-3">
                         <div class="w-12 h-12 bg-slate-100 rounded-lg flex items-center justify-center">
@@ -627,89 +637,136 @@
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/>
                             </svg>
                         </div>
-                        <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-700">
-                            Pendiente
+                        <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-slate-100 text-slate-700">
+                            9 acciones
                         </span>
                     </div>
                     <h4 class="font-semibold text-gray-900 mb-1">2. Recursos Humanos</h4>
-                    <p class="text-sm text-gray-500 mb-3">Gestión del personal y asignaciones de responsables</p>
-                    <div class="flex items-center justify-between text-sm">
+                    <p class="text-sm text-gray-500 mb-3">Transferencia de recursos humanos</p>
+                    <div class="flex items-center justify-between text-sm mb-2">
                         <span class="text-gray-500">Avance:</span>
                         <span class="font-semibold text-gray-700">0%</span>
                     </div>
-                    <div class="w-full bg-gray-200 rounded-full h-2 mt-2">
+                    <div class="w-full bg-gray-200 rounded-full h-2">
                         <div class="bg-slate-600 h-2 rounded-full" style="width: 0%"></div>
                     </div>
                 </div>
 
-                {{-- 3. Bienes y Servicios --}}
+                <!-- 3. Bienes y Servicios -->
                 <div class="bg-white rounded-lg border border-gray-200 p-5 hover:shadow-md hover:border-gray-300 transition-all">
                     <div class="flex items-center justify-between mb-3">
-                        <div class="w-12 h-12 bg-slate-100 rounded-lg flex items-center justify-center">
-                            <svg class="w-6 h-6 text-slate-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <div class="w-12 h-12 bg-emerald-100 rounded-lg flex items-center justify-center">
+                            <svg class="w-6 h-6 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"/>
                             </svg>
                         </div>
-                        <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-700">
-                            Pendiente
+                        <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-emerald-100 text-emerald-700">
+                            10 acciones
                         </span>
                     </div>
                     <h4 class="font-semibold text-gray-900 mb-1">3. Bienes y Servicios</h4>
-                    <p class="text-sm text-gray-500 mb-3">Inventario y gestión de bienes patrimoniales</p>
-                    <div class="flex items-center justify-between text-sm">
+                    <p class="text-sm text-gray-500 mb-3">Transferencia de bienes y servicios</p>
+                    <div class="flex items-center justify-between text-sm mb-2">
                         <span class="text-gray-500">Avance:</span>
                         <span class="font-semibold text-gray-700">0%</span>
                     </div>
-                    <div class="w-full bg-gray-200 rounded-full h-2 mt-2">
-                        <div class="bg-slate-600 h-2 rounded-full" style="width: 0%"></div>
+                    <div class="w-full bg-gray-200 rounded-full h-2">
+                        <div class="bg-emerald-600 h-2 rounded-full" style="width: 0%"></div>
                     </div>
                 </div>
 
-                {{-- 4. Acervo Documentario --}}
+                <!-- 4. Acervo Documentario -->
                 <div class="bg-white rounded-lg border border-gray-200 p-5 hover:shadow-md hover:border-gray-300 transition-all">
                     <div class="flex items-center justify-between mb-3">
-                        <div class="w-12 h-12 bg-slate-100 rounded-lg flex items-center justify-center">
-                            <svg class="w-6 h-6 text-slate-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <div class="w-12 h-12 bg-amber-100 rounded-lg flex items-center justify-center">
+                            <svg class="w-6 h-6 text-amber-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"/>
                             </svg>
                         </div>
-                        <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-700">
-                            Pendiente
+                        <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-amber-100 text-amber-700">
+                            6 acciones
                         </span>
                     </div>
                     <h4 class="font-semibold text-gray-900 mb-1">4. Acervo Documentario</h4>
-                    <p class="text-sm text-gray-500 mb-3">Gestión documental y archivo institucional</p>
-                    <div class="flex items-center justify-between text-sm">
+                    <p class="text-sm text-gray-500 mb-3">Transferencia del acervo documentario</p>
+                    <div class="flex items-center justify-between text-sm mb-2">
                         <span class="text-gray-500">Avance:</span>
                         <span class="font-semibold text-gray-700">0%</span>
                     </div>
-                    <div class="w-full bg-gray-200 rounded-full h-2 mt-2">
-                        <div class="bg-slate-600 h-2 rounded-full" style="width: 0%"></div>
+                    <div class="w-full bg-gray-200 rounded-full h-2">
+                        <div class="bg-amber-600 h-2 rounded-full" style="width: 0%"></div>
                     </div>
                 </div>
 
-                {{-- 5. Activos Informáticos --}}
+                <!-- 5. Activos Informáticos -->
                 <div class="bg-white rounded-lg border border-gray-200 p-5 hover:shadow-md hover:border-gray-300 transition-all">
                     <div class="flex items-center justify-between mb-3">
-                        <div class="w-12 h-12 bg-slate-100 rounded-lg flex items-center justify-center">
-                            <svg class="w-6 h-6 text-slate-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <div class="w-12 h-12 bg-cyan-100 rounded-lg flex items-center justify-center">
+                            <svg class="w-6 h-6 text-cyan-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 3v2m6-2v2M9 19v2m6-2v2M5 9H3m2 6H3m18-6h-2m2 6h-2M7 19h10a2 2 0 002-2V7a2 2 0 00-2-2H7a2 2 0 00-2 2v10a2 2 0 002 2zM9 9h6v6H9V9z"/>
                             </svg>
                         </div>
-                        <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-700">
-                            Pendiente
+                        <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-cyan-100 text-cyan-700">
+                            6 acciones
                         </span>
                     </div>
                     <h4 class="font-semibold text-gray-900 mb-1">5. Activos Informáticos</h4>
-                    <p class="text-sm text-gray-500 mb-3">Equipos de cómputo, software y sistemas de información</p>
-                    <div class="flex items-center justify-between text-sm">
+                    <p class="text-sm text-gray-500 mb-3">Transferencia de activos informáticos</p>
+                    <div class="flex items-center justify-between text-sm mb-2">
                         <span class="text-gray-500">Avance:</span>
                         <span class="font-semibold text-gray-700">0%</span>
                     </div>
-                    <div class="w-full bg-gray-200 rounded-full h-2 mt-2">
-                        <div class="bg-slate-600 h-2 rounded-full" style="width: 0%"></div>
+                    <div class="w-full bg-gray-200 rounded-full h-2">
+                        <div class="bg-cyan-600 h-2 rounded-full" style="width: 0%"></div>
                     </div>
                 </div>
+
+                <!-- 6. Aprobación del Plan -->
+                <div class="bg-white rounded-lg border border-gray-200 p-5 hover:shadow-md hover:border-gray-300 transition-all">
+                    <div class="flex items-center justify-between mb-3">
+                        <div class="w-12 h-12 bg-purple-100 rounded-lg flex items-center justify-center">
+                            <svg class="w-6 h-6 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                            </svg>
+                        </div>
+                        <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-purple-100 text-purple-700">
+                            2 acciones
+                        </span>
+                    </div>
+                    <h4 class="font-semibold text-gray-900 mb-1">6. Aprobación del Plan</h4>
+                    <p class="text-sm text-gray-500 mb-3">Aprobación del plan de acción y formatos</p>
+                    <div class="flex items-center justify-between text-sm mb-2">
+                        <span class="text-gray-500">Avance:</span>
+                        <span class="font-semibold text-gray-700">0%</span>
+                    </div>
+                    <div class="w-full bg-gray-200 rounded-full h-2">
+                        <div class="bg-purple-600 h-2 rounded-full" style="width: 0%"></div>
+                    </div>
+                </div>
+
+                <!-- 7. Cierre de Transferencia -->
+                <div class="bg-white rounded-lg border border-gray-200 p-5 hover:shadow-md hover:border-gray-300 transition-all">
+                    <div class="flex items-center justify-between mb-3">
+                        <div class="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center">
+                            <svg class="w-6 h-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+                            </svg>
+                        </div>
+                        <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-700">
+                            3 acciones
+                        </span>
+                    </div>
+                    <h4 class="font-semibold text-gray-900 mb-1">7. Cierre de Transferencia</h4>
+                    <p class="text-sm text-gray-500 mb-3">Cierre del proceso de transferencia</p>
+                    <div class="flex items-center justify-between text-sm mb-2">
+                        <span class="text-gray-500">Avance:</span>
+                        <span class="font-semibold text-gray-700">0%</span>
+                    </div>
+                    <div class="w-full bg-gray-200 rounded-full h-2">
+                        <div class="bg-green-600 h-2 rounded-full" style="width: 0%"></div>
+                    </div>
+                </div>
+
             </div>
         </div>
     </div>
